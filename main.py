@@ -1,32 +1,20 @@
-import os
-import requests
-from pathlib import Path
-from datetime import date
-from dotenv import load_dotenv
-from bs4 import BeautifulSoup
+import json
+from tools.notifications import PushNotification
+from tools.db import FileDatabase
+from tools.scraper import Scraper
 
-load_dotenv()
-
-response = requests.get(os.getenv("PRODUCT_URL"))
-soup = BeautifulSoup(response.text, "html.parser")
-product_title = soup.find("span", "product-name").string
-price = soup.find("span", "regular-price").string
+notification = PushNotification()
+db = FileDatabase()
 
 
-file_db = Path("products.txt")
-date_today = date.today().isoformat()
-with file_db.open("a") as f:
-    f.write(f"{date_today}|{product_title}|{price}\n")
+with open("data/scraping_data.json") as f:
+    products = json.load(f)
 
+for product in products:
+    scraper = Scraper(product["url"])
+    price = scraper.get_value(product["css_selector"])
 
-NOTIFICATION_URL = "https://api.pushover.net/1/messages.json"
-response = requests.post(
-    NOTIFICATION_URL,
-    data={
-        "token": os.getenv("NOTIFICATION_TOKEN"),
-        "user": os.getenv("NOTIFICATION_USER_KEY"),
-        "title": product_title,
-        "message": price,
-        "sound": "pianobar",
-    },
-)
+    db.write_line(product["title"], price)
+
+    if product["notification"]:
+        notification.send(product["title"], price)
