@@ -7,14 +7,14 @@ from bs4 import BeautifulSoup
 
 load_dotenv()
 
-file_db = Path("products.txt")
-date_today = date.today().isoformat()
-
 response = requests.get(os.getenv("PRODUCT_URL"))
 soup = BeautifulSoup(response.text, "html.parser")
 product_title = soup.find("span", "product-name").string
 price = soup.find("span", "regular-price").string
 
+
+file_db = Path("products.txt")
+date_today = date.today().isoformat()
 with file_db.open("a") as f:
     f.write(f"{date_today}|{product_title}|{price}\n")
 
