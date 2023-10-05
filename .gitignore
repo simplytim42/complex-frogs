@@ -1,3 +1,12 @@
+# system files
+.DS_Store
+
+# python files
+__pycache__
+
+# app files
 /venv
 .env
+
+# database
 products.txt
