@@ -10,3 +10,6 @@ __pycache__
 
 # database
 products.txt
+
+# data files
+data/scraping_data.json
