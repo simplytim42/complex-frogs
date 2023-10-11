@@ -2,7 +2,7 @@
     {
         "title": "Product XYZ",
         "url": "https://www.example.com/product-xyz",
-        "css_selector": "span.regular-price",
+        "css_selector": "div#price-div span.regular-price",
         "notification": false
     }
 ]
