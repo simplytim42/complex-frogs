@@ -1,4 +1,5 @@
 import json
+import time
 from tools.notifications import PushNotification
 from tools.db import Database
 from tools.scraper import Scraper
@@ -20,3 +21,5 @@ for product in products:
         notification.send(product["title"], price)
 
     print(f"Added '{product['title']}' with price {price}")
+    # Sleep for 5 seconds to avoid getting blocked
+    time.sleep(5)
