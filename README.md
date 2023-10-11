@@ -1,5 +1,5 @@
-# price-tracker
-web scraping to track the price of something I want to buy and send me daily notifications using https://pushover.net
+# complex-frogs
+web scraping to track the price of things I would like to buy and send me daily notifications using https://pushover.net
 
 # setup
 1. sign up to https://pushover.net and generate an API TOKEN and a USER KEY.
