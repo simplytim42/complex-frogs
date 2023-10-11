@@ -1,14 +1,8 @@
 [
     {
-        "title": "Kepler 9 Nightfall Air Tent",
-        "url": "https://www.gooutdoors.co.uk/15986808/berghaus-kepler-9-nightfall-air-tent-15986808",
+        "title": "Product XYZ",
+        "url": "https://www.example.com/product-xyz",
         "css_selector": "span.regular-price",
-        "notification": true
-    },
-    {
-        "title": "A Common-Sense Guide to Data Structures and Algorithms",
-        "url": "https://blackwells.co.uk/bookshop/product/A-Common-Sense-Guide-to-Data-Structures-and-Algorithms-by-Jay-Wengrow/9781680507225",
-        "css_selector": ".product-price--current",
         "notification": false
     }
 ]
