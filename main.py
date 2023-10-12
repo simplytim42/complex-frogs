@@ -1,6 +1,7 @@
 import json
 import time
 import os
+from pathlib import Path
 from py_pushover_client import PushoverAPIClient
 from tools.db import Database
 from tools.scraper import Scraper
@@ -11,10 +12,11 @@ load_dotenv()
 API_TOKEN = os.getenv("NOTIFICATION_TOKEN")
 USER_KEY = os.getenv("NOTIFICATION_USER_KEY")
 notification = PushoverAPIClient(api_token=API_TOKEN, user_key=USER_KEY)
+scraping_data = Path(__file__).resolve().parent / "data/scraping_data.json"
 db = Database()
 
 
-with open("data/scraping_data.json") as f:
+with scraping_data.open() as f:
     products = json.load(f)
 
 

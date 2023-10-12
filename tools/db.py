@@ -3,8 +3,10 @@ from datetime import date
 
 
 class Database:
+    db_name = "products.txt"
+
     def __init__(self):
-        self.db = Path("products.txt")
+        self.db = Path(__file__).resolve().parent.parent / self.db_name
         if not self.db.exists():
             self.db.touch()
 
