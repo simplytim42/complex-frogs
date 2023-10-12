@@ -11,6 +11,11 @@ class Scraper:
         self.url = url
 
     def get_value(self, css_selector: str) -> str:
-        response = httpx.get(self.url, headers=self.headers)
-        html = HTMLParser(response.text)
-        return html.css_first(css_selector).text()
+        try:
+            response = httpx.get(self.url, headers=self.headers)
+            html = HTMLParser(response.text)
+            value = html.css_first(css_selector).text()
+        except Exception:
+            value = "Not found"
+
+        return value
