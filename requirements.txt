@@ -6,6 +6,7 @@ h11==0.14.0
 httpcore==0.18.0
 httpx==0.25.0
 idna==3.4
+py_pushover_client==1.0.0.dev2
 python-dotenv==1.0.0
 requests==2.31.0
 selectolax==0.3.16
