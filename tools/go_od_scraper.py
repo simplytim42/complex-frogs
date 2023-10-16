@@ -11,7 +11,6 @@ class GoOutdoorsScraper(BaseScraper):
         self.url = f"https://www.gooutdoors.co.uk/{sku}/{id}"
 
     def __get_html(self):
-        print(self.headers)
         response = httpx.get(self.url, headers=self.headers)
         response.raise_for_status()
         self.html = HTMLParser(response.text)
