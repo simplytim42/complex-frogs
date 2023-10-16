@@ -3,9 +3,8 @@ import time
 import os
 from pathlib import Path
 from py_pushover_client import PushoverAPIClient
-from tools.db import Database
-from tools.scraper import Scraper
 from dotenv import load_dotenv
+from tools import Database, get_scraper
 
 
 load_dotenv()
@@ -19,17 +18,17 @@ db = Database()
 with scraping_data.open() as f:
     products = json.load(f)
 
-
 for product in products:
-    scraper = Scraper(product["url"])
-    price = scraper.get_value(product["css_selector"])
+    scraper = get_scraper(product["site"], product["id"])
+    price = scraper.get_price()
+    title = scraper.get_title()
 
-    db.add_record(product["title"], price)
+    db.add_record(title, price)
 
     if product["notification"]:
-        notification.send(title=product["title"], message=price)
+        notification.send(title=title, message=price)
 
-    print(f"Added '{product['title']}' with price {price}")
+    print(f"Added '{title}' with price {price}")
 
     # Sleep for 5 seconds to avoid getting blocked
     time.sleep(5)

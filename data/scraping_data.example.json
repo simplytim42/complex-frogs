@@ -1,8 +1,7 @@
 [
     {
-        "title": "Product XYZ",
-        "url": "https://www.example.com/product-xyz",
-        "css_selector": "div#price-div span.regular-price",
+        "site": "site_id",
+        "id": "url_product_id",
         "notification": false
     }
 ]
