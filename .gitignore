@@ -13,3 +13,6 @@ products.txt
 
 # data files
 data/scraping_data.json
+
+# log files
+frog.log
