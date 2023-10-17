@@ -19,16 +19,19 @@ with scraping_data.open() as f:
     products = json.load(f)
 
 for product in products:
-    scraper = get_scraper(product["site"], product["id"])
-    price = scraper.get_price()
-    title = scraper.get_title()
+    try:
+        scraper = get_scraper(product["site"], product["id"])
+        price = scraper.get_price()
+        title = scraper.get_title()
 
-    db.add_record(title, price)
+        db.add_record(title, price)
 
-    if product["notification"]:
-        notification.send(title=title, message=price)
+        if product["notification"]:
+            notification.send(title=title, message=price)
 
-    print(f"Added '{title}' with price {price}")
+        print(f"Added '{title}' with price {price}")
+    except Exception as e:
+        print(e)
 
     # Sleep for 5 seconds to avoid getting blocked
     time.sleep(5)
