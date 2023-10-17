@@ -1,23 +1,26 @@
 from playwright.sync_api import sync_playwright
 from selectolax.parser import HTMLParser
 from .base_scraper import BaseScraper, ScraperException
+import logging
 
 
 class AmazonScraper(BaseScraper):
+    PRICE_SELECTOR = "span.a-offscreen"
+    TITLE_SELECTOR = "span#productTitle"
     html = None
 
     def __init__(self, asin: str):
-        self.asin = asin
+        self.URL = f"https://www.amazon.co.uk/dp/{asin}"
 
     def __get_html(self):
         try:
             pw = sync_playwright().start()
             browser = pw.chromium.launch()
             page = browser.new_page()
-            page.goto(f"https://www.amazon.co.uk/dp/{self.asin}")
+            page.goto(self.URL)
             self.html = HTMLParser(page.content())
         except Exception as e:
-            print(e)
+            logging.error(f"Error getting HTML: {e}")
             raise ScraperException("Failed to get HTML")
         finally:
             browser.close()
@@ -27,16 +30,16 @@ class AmazonScraper(BaseScraper):
         if not self.html:
             self.__get_html()
         try:
-            return self.html.css_first("span.a-offscreen").text(strip=True)
+            return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            print(e)
+            logging.warning(f"Error getting price: {e}")
             return "Price not found"
 
     def get_title(self) -> str:
         if not self.html:
             self.__get_html()
         try:
-            return self.html.css_first("span#productTitle").text(strip=True)
+            return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            print(e)
+            logging.warning(f"Error getting title: {e}")
             return "Title not found"
