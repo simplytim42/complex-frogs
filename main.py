@@ -1,11 +1,18 @@
 import json
 import time
 import os
+import logging
 from pathlib import Path
 from py_pushover_client import PushoverAPIClient
 from dotenv import load_dotenv
 from tools import Database, get_scraper
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    filename="frog.log",
+)
 
 load_dotenv()
 API_TOKEN = os.getenv("NOTIFICATION_TOKEN")
@@ -20,6 +27,7 @@ with scraping_data.open() as f:
 
 for product in products:
     try:
+        logging.info(f"Getting data for '{product['id']}'")
         scraper = get_scraper(product["site"], product["id"])
         price = scraper.get_price()
         title = scraper.get_title()
@@ -28,10 +36,10 @@ for product in products:
 
         if product["notification"]:
             notification.send(title=title, message=price)
+            logging.info(f"Sent notification for '{product['id']}'")
 
-        print(f"Added '{title}' with price {price}")
     except Exception as e:
-        print(e)
+        logging.error(f"Error getting data for '{product['id']}: {e}'")
 
     # Sleep for 5 seconds to avoid getting blocked
     time.sleep(5)
