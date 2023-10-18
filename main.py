@@ -1,5 +1,6 @@
 import json
 import time
+import datetime
 import os
 import logging
 from pathlib import Path
@@ -32,14 +33,21 @@ for product in products:
         price = scraper.get_price()
         title = scraper.get_title()
 
+        if price == scraper.PRICE_404 and title == scraper.TITLE_404:
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            filename = f"html_logs/{timestamp}_{product['id']}.html"
+            with Path(__file__).resolve().parent / filename as f:
+                f.parent.mkdir(parents=True, exist_ok=True)
+                f.write_text(scraper.get_html())
+
         db.add_record(title, price)
 
         if product["notification"]:
             notification.send(title=title, message=price)
-            logging.info(f"Sent notification for '{product['id']}'")
+            logging.info(f"Sent notification for {product['id']}")
 
     except Exception as e:
-        logging.error(f"Error getting data for '{product['id']}: {e}'")
+        logging.error(f"Error getting data for {product['id']}: {e}")
 
     # Sleep for 5 seconds to avoid getting blocked
     time.sleep(5)
