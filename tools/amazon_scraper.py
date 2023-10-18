@@ -16,7 +16,8 @@ class AmazonScraper(BaseScraper):
         try:
             pw = sync_playwright().start()
             browser = pw.chromium.launch()
-            page = browser.new_page()
+            context = browser.new_context(extra_http_headers=self.HEADERS)
+            page = context.new_page()
             page.goto(self.URL)
             self.html = HTMLParser(page.content())
         except Exception as e:
