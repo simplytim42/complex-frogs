@@ -12,7 +12,7 @@ class AmazonScraper(BaseScraper):
     def __init__(self, asin: str):
         self.URL = f"https://www.amazon.co.uk/dp/{asin}"
 
-    def __get_html(self):
+    def __retrieve_html(self):
         try:
             pw = sync_playwright().start()
             browser = pw.chromium.launch()
@@ -26,20 +26,25 @@ class AmazonScraper(BaseScraper):
             browser.close()
             pw.stop()
 
+    def get_html(self) -> str:
+        if not self.html:
+            self.__retrieve_html()
+        return self.html.html
+
     def get_price(self) -> str:
         if not self.html:
-            self.__get_html()
+            self.__retrieve_html()
         try:
             return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
             logging.warning(f"Error getting price: {e}")
-            return "Price not found"
+            return self.PRICE_404
 
     def get_title(self) -> str:
         if not self.html:
-            self.__get_html()
+            self.__retrieve_html()
         try:
             return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
             logging.warning(f"Error getting title: {e}")
-            return "Title not found"
+            return self.TITLE_404
