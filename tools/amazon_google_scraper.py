@@ -2,6 +2,7 @@ from playwright.sync_api import sync_playwright
 from selectolax.parser import HTMLParser
 from .base_scraper import BaseScraper, ScraperException
 import logging
+import textdistance as td
 
 
 class AmazonGoogleScraper(BaseScraper):
@@ -14,8 +15,9 @@ class AmazonGoogleScraper(BaseScraper):
     node = None
 
     def __init__(self, query: str):
-        query = query.replace(" ", "+")
-        self.URL = f"https://www.google.com/search?q={query}&tbm=shop"
+        self.query = query
+        url_query = query.replace(" ", "+")
+        self.URL = f"https://www.google.com/search?q={url_query}&tbm=shop"
 
     def __retrieve_html(self):
         try:
@@ -32,7 +34,7 @@ class AmazonGoogleScraper(BaseScraper):
             for node in nodes:
                 if node.select(self.PRODUCT_DETAILS_SELECTOR).any_text_contains(
                     "Amazon.co.uk"
-                ):
+                ) and self.__title_match(node):
                     self.node = node
                     break
         except Exception as e:
@@ -41,6 +43,11 @@ class AmazonGoogleScraper(BaseScraper):
         finally:
             browser.close()
             pw.stop()
+
+    def __title_match(self, node) -> bool:
+        title = node.css_first(self.TITLE_SELECTOR).text(strip=True)
+        similarity = td.levenshtein.normalized_similarity(self.query, title)
+        return similarity > 0.5
 
     def get_html(self) -> str:
         if not self.html:
