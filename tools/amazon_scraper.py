@@ -5,11 +5,30 @@ import logging
 
 
 class AmazonScraper(BaseScraper):
+    """
+    A scraper for retrieving product information from the Amazon UK website.
+
+    This implementation is not always reliable.
+
+    Attributes:
+        PRICE_SELECTOR (str): The CSS selector for the product price element.
+        TITLE_SELECTOR (str): The CSS selector for the product title element.
+        URL (str): The URL of the product page.
+        html (HTMLParser): The parsed HTML content of the product page.
+    """
+
     PRICE_SELECTOR = "span.a-offscreen"
     TITLE_SELECTOR = "span#productTitle"
+    URL = ""
     html = None
 
     def __init__(self, asin: str):
+        """
+        Initializes a new instance of the AmazonScraper class.
+
+        Args:
+            asin (str): The Amazon Standard Identification Number (ASIN) of the product to scrape.
+        """
         self.URL = f"https://www.amazon.co.uk/dp/{asin}"
 
     def __retrieve_html(self):

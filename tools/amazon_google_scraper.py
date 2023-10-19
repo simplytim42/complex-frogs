@@ -6,6 +6,19 @@ import textdistance as td
 
 
 class AmazonGoogleScraper(BaseScraper):
+    """
+    A scraper for retrieving Amazon UK product information from the Google Shopping search results page.
+
+    Attributes:
+        PRICE_SELECTOR (str): The CSS selector for the product price element.
+        TITLE_SELECTOR (str): The CSS selector for the product title element.
+        REJECT_COOKIES_SELECTOR (str): The CSS selector for the reject cookies button element.
+        PRODUCT_CARDS_SELECTOR (str): The CSS selector for the product card elements.
+        PRODUCT_DETAILS_SELECTOR (str): The CSS selector for the product details element.
+        html (HTMLParser): The parsed HTML content of the search results page.
+        node (SelectolaxNode): The current product card node being processed.
+    """
+
     PRICE_SELECTOR = "span.T14wmb"
     TITLE_SELECTOR = "h3.sh-np__product-title"
     REJECT_COOKIES_SELECTOR = "div.VfPpkd-RLmnJb"
@@ -15,6 +28,13 @@ class AmazonGoogleScraper(BaseScraper):
     node = None
 
     def __init__(self, query: str):
+        """
+        Initializes a new instance of the AmazonGoogleScraper class.
+
+        Args:
+            query (str): The search query to use. Ideally this should be the
+            product name as it appears on Amazon.
+        """
         self.query = query
         url_query = query.replace(" ", "+")
         self.URL = f"https://www.google.com/search?q={url_query}&tbm=shop"
@@ -35,6 +55,7 @@ class AmazonGoogleScraper(BaseScraper):
                 if node.select(self.PRODUCT_DETAILS_SELECTOR).any_text_contains(
                     "Amazon.co.uk"
                 ) and self.__title_match(node):
+                    # Found a likely match
                     self.node = node
                     break
         except Exception as e:
@@ -45,6 +66,9 @@ class AmazonGoogleScraper(BaseScraper):
             pw.stop()
 
     def __title_match(self, node) -> bool:
+        """Returns True if the scraped product title has over 50% similarity
+        to the query value
+        """
         title = node.css_first(self.TITLE_SELECTOR).text(strip=True)
         similarity = td.levenshtein.normalized_similarity(self.query, title)
         return similarity > 0.5

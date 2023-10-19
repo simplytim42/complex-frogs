@@ -4,6 +4,8 @@ import logging
 
 
 class Database:
+    """A simple text file database for storing product data."""
+
     db_name = "products.txt"
 
     def __init__(self):
@@ -13,6 +15,14 @@ class Database:
             logging.debug(f"Created database {self.db_name}")
 
     def add_record(self, *args):
+        """Add a record to the database if it doesn't already exist.
+
+        Args:
+            *args: any number of values to be added to the database
+
+        Returns:
+            None
+        """
         today = date.today().isoformat()
         values = today, *args
         record = "|".join(values) + "\n"

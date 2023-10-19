@@ -5,11 +5,29 @@ from .base_scraper import BaseScraper, ScraperException
 
 
 class GoOutdoorsScraper(BaseScraper):
-    html = None
+    """
+    A scraper for retrieving product information from the Go Outdoors website.
+
+    Attributes:
+        PRICE_SELECTOR (str): The CSS selector for the product price element.
+        TITLE_SELECTOR (str): The CSS selector for the product title element.
+        URL (str): The URL of the product page.
+        html (HTMLParser): The parsed HTML content of the product page.
+    """
+
     PRICE_SELECTOR = "span.regular-price"
     TITLE_SELECTOR = "span.product-name"
+    URL = ""
+    html = None
 
     def __init__(self, id: str):
+        """
+        Initializes a new instance of the GoOutdoorsScraper class.
+
+        Args:
+            id (str): The product ID in the format found in the URL.
+            For example: "waterproof-down-jacket-123456".
+        """
         sku = id.split("-")[-1]
         self.URL = f"https://www.gooutdoors.co.uk/{sku}/{id}"
 

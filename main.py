@@ -8,12 +8,14 @@ from py_pushover_client import PushoverAPIClient
 from dotenv import load_dotenv
 from tools import Database, get_scraper
 
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     filename="frog.log",
 )
+
 
 load_dotenv()
 API_TOKEN = os.getenv("NOTIFICATION_TOKEN")
@@ -26,6 +28,7 @@ db = Database()
 with scraping_data.open() as f:
     products = json.load(f)
 
+
 for product in products:
     try:
         logging.info(f"Getting data for '{product['id']}'")
@@ -34,6 +37,7 @@ for product in products:
         title = scraper.get_title()
 
         if price == scraper.PRICE_404 and title == scraper.TITLE_404:
+            # error getting data so we save the raw html for debugging
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             filename = f"html_logs/{timestamp}_{product['id']}.html"
             with Path(__file__).resolve().parent / filename as f:
