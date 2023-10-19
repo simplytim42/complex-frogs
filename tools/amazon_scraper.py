@@ -43,8 +43,12 @@ class AmazonScraper(BaseScraper):
             page.goto(self.URL)
             self.html = HTMLParser(page.content())
         except Exception as e:
-            logging.error(f"Error getting HTML for {__class__} {self.ASIN}: {e}")
-            raise ScraperException(f"Failed to get HTML {__class__} {self.ASIN}")
+            logging.error(
+                f"Error getting HTML for '{__class__.__name__}' {self.ASIN}: {e}"
+            )
+            raise ScraperException(
+                f"Failed to get HTML '{__class__.__name__}' {self.ASIN}"
+            )
         finally:
             browser.close()
             pw.stop()
@@ -60,7 +64,9 @@ class AmazonScraper(BaseScraper):
         try:
             return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting price for {__class__} {self.ASIN}: {e}")
+            logging.warning(
+                f"Error getting price for '{__class__.__name__}' {self.ASIN}: {e}"
+            )
             return self.PRICE_404
 
     def get_title(self) -> str:
@@ -69,5 +75,7 @@ class AmazonScraper(BaseScraper):
         try:
             return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting title for {__class__} {self.ASIN}: {e}")
+            logging.warning(
+                f"Error getting title for '{__class__.__name__}' {self.ASIN}: {e}"
+            )
             return self.TITLE_404

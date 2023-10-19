@@ -39,8 +39,12 @@ class GoOutdoorsScraper(BaseScraper):
             response.raise_for_status()
             self.html = HTMLParser(response.text)
         except Exception as e:
-            logging.error(f"Error getting HTML for {__class__} {self.SKU}: {e}")
-            raise ScraperException("Failed to get HTML for {__class__} {self.SKU}")
+            logging.error(
+                f"Error getting HTML for '{__class__.__name__}' {self.SKU}: {e}"
+            )
+            raise ScraperException(
+                "Failed to get HTML for '{__class__.__name__}' {self.SKU}"
+            )
 
     def get_html(self) -> str:
         if not self.html:
@@ -53,7 +57,9 @@ class GoOutdoorsScraper(BaseScraper):
         try:
             return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting price for {__class__} {self.SKU}: {e}")
+            logging.warning(
+                f"Error getting price for '{__class__.__name__}' {self.SKU}: {e}"
+            )
             return self.PRICE_404
 
     def get_title(self) -> str:
@@ -62,5 +68,7 @@ class GoOutdoorsScraper(BaseScraper):
         try:
             return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting title for {__class__} {self.SKU}: {e}")
+            logging.warning(
+                f"Error getting title for '{__class__.__name__}' {self.SKU}: {e}"
+            )
             return self.TITLE_404

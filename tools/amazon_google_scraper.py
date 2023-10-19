@@ -59,7 +59,9 @@ class AmazonGoogleScraper(BaseScraper):
                     self.node = node
                     break
         except Exception as e:
-            logging.error(f"Error getting HTML for {__class__} {self.query}: {e}")
+            logging.error(
+                f"Error getting HTML for '{__class__.__name__}' {self.query}: {e}"
+            )
             raise ScraperException(f"Failed to get HTML for {self.query}")
         finally:
             browser.close()
@@ -84,7 +86,9 @@ class AmazonGoogleScraper(BaseScraper):
         try:
             return self.node.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting price for {__class__} {self.query}: {e}")
+            logging.warning(
+                f"Error getting price for '{__class__.__name__}' {self.query}: {e}"
+            )
             return self.PRICE_404
 
     def get_title(self) -> str:
@@ -93,5 +97,7 @@ class AmazonGoogleScraper(BaseScraper):
         try:
             return self.node.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting title for {__class__} {self.query}: {e}")
+            logging.warning(
+                f"Error getting title for '{__class__.__name__}' {self.query}: {e}"
+            )
             return self.TITLE_404
