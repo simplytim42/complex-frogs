@@ -62,7 +62,9 @@ class AmazonGoogleScraper(BaseScraper):
             logging.error(
                 f"Error getting HTML for '{__class__.__name__}' {self.query}: {e}"
             )
-            raise ScraperException(f"Failed to get HTML for {self.query}")
+            raise ScraperException(
+                f"Failed to get HTML for '{__class__.__name__}' {self.query}"
+            )
         finally:
             browser.close()
             pw.stop()

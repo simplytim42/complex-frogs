@@ -43,7 +43,7 @@ class GoOutdoorsScraper(BaseScraper):
                 f"Error getting HTML for '{__class__.__name__}' {self.SKU}: {e}"
             )
             raise ScraperException(
-                "Failed to get HTML for '{__class__.__name__}' {self.SKU}"
+                f"Failed to get HTML for '{__class__.__name__}' {self.SKU}"
             )
 
     def get_html(self) -> str:
