@@ -12,12 +12,14 @@ class GoOutdoorsScraper(BaseScraper):
         PRICE_SELECTOR (str): The CSS selector for the product price element.
         TITLE_SELECTOR (str): The CSS selector for the product title element.
         URL (str): The URL of the product page.
+        SKU (str): The SKU of the product.
         html (HTMLParser): The parsed HTML content of the product page.
     """
 
     PRICE_SELECTOR = "span.regular-price"
     TITLE_SELECTOR = "span.product-name"
     URL = ""
+    SKU = ""
     html = None
 
     def __init__(self, id: str):
@@ -28,8 +30,8 @@ class GoOutdoorsScraper(BaseScraper):
             id (str): The product ID in the format found in the URL.
             For example: "waterproof-down-jacket-123456".
         """
-        sku = id.split("-")[-1]
-        self.URL = f"https://www.gooutdoors.co.uk/{sku}/{id}"
+        self.SKU = id.split("-")[-1]
+        self.URL = f"https://www.gooutdoors.co.uk/{self.SKU}/{id}"
 
     def __retrieve_html(self):
         try:
@@ -37,8 +39,8 @@ class GoOutdoorsScraper(BaseScraper):
             response.raise_for_status()
             self.html = HTMLParser(response.text)
         except Exception as e:
-            logging.error(f"Error getting HTML: {e}")
-            raise ScraperException("Failed to get HTML")
+            logging.error(f"Error getting HTML for {__class__} {self.SKU}: {e}")
+            raise ScraperException("Failed to get HTML for {__class__} {self.SKU}")
 
     def get_html(self) -> str:
         if not self.html:
@@ -51,7 +53,7 @@ class GoOutdoorsScraper(BaseScraper):
         try:
             return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting price: {e}")
+            logging.warning(f"Error getting price for {__class__} {self.SKU}: {e}")
             return self.PRICE_404
 
     def get_title(self) -> str:
@@ -60,5 +62,5 @@ class GoOutdoorsScraper(BaseScraper):
         try:
             return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting title: {e}")
+            logging.warning(f"Error getting title for {__class__} {self.SKU}: {e}")
             return self.TITLE_404

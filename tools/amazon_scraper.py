@@ -14,12 +14,14 @@ class AmazonScraper(BaseScraper):
         PRICE_SELECTOR (str): The CSS selector for the product price element.
         TITLE_SELECTOR (str): The CSS selector for the product title element.
         URL (str): The URL of the product page.
+        ASIN (str): The Amazon Standard Identification Number (ASIN) of the product.
         html (HTMLParser): The parsed HTML content of the product page.
     """
 
     PRICE_SELECTOR = "span.a-offscreen"
     TITLE_SELECTOR = "span#productTitle"
     URL = ""
+    ASIN = ""
     html = None
 
     def __init__(self, asin: str):
@@ -29,6 +31,7 @@ class AmazonScraper(BaseScraper):
         Args:
             asin (str): The Amazon Standard Identification Number (ASIN) of the product to scrape.
         """
+        self.ASIN = asin
         self.URL = f"https://www.amazon.co.uk/dp/{asin}"
 
     def __retrieve_html(self):
@@ -40,8 +43,8 @@ class AmazonScraper(BaseScraper):
             page.goto(self.URL)
             self.html = HTMLParser(page.content())
         except Exception as e:
-            logging.error(f"Error getting HTML: {e}")
-            raise ScraperException("Failed to get HTML")
+            logging.error(f"Error getting HTML for {__class__} {self.ASIN}: {e}")
+            raise ScraperException(f"Failed to get HTML {__class__} {self.ASIN}")
         finally:
             browser.close()
             pw.stop()
@@ -57,7 +60,7 @@ class AmazonScraper(BaseScraper):
         try:
             return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting price: {e}")
+            logging.warning(f"Error getting price for {__class__} {self.ASIN}: {e}")
             return self.PRICE_404
 
     def get_title(self) -> str:
@@ -66,5 +69,5 @@ class AmazonScraper(BaseScraper):
         try:
             return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting title: {e}")
+            logging.warning(f"Error getting title for {__class__} {self.ASIN}: {e}")
             return self.TITLE_404
