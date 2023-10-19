@@ -43,12 +43,13 @@ for product in products:
             with Path(__file__).resolve().parent / filename as f:
                 f.parent.mkdir(parents=True, exist_ok=True)
                 f.write_text(scraper.get_html())
+        else:
+            # save data to database and send notification if needed
+            db.add_record(title, price)
 
-        db.add_record(title, price)
-
-        if product["notification"]:
-            notification.send(title=title, message=price)
-            logging.info(f"Sent notification for {product['id']}")
+            if product["notification"]:
+                notification.send(title=title, message=price)
+                logging.info(f"Sent notification for {product['id']}")
 
     except Exception as e:
         logging.error(f"Error getting data for {product['id']}: {e}")
