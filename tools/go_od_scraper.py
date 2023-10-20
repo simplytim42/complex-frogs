@@ -33,6 +33,9 @@ class GoOutdoorsScraper(BaseScraper):
         self.SKU = id.split("-")[-1]
         self.URL = f"https://www.gooutdoors.co.uk/{self.SKU}/{id}"
 
+    def __repr__(self):
+        return f"{__class__.__name__}(id='{self.SKU}')"
+
     def __retrieve_html(self):
         try:
             response = httpx.get(self.URL, headers=self.HEADERS)

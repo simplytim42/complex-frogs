@@ -34,6 +34,9 @@ class AmazonScraper(BaseScraper):
         self.ASIN = asin
         self.URL = f"https://www.amazon.co.uk/dp/{asin}"
 
+    def __repr__(self):
+        return f"{__class__.__name__}(asin='{self.ASIN}')"
+
     def __retrieve_html(self):
         try:
             pw = sync_playwright().start()
