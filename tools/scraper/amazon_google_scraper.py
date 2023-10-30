@@ -27,16 +27,16 @@ class AmazonGoogleScraper(BaseScraper):
     html = None
     node = None
 
-    def __init__(self, query: str):
+    def __init__(self, id: str):
         """
         Initializes a new instance of the AmazonGoogleScraper class.
 
         Args:
-            query (str): The search query to use. Ideally this should be the
+            id (str): The search query to use. Ideally this should be the
             product name as it appears on Amazon.
         """
-        self.query = query
-        url_query = query.replace(" ", "+")
+        self.query = id
+        url_query = id.replace(" ", "+")
         self.URL = f"https://www.google.com/search?q={url_query}&tbm=shop"
 
     def __repr__(self):

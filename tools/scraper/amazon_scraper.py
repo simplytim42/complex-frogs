@@ -24,15 +24,15 @@ class AmazonScraper(BaseScraper):
     ASIN = ""
     html = None
 
-    def __init__(self, asin: str):
+    def __init__(self, id: str):
         """
         Initializes a new instance of the AmazonScraper class.
 
         Args:
-            asin (str): The Amazon Standard Identification Number (ASIN) of the product to scrape.
+            id (str): The Amazon Standard Identification Number (ASIN) of the product to scrape.
         """
-        self.ASIN = asin
-        self.URL = f"https://www.amazon.co.uk/dp/{asin}"
+        self.ASIN = id
+        self.URL = f"https://www.amazon.co.uk/dp/{id}"
 
     def __repr__(self):
         return f"{__class__.__name__}(asin='{self.ASIN}')"
