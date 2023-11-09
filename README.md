@@ -11,3 +11,12 @@ web scraping to track the price of things I would like to buy and send me daily 
 1. rename `.env-example` to `.env` and populate the variables with your API TOKEN and USER KEY.
 1. inside the `data` direcory, rename `scraping_data.example.json` to `scraping_data.json` and populate the relevant scraping data.
 1. `python main.py`
+
+# run tests
+1. ensure you are in the project's root dir
+1. `pytest .`
+
+# run test coverage
+1. ensure you are in the project's root dir
+1. `pytest --cov .` will produce an overview report in the cli
+1. `pytest --cov --cov-report=html .` will produce html reports detailing exactly what code is not covered.
