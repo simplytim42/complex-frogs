@@ -17,3 +17,7 @@ data/scraping_data.json
 # log files
 frog.log
 html_logs/
+
+# testing files
+htmlcov/
+.coverage
