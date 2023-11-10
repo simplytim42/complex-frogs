@@ -1,8 +1,11 @@
 # system files
 .DS_Store
 
-# python files
+# cache files
 __pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
 
 # app files
 venv/

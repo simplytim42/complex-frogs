@@ -9,7 +9,10 @@ httpcore==0.18.0
 httpx==0.25.0
 idna==3.4
 iniconfig==2.0.0
+mypy==1.6.1
+mypy-extensions==1.0.0
 packaging==23.2
+pipdeptree==2.13.1
 playwright==1.38.0
 pluggy==1.3.0
 py_pushover_client==1.0.0.dev2
@@ -21,6 +24,7 @@ pytest-playwright==0.4.3
 python-dotenv==1.0.0
 python-slugify==8.0.1
 requests==2.31.0
+ruff==0.1.5
 selectolax==0.3.16
 sniffio==1.3.0
 text-unidecode==1.3
