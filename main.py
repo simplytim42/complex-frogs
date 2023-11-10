@@ -38,12 +38,14 @@ for product in products:
         title = scraper.get_title()
 
         if price == scraper.PRICE_404 and title == scraper.TITLE_404:
+            logging.info(f"Could not find price and title for '{product['id']}'")
             # error getting data so we save the raw html for debugging
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             filename = f"html_logs/{timestamp}_{product['id']}.html"
             with Path(__file__).resolve().parent / filename as f:
                 f.parent.mkdir(parents=True, exist_ok=True)
-                f.write_text(scraper.get_html())
+                html = str(scraper.get_html())
+                f.write_text(html)
         else:
             # save data to database and send notification if needed
             db.add_record(title, price)

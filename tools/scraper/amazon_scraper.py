@@ -22,7 +22,8 @@ class AmazonScraper(BaseScraper):
     TITLE_SELECTOR = "span#productTitle"
     URL = ""
     ASIN = ""
-    html = None
+    retrieved_html = False
+    html = HTMLParser("")
 
     def __init__(self, id: str):
         """
@@ -34,10 +35,10 @@ class AmazonScraper(BaseScraper):
         self.ASIN = id
         self.URL = f"https://www.amazon.co.uk/dp/{id}"
 
-    def __repr__(self):
-        return f"{__class__.__name__}(asin='{self.ASIN}')"
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(asin='{self.ASIN}')"
 
-    def __retrieve_html(self):
+    def __retrieve_html(self) -> None:
         try:
             pw = sync_playwright().start()
             browser = pw.chromium.launch()
@@ -45,40 +46,41 @@ class AmazonScraper(BaseScraper):
             page = context.new_page()
             page.goto(self.URL)
             self.html = HTMLParser(page.content())
+            self.retrieved_html = True
         except Exception as e:
             logging.error(
-                f"Error getting HTML for '{__class__.__name__}' {self.ASIN}: {e}"
+                f"Error getting HTML for '{self.__class__.__name__}' {self.ASIN}: {e}"
             )
             raise ScraperException(
-                f"Failed to get HTML '{__class__.__name__}' {self.ASIN}"
+                f"Failed to get HTML '{self.__class__.__name__}' {self.ASIN}"
             )
         finally:
             browser.close()
             pw.stop()
 
-    def get_html(self) -> str:
-        if not self.html:
+    def get_html(self) -> str | None:
+        if not self.retrieved_html:
             self.__retrieve_html()
         return self.html.html
 
     def get_price(self) -> str:
-        if not self.html:
+        if not self.retrieved_html:
             self.__retrieve_html()
         try:
             return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
             logging.warning(
-                f"Error getting price for '{__class__.__name__}' {self.ASIN}: {e}"
+                f"Error getting price for '{self.__class__.__name__}' {self.ASIN}: {e}"
             )
             return self.PRICE_404
 
     def get_title(self) -> str:
-        if not self.html:
+        if not self.retrieved_html:
             self.__retrieve_html()
         try:
             return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
             logging.warning(
-                f"Error getting title for '{__class__.__name__}' {self.ASIN}: {e}"
+                f"Error getting title for '{self.__class__.__name__}' {self.ASIN}: {e}"
             )
             return self.TITLE_404
