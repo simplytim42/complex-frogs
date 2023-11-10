@@ -1,9 +1,6 @@
 name: Testing and Coverage
 
-on:
-  pull_request:
-    branches:
-      - main
+on: [push]
 
 jobs:
   tests-coverage:
