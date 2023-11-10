@@ -24,3 +24,4 @@ web scraping to track the price of things I would like to buy and send me daily 
 # code quality checks
 1. open a terminal and ensure you are in the project's root dir
 1. `flake8` will run the code linter
+1. `mypy .` will run the type checker
