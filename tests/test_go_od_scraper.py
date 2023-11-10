@@ -4,8 +4,12 @@ import pytest
 
 
 @pytest.fixture
-def scraper():
+def scraper():  # type: ignore
+    """returns a GoOutdoorsScraper instance with a mocked HTMLParser instance.
+    This stops the scraper from making an http request."""
+
     scraper = GoOutdoorsScraper("down-jacket-123456")
+    scraper.retrieved_html = True
     scraper.html = HTMLParser(
         """
         <html>
@@ -17,21 +21,24 @@ def scraper():
     return scraper
 
 
-class TestGoOutdoorsScraper:
-    def test_init(self, scraper):
-        assert scraper.SKU == "123456"
-        assert scraper.URL == "https://www.gooutdoors.co.uk/123456/down-jacket-123456"
+def test_init(scraper):  # type: ignore
+    assert scraper.SKU == "123456"
+    assert scraper.URL == "https://www.gooutdoors.co.uk/123456/down-jacket-123456"
 
-    def test_get_title(self, scraper):
-        assert scraper.get_title() == "Down Jacket"
 
-    def test_get_title_no_title(self, scraper):
-        scraper.html = HTMLParser("<html></html>")
-        assert scraper.get_title() == scraper.TITLE_404
+def test_get_title(scraper):  # type: ignore
+    assert scraper.get_title() == "Down Jacket"
 
-    def test_get_price(self, scraper):
-        assert scraper.get_price() == "£100.00"
 
-    def test_get_price_no_price(self, scraper):
-        scraper.html = HTMLParser("<html></html>")
-        assert scraper.get_price() == scraper.PRICE_404
+def test_get_title_no_title(scraper):  # type: ignore
+    scraper.html = HTMLParser("<html></html>")
+    assert scraper.get_title() == scraper.TITLE_404
+
+
+def test_get_price(scraper):  # type: ignore
+    assert scraper.get_price() == "£100.00"
+
+
+def test_get_price_no_price(scraper):  # type: ignore
+    scraper.html = HTMLParser("<html></html>")
+    assert scraper.get_price() == scraper.PRICE_404
