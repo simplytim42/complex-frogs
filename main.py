@@ -6,11 +6,12 @@ import logging
 from pathlib import Path
 from py_pushover_client import PushoverAPIClient
 from dotenv import load_dotenv
-from tools import Database, get_scraper
+from tools.database import Database
+from tools.scraper.scraper_dispatcher import get_scraper
 
 
 logging.basicConfig(
-    level=logging.WARNING,
+    level=logging.INFO,
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     filename="frog.log",
@@ -49,10 +50,10 @@ for product in products:
 
             if product["notification"]:
                 notification.send(title=title, message=price)
-                logging.info(f"Sent notification for {product['id']}")
+                logging.info(f"Sent notification for '{product['id']}'")
 
     except Exception as e:
-        logging.error(f"Error getting data for {product['id']}: {e}")
+        logging.error(f"Error getting data for '{product['id']}': {e}")
 
     # Sleep for 5 seconds to avoid getting blocked
     time.sleep(5)

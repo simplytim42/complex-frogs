@@ -12,7 +12,7 @@ class Database:
         self.db = Path(__file__).resolve().parent.parent / self.db_name
         if not self.db.exists():
             self.db.touch()
-            logging.debug(f"Created database {self.db_name}")
+            logging.debug(f"Created database '{self.db_name}'")
 
     def add_record(self, *args):
         """Add a record to the database if it doesn't already exist.
