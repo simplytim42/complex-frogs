@@ -22,7 +22,7 @@ class BaseScraper(ABC):
     TITLE_404 = "Title not found"
 
     @abstractmethod
-    def get_html(self) -> str:
+    def get_html(self) -> str | None:
         """
         Get the HTML content of the page.
 

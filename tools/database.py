@@ -8,13 +8,13 @@ class Database:
 
     db_name = "products.txt"
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.db = Path(__file__).resolve().parent.parent / self.db_name
         if not self.db.exists():
             self.db.touch()
-            logging.debug(f"Created database {self.db_name}")
+            logging.debug(f"Created database '{self.db_name}'")
 
-    def add_record(self, *args):
+    def add_record(self, *args: str) -> None:
         """Add a record to the database if it doesn't already exist.
 
         Args:
@@ -33,5 +33,5 @@ class Database:
                 f.write(record)
                 logging.info(f"Added record: |||{record.strip()}|||")
 
-    def _record_exists(self, record):
+    def _record_exists(self, record: str) -> bool:
         return record in self.db.read_text()

@@ -6,11 +6,12 @@ import logging
 from pathlib import Path
 from py_pushover_client import PushoverAPIClient
 from dotenv import load_dotenv
-from tools import Database, get_scraper
+from tools.database import Database
+from tools.scraper.scraper_dispatcher import get_scraper
 
 
 logging.basicConfig(
-    level=logging.WARNING,
+    level=logging.INFO,
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     filename="frog.log",
@@ -37,22 +38,24 @@ for product in products:
         title = scraper.get_title()
 
         if price == scraper.PRICE_404 and title == scraper.TITLE_404:
+            logging.info(f"Could not find price and title for '{product['id']}'")
             # error getting data so we save the raw html for debugging
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             filename = f"html_logs/{timestamp}_{product['id']}.html"
             with Path(__file__).resolve().parent / filename as f:
                 f.parent.mkdir(parents=True, exist_ok=True)
-                f.write_text(scraper.get_html())
+                html = str(scraper.get_html())
+                f.write_text(html)
         else:
             # save data to database and send notification if needed
             db.add_record(title, price)
 
             if product["notification"]:
                 notification.send(title=title, message=price)
-                logging.info(f"Sent notification for {product['id']}")
+                logging.info(f"Sent notification for '{product['id']}'")
 
     except Exception as e:
-        logging.error(f"Error getting data for {product['id']}: {e}")
+        logging.error(f"Error getting data for '{product['id']}': {e}")
 
     # Sleep for 5 seconds to avoid getting blocked
     time.sleep(5)

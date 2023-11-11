@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  static-analysis:
+  linter:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,9 +21,28 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff mypy
+          pip install ruff
 
-      - name: Run Ruff and MyPy
+      - name: Run Ruff
+        run: ruff check .
+
+  type-checker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10.x
+
+      - name: Install dependencies
+        # selectolax is installed to allow mypy to check it's type hints
         run: |
-          ruff check .
-          mypy .
+          python -m pip install --upgrade pip
+          pip install mypy selectolax
+
+      - name: Run MyPy
+        run: mypy .

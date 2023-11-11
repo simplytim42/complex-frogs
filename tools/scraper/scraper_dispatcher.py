@@ -1,9 +1,11 @@
 from .amazon_scraper import AmazonScraper
 from .go_od_scraper import GoOutdoorsScraper
 from .amazon_google_scraper import AmazonGoogleScraper
+from .base_scraper import BaseScraper
+from typing import Literal
 
 
-def get_scraper(site: str, product_id: str):
+def get_scraper(site: Literal["amz", "amz-g", "go_od"], product_id: str) -> BaseScraper:
     """
     Returns a scraper instance for the specified site and product ID.
 
@@ -13,16 +15,12 @@ def get_scraper(site: str, product_id: str):
 
     Returns:
         BaseScraper: A scraper instance for the specified site and product ID.
-
-    Raises:
-        ValueError: If an invalid site is specified.
     """
-    if site not in ["amz", "amz-g", "go_od"]:
-        raise ValueError(f"Invalid site: {site}")
 
-    if site == "amz":
-        return AmazonScraper(product_id)
     if site == "amz-g":
         return AmazonGoogleScraper(product_id)
     if site == "go_od":
         return GoOutdoorsScraper(product_id)
+
+    # Default to Amazon
+    return AmazonScraper(product_id)
