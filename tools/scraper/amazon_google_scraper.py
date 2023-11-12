@@ -42,7 +42,7 @@ class AmazonGoogleScraper(BaseScraper):
         self.URL = f"https://www.google.com/search?q={url_query}&tbm=shop"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(query='{self.query}')"
+        return f"{self.__class__.__name__}(id='{self.query}')"
 
     def __retrieve_html(self) -> None:
         try:
