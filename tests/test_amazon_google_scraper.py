@@ -41,6 +41,10 @@ def test_init(scraper_with_data):
     assert scraper_with_data.URL == expected_url
 
 
+def test_repr(scraper_with_data):
+    assert repr(scraper_with_data) == "AmazonGoogleScraper(id='a fake product title')"
+
+
 def test_get_title(scraper_with_data):
     assert scraper_with_data.get_title() == "Fake"
 
