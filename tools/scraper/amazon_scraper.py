@@ -36,7 +36,7 @@ class AmazonScraper(BaseScraper):
         self.URL = f"https://www.amazon.co.uk/dp/{id}"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(asin='{self.ASIN}')"
+        return f"{self.__class__.__name__}(id='{self.ASIN}')"
 
     def __retrieve_html(self) -> None:
         try:
