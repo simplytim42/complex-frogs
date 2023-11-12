@@ -36,6 +36,16 @@ def test_init(scraper_with_data):
     assert scraper_with_data.URL == "https://www.amazon.co.uk/dp/123456789"
 
 
+def test_repr(scraper_with_data):
+    assert repr(scraper_with_data) == "AmazonScraper(id='123456789')"
+
+
+def test_get_html(scraper_with_data):
+    # as we've added span tags to the html, we can check for them here instead of checking
+    # for the whole html.
+    assert "</span>" in scraper_with_data.get_html()
+
+
 def test_get_title(scraper_with_data):
     assert scraper_with_data.get_title() == "Fake"
 
