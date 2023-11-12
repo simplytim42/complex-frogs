@@ -4,9 +4,8 @@ import pytest
 
 
 @pytest.fixture
-def scraper():  # type: ignore
-    """returns a GoOutdoorsScraper instance with a mocked HTMLParser instance.
-    This stops the scraper from making an http request."""
+def scraper_with_data():
+    """returns a GoOutdoorsScraper instance with a mocked HTMLParser instance."""
 
     scraper = GoOutdoorsScraper("down-jacket-123456")
     scraper.retrieved_html = True
@@ -21,24 +20,34 @@ def scraper():  # type: ignore
     return scraper
 
 
-def test_init(scraper):  # type: ignore
-    assert scraper.SKU == "123456"
-    assert scraper.URL == "https://www.gooutdoors.co.uk/123456/down-jacket-123456"
+@pytest.fixture
+def scraper_no_data():
+    """returns a GoOutdoorsScraper instance with a mocked HTMLParser instance without
+    any data."""
 
-
-def test_get_title(scraper):  # type: ignore
-    assert scraper.get_title() == "Down Jacket"
-
-
-def test_get_title_no_title(scraper):  # type: ignore
+    scraper = GoOutdoorsScraper("down-jacket-123456")
+    scraper.retrieved_html = True
     scraper.html = HTMLParser("<html></html>")
-    assert scraper.get_title() == scraper.TITLE_404
+    return scraper
 
 
-def test_get_price(scraper):  # type: ignore
-    assert scraper.get_price() == "£100.00"
+def test_init(scraper_with_data):
+    expected_url = "https://www.gooutdoors.co.uk/123456/down-jacket-123456"
+    assert scraper_with_data.SKU == "123456"
+    assert scraper_with_data.URL == expected_url
 
 
-def test_get_price_no_price(scraper):  # type: ignore
-    scraper.html = HTMLParser("<html></html>")
-    assert scraper.get_price() == scraper.PRICE_404
+def test_get_title(scraper_with_data):
+    assert scraper_with_data.get_title() == "Down Jacket"
+
+
+def test_get_title_no_title(scraper_no_data):
+    assert scraper_no_data.get_title() == scraper_no_data.TITLE_404
+
+
+def test_get_price(scraper_with_data):
+    assert scraper_with_data.get_price() == "£100.00"
+
+
+def test_get_price_no_price(scraper_no_data):
+    assert scraper_no_data.get_price() == scraper_no_data.PRICE_404
