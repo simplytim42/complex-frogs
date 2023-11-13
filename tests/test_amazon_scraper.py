@@ -1,62 +1,70 @@
 from tools.scraper.amazon_scraper import AmazonScraper
-from selectolax.parser import HTMLParser
 import pytest
 
 
 @pytest.fixture
-def scraper_with_data():
-    """returns a AmazonScraper instance with a mocked HTMLParser instance."""
-
-    scraper = AmazonScraper("123456789")
-    scraper.retrieved_html = True
-    scraper.html = HTMLParser(
-        """
-        <html>
-            <span class="a-offscreen">£100.00</span>
-            <span id="productTitle">Fake</span>
-        </html>
-        """
-    )
-    return scraper
+def get_html_namespace():
+    namespaces = [
+        "tools",
+        "scraper",
+        "amazon_scraper",
+        "AmazonScraper",
+        "_AmazonScraper__get_html_with_playwright",
+    ]
+    return ".".join(namespaces)
 
 
 @pytest.fixture
-def scraper_no_data():
-    """returns a AmazonScraper instance with a mocked HTMLParser instance containing
-    no data."""
-
-    scraper = AmazonScraper("123456789")
-    scraper.retrieved_html = True
-    scraper.html = HTMLParser("<html></html>")
-    return scraper
-
-
-def test_init(scraper_with_data):
-    assert scraper_with_data.ASIN == "123456789"
-    assert scraper_with_data.URL == "https://www.amazon.co.uk/dp/123456789"
+def mock_http_get_with_data(mocker, get_html_namespace):
+    mock_get = mocker.patch(get_html_namespace)
+    mock_get.return_value = """
+        <html>
+            <span class="a-offscreen">£30.00</span>
+            <span id="productTitle">Coding Book</span>
+        </html>
+        """
+    return mock_get
 
 
-def test_repr(scraper_with_data):
-    assert repr(scraper_with_data) == "AmazonScraper(id='123456789')"
+@pytest.fixture
+def mock_http_get_no_data(mocker, get_html_namespace):
+    mock_get = mocker.patch(get_html_namespace)
+    mock_get.return_value = "<html></html>"
+    return mock_get
 
 
-def test_get_html(scraper_with_data):
+@pytest.fixture
+def scraper():
+    return AmazonScraper("123456789")
+
+
+def test_init(scraper):
+    assert scraper.ASIN == "123456789"
+    assert scraper.URL == "https://www.amazon.co.uk/dp/123456789"
+
+
+def test_repr(scraper):
+    result = repr(scraper)
+    assert result == repr(eval(result))
+
+
+def test_get_html(mock_http_get_with_data, scraper):
     # as we've added span tags to the html, we can check for them here instead of checking
     # for the whole html.
-    assert "</span>" in scraper_with_data.get_html()
+    assert "</span>" in scraper.get_html()
 
 
-def test_get_title(scraper_with_data):
-    assert scraper_with_data.get_title() == "Fake"
+def test_get_title(mock_http_get_with_data, scraper):
+    assert scraper.get_title() == "Coding Book"
 
 
-def test_get_title_no_title(scraper_no_data):
-    assert scraper_no_data.get_title() == scraper_no_data.TITLE_404
+def test_get_title_no_title(mock_http_get_no_data, scraper):
+    assert scraper.get_title() == scraper.TITLE_404
 
 
-def test_get_price(scraper_with_data):
-    assert scraper_with_data.get_price() == "£100.00"
+def test_get_price(mock_http_get_with_data, scraper):
+    assert scraper.get_price() == "£30.00"
 
 
-def test_get_price_no_price(scraper_no_data):
-    assert scraper_no_data.get_price() == scraper_no_data.PRICE_404
+def test_get_price_no_price(mock_http_get_no_data, scraper):
+    assert scraper.get_price() == scraper.PRICE_404
