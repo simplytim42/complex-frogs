@@ -1,4 +1,5 @@
 from tools.scraper.go_od_scraper import GoOutdoorsScraper
+from tools.scraper.base_scraper import ScraperException
 import pytest
 
 
@@ -26,6 +27,15 @@ def mock_http_get_no_data(mocker):
 
 
 @pytest.fixture
+def mock_http_get_no_html(mocker):
+    mock_response = mocker.Mock()
+    mock_response.text = 42
+    mock_get = mocker.patch("httpx.get")
+    mock_get.return_value = mock_response
+    return mock_get
+
+
+@pytest.fixture
 def scraper():
     return GoOutdoorsScraper("down-jacket-123456")
 
@@ -46,6 +56,11 @@ def test_get_html(mock_http_get_with_data, scraper):
     # as we've added span tags to the html, we can check for them here instead of checking
     # for the whole html.
     assert "</span>" in scraper.get_html()
+
+
+def test_get_html_no_html(mock_http_get_no_html, scraper):
+    with pytest.raises(ScraperException):
+        scraper.get_html()
 
 
 def test_get_title(mock_http_get_with_data, scraper):

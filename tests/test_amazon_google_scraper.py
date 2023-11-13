@@ -1,4 +1,5 @@
 from tools.scraper.amazon_google_scraper import AmazonGoogleScraper
+from tools.scraper.base_scraper import ScraperException
 import pytest
 
 
@@ -37,6 +38,13 @@ def mock_http_get_no_data(mocker, get_html_namespace):
 
 
 @pytest.fixture
+def mock_http_get_no_html(mocker, get_html_namespace):
+    mock_get = mocker.patch(get_html_namespace)
+    mock_get.return_value = 42
+    return mock_get
+
+
+@pytest.fixture
 def scraper():
     return AmazonGoogleScraper("Coding Book")
 
@@ -56,6 +64,11 @@ def test_get_html(mock_http_get_with_data, scraper):
     # as we've added span tags to the html, we can check for them here instead of checking
     # for the whole html.
     assert "</span>" in scraper.get_html()
+
+
+def test_get_html_no_html(mock_http_get_no_html, scraper):
+    with pytest.raises(ScraperException):
+        scraper.get_html()
 
 
 def test_get_title(mock_http_get_with_data, scraper):
