@@ -54,8 +54,8 @@ class AmazonScraper(BaseScraper):
             self.html = HTMLParser(self.__get_html_with_playwright())
             self.retrieved_html = True
         except Exception as e:
-            logging.error(f"Error getting HTML for '{self!r}': {e}")
-            raise ScraperException(f"Failed to get HTML '{self!r}'")
+            logging.error(f"Error getting HTML for {self!r}: {e}")
+            raise ScraperException(f"Failed to get HTML {self!r}")
 
     def get_html(self) -> str | None:
         if not self.retrieved_html:
@@ -68,7 +68,7 @@ class AmazonScraper(BaseScraper):
         try:
             return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting price for '{self!r}': {e}")
+            logging.warning(f"Error getting price for {self!r}: {e}")
             return self.PRICE_404
 
     def get_title(self) -> str:
@@ -77,5 +77,5 @@ class AmazonScraper(BaseScraper):
         try:
             return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting title for '{self!r}': {e}")
+            logging.warning(f"Error getting title for {self!r}: {e}")
             return self.TITLE_404

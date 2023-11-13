@@ -72,8 +72,8 @@ class AmazonGoogleScraper(BaseScraper):
                     self.retrieved_node = True
                     break
         except Exception as e:
-            logging.error(f"Error getting HTML for '{self!r}': {e}")
-            raise ScraperException(f"Failed to get HTML for '{self!r}'")
+            logging.error(f"Error getting HTML for {self!r}: {e}")
+            raise ScraperException(f"Failed to get HTML for {self!r}")
 
     def __title_match(self, node: Node) -> bool:
         """Returns True if the scraped product title has over 50% similarity
@@ -94,7 +94,7 @@ class AmazonGoogleScraper(BaseScraper):
         try:
             return self.node.css_first(self.PRICE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting price for '{self!r}': {e}")
+            logging.warning(f"Error getting price for {self!r}: {e}")
             return self.PRICE_404
 
     def get_title(self) -> str:
@@ -103,5 +103,5 @@ class AmazonGoogleScraper(BaseScraper):
         try:
             return self.node.css_first(self.TITLE_SELECTOR).text(strip=True)
         except AttributeError as e:
-            logging.warning(f"Error getting title for '{self!r}': {e}")
+            logging.warning(f"Error getting title for {self!r}: {e}")
             return self.TITLE_404
