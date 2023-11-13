@@ -38,14 +38,20 @@ class AmazonScraper(BaseScraper):
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(id='{self.ASIN}')"
 
+    def __get_html_with_playwright(self) -> str:
+        pw = sync_playwright().start()
+        browser = pw.chromium.launch()
+        context = browser.new_context(extra_http_headers=self.HEADERS)
+        page = context.new_page()
+        page.goto(self.URL)
+        content = page.content()
+        browser.close()
+        pw.stop()
+        return content
+
     def __retrieve_html(self) -> None:
         try:
-            pw = sync_playwright().start()
-            browser = pw.chromium.launch()
-            context = browser.new_context(extra_http_headers=self.HEADERS)
-            page = context.new_page()
-            page.goto(self.URL)
-            self.html = HTMLParser(page.content())
+            self.html = HTMLParser(self.__get_html_with_playwright())
             self.retrieved_html = True
         except Exception as e:
             logging.error(
@@ -54,9 +60,6 @@ class AmazonScraper(BaseScraper):
             raise ScraperException(
                 f"Failed to get HTML '{self.__class__.__name__}' {self.ASIN}"
             )
-        finally:
-            browser.close()
-            pw.stop()
 
     def get_html(self) -> str | None:
         if not self.retrieved_html:
