@@ -1,63 +1,64 @@
 from tools.scraper.go_od_scraper import GoOutdoorsScraper
-from selectolax.parser import HTMLParser
 import pytest
 
 
 @pytest.fixture
-def scraper_with_data():
-    """returns a GoOutdoorsScraper instance with a mocked HTMLParser instance."""
-
-    scraper = GoOutdoorsScraper("down-jacket-123456")
-    scraper.retrieved_html = True
-    scraper.html = HTMLParser(
-        """
+def mock_http_get_with_data(mocker):
+    mock_response = mocker.Mock()
+    mock_response.text = """
         <html>
             <span class="regular-price">£100.00</span>
             <span class="product-name">Down Jacket</span>
         </html>
         """
-    )
-    return scraper
+    mock_get = mocker.patch("httpx.get")
+    mock_get.return_value = mock_response
+    return mock_get
 
 
 @pytest.fixture
-def scraper_no_data():
-    """returns a GoOutdoorsScraper instance with a mocked HTMLParser instance without
-    any data."""
-
-    scraper = GoOutdoorsScraper("down-jacket-123456")
-    scraper.retrieved_html = True
-    scraper.html = HTMLParser("<html></html>")
-    return scraper
+def mock_http_get_no_data(mocker):
+    mock_response = mocker.Mock()
+    mock_response.text = "<html></html>"
+    mock_get = mocker.patch("httpx.get")
+    mock_get.return_value = mock_response
+    return mock_get
 
 
-def test_init(scraper_with_data):
+@pytest.fixture
+def scraper():
+    return GoOutdoorsScraper("down-jacket-123456")
+
+
+def test_init(scraper):
     expected_url = "https://www.gooutdoors.co.uk/123456/down-jacket-123456"
-    assert scraper_with_data.SKU == "123456"
-    assert scraper_with_data.URL == expected_url
+    assert scraper.SKU == "123456"
+    assert scraper.URL == expected_url
 
 
-def test_repr(scraper_with_data):
-    assert repr(scraper_with_data) == "GoOutdoorsScraper(id='123456')"
+def test_repr(scraper):
+    # result of a repr method should be able to recreate the object
+    result = repr(scraper)
+    assert result == repr(eval(result))
 
 
-def test_get_html(scraper_with_data):
+def test_get_html(mock_http_get_with_data, scraper):
     # as we've added span tags to the html, we can check for them here instead of checking
     # for the whole html.
-    assert "</span>" in scraper_with_data.get_html()
+    assert "</span>" in scraper.get_html()
 
 
-def test_get_title(scraper_with_data):
-    assert scraper_with_data.get_title() == "Down Jacket"
+def test_get_title(mock_http_get_with_data, scraper):
+    assert scraper.get_title() == "Down Jacket"
 
 
-def test_get_title_no_title(scraper_no_data):
-    assert scraper_no_data.get_title() == scraper_no_data.TITLE_404
+def test_get_title_no_title(mock_http_get_no_data, scraper):
+    assert scraper.get_title() == scraper.TITLE_404
 
 
-def test_get_price(scraper_with_data):
-    assert scraper_with_data.get_price() == "£100.00"
+def test_get_price(mock_http_get_with_data, scraper):
+    assert scraper.get_price() == "£100.00"
 
 
-def test_get_price_no_price(scraper_no_data):
-    assert scraper_no_data.get_price() == scraper_no_data.PRICE_404
+def test_get_price_no_price(mock_http_get_no_data, scraper):
+    assert scraper.get_price() == scraper.PRICE_404
