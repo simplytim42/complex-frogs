@@ -42,18 +42,24 @@ class AmazonGoogleScraper(BaseScraper):
         self.URL = f"https://www.google.com/search?q={url_query}&tbm=shop"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(query='{self.query}')"
+        return f"{self.__class__.__name__}(id='{self.query}')"
+
+    def __get_html_with_playwright(self) -> str:
+        pw = sync_playwright().start()
+        browser = pw.chromium.launch()
+        context = browser.new_context(extra_http_headers=self.HEADERS)
+        page = context.new_page()
+        page.goto(self.URL)
+        page.click(self.REJECT_COOKIES_SELECTOR)
+        page.wait_for_load_state("networkidle")
+        content = page.content()
+        browser.close()
+        pw.stop()
+        return str(content)
 
     def __retrieve_html(self) -> None:
         try:
-            pw = sync_playwright().start()
-            browser = pw.chromium.launch()
-            context = browser.new_context(extra_http_headers=self.HEADERS)
-            page = context.new_page()
-            page.goto(self.URL)
-            page.click(self.REJECT_COOKIES_SELECTOR)
-            page.wait_for_load_state("networkidle")
-            self.html = HTMLParser(page.content())
+            self.html = HTMLParser(self.__get_html_with_playwright())
             self.retrieved_html = True
 
             nodes = self.html.css(self.PRODUCT_CARDS_SELECTOR)
@@ -72,9 +78,6 @@ class AmazonGoogleScraper(BaseScraper):
             raise ScraperException(
                 f"Failed to get HTML for '{self.__class__.__name__}' {self.query}"
             )
-        finally:
-            browser.close()
-            pw.stop()
 
     def __title_match(self, node: Node) -> bool:
         """Returns True if the scraped product title has over 50% similarity

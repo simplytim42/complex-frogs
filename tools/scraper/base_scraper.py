@@ -29,7 +29,7 @@ class BaseScraper(ABC):
         Returns:
             str: The HTML content of the page.
         """
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def get_price(self) -> str:
@@ -39,7 +39,7 @@ class BaseScraper(ABC):
         Returns:
             str: The price of the product.
         """
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def get_title(self) -> str:
@@ -49,4 +49,4 @@ class BaseScraper(ABC):
         Returns:
             str: The title of the product.
         """
-        pass
+        pass  # pragma: no cover

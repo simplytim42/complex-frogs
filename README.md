@@ -19,7 +19,7 @@ web scraping to track the price of things I would like to buy and send me daily 
 # run test coverage
 1. open a terminal and ensure you are in the project's root dir
 1. `pytest --cov .` will produce an overview report in the cli
-1. `pytest --cov --cov-report=html .` will produce html reports detailing exactly what code is not covered.
+1. `pytest --cov --cov-config=.coveragerc --cov-report=html .  ` will produce html reports detailing exactly what code is not covered.
 
 # code quality checks
 1. open a terminal and ensure you are in the project's root dir
