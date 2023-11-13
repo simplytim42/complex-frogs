@@ -47,7 +47,7 @@ class AmazonScraper(BaseScraper):
         content = page.content()
         browser.close()
         pw.stop()
-        return content
+        return str(content)
 
     def __retrieve_html(self) -> None:
         try:
