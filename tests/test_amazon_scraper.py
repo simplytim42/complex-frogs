@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.fixture
-def get_html_namespace():
+def get_html_namespace():  # type: ignore
     namespaces = [
         "tools",
         "scraper",
@@ -16,7 +16,7 @@ def get_html_namespace():
 
 
 @pytest.fixture
-def mock_http_get_with_data(mocker, get_html_namespace):
+def mock_http_get_with_data(mocker, get_html_namespace):  # type: ignore
     mock_get = mocker.patch(get_html_namespace)
     mock_get.return_value = """
         <html>
@@ -28,56 +28,56 @@ def mock_http_get_with_data(mocker, get_html_namespace):
 
 
 @pytest.fixture
-def mock_http_get_no_data(mocker, get_html_namespace):
+def mock_http_get_no_data(mocker, get_html_namespace):  # type: ignore
     mock_get = mocker.patch(get_html_namespace)
     mock_get.return_value = "<html></html>"
     return mock_get
 
 
 @pytest.fixture
-def mock_http_get_no_html(mocker, get_html_namespace):
+def mock_http_get_no_html(mocker, get_html_namespace):  # type: ignore
     mock_get = mocker.patch(get_html_namespace)
     mock_get.return_value = 42
     return mock_get
 
 
 @pytest.fixture
-def scraper():
+def scraper():  # type: ignore
     return AmazonScraper("123456789")
 
 
-def test_init(scraper):
+def test_init(scraper):  # type: ignore
     assert scraper.ASIN == "123456789"
     assert scraper.URL == "https://www.amazon.co.uk/dp/123456789"
 
 
-def test_repr(scraper):
+def test_repr(scraper):  # type: ignore
     result = repr(scraper)
     assert result == repr(eval(result))
 
 
-def test_get_html(mock_http_get_with_data, scraper):
+def test_get_html(mock_http_get_with_data, scraper):  # type: ignore
     # as we've added span tags to the html, we can check for them here instead of checking
     # for the whole html.
     assert "</span>" in scraper.get_html()
 
 
-def test_get_html_no_html(mock_http_get_no_html, scraper):
+def test_get_html_no_html(mock_http_get_no_html, scraper):  # type: ignore
     with pytest.raises(ScraperException):
         scraper.get_html()
 
 
-def test_get_title(mock_http_get_with_data, scraper):
+def test_get_title(mock_http_get_with_data, scraper):  # type: ignore
     assert scraper.get_title() == "Coding Book"
 
 
-def test_get_title_no_title(mock_http_get_no_data, scraper):
+def test_get_title_no_title(mock_http_get_no_data, scraper):  # type: ignore
     assert scraper.get_title() == scraper.TITLE_404
 
 
-def test_get_price(mock_http_get_with_data, scraper):
+def test_get_price(mock_http_get_with_data, scraper):  # type: ignore
     assert scraper.get_price() == "£30.00"
 
 
-def test_get_price_no_price(mock_http_get_no_data, scraper):
+def test_get_price_no_price(mock_http_get_no_data, scraper):  # type: ignore
     assert scraper.get_price() == scraper.PRICE_404
