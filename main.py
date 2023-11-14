@@ -34,10 +34,18 @@ for product in products:
     try:
         logging.info(f"Getting data for '{product['id']}'")
         scraper = get_scraper(product["site"], product["id"])
-        price = scraper.get_price()
-        title = scraper.get_title()
 
-        if price == scraper.PRICE_404 and title == scraper.TITLE_404:
+        if scraper.run():
+            price = scraper.get_price()
+            title = scraper.get_title()
+
+            # save data to database and send notification if needed
+            db.add_record(title, price)
+
+            if product["notification"]:
+                notification.send(title=title, message=price)
+                logging.info(f"Sent notification for '{product['id']}'")
+        else:
             logging.info(f"Could not find price and title for '{product['id']}'")
             # error getting data so we save the raw html for debugging
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -46,16 +54,9 @@ for product in products:
                 f.parent.mkdir(parents=True, exist_ok=True)
                 html = str(scraper.get_html())
                 f.write_text(html)
-        else:
-            # save data to database and send notification if needed
-            db.add_record(title, price)
-
-            if product["notification"]:
-                notification.send(title=title, message=price)
-                logging.info(f"Sent notification for '{product['id']}'")
 
     except Exception as e:
-        logging.error(f"Error getting data for '{product['id']}': {e}")
+        logging.error(f"Failed to get data: {e}")
 
     # Sleep for 5 seconds to avoid getting blocked
-    time.sleep(5)
+    time.sleep(1)
