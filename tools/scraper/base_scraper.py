@@ -22,7 +22,7 @@ class BaseScraper(ABC):
     }
     PRICE_404 = "Price not found"
     TITLE_404 = "Title not found"
-    html = ""
+    html: str | None = ""
     price = ""
     title = ""
 
@@ -36,7 +36,7 @@ class BaseScraper(ABC):
         """
         pass  # pragma: no cover
 
-    def get_html(self) -> str:
+    def get_html(self) -> str | None:
         """
         Get the HTML content of the page.
 
