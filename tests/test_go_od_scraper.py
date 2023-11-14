@@ -55,25 +55,35 @@ def test_repr(scraper):
 def test_get_html(mock_http_get_with_data, scraper):
     # as we've added span tags to the html, we can check for them here instead of checking
     # for the whole html.
+    scraper.run()
     assert "</span>" in scraper.get_html()
 
 
 def test_get_html_no_html(mock_http_get_no_html, scraper):
     with pytest.raises(ScraperException):
+        scraper.run()
         scraper.get_html()
 
 
 def test_get_title(mock_http_get_with_data, scraper):
+    result = scraper.run()
+    assert result is True
     assert scraper.get_title() == "Down Jacket"
 
 
 def test_get_title_no_title(mock_http_get_no_data, scraper):
+    result = scraper.run()
+    assert result is False
     assert scraper.get_title() == scraper.TITLE_404
 
 
 def test_get_price(mock_http_get_with_data, scraper):
+    result = scraper.run()
+    assert result is True
     assert scraper.get_price() == "£100.00"
 
 
 def test_get_price_no_price(mock_http_get_no_data, scraper):
+    result = scraper.run()
+    assert result is False
     assert scraper.get_price() == scraper.PRICE_404

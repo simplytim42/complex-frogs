@@ -1,5 +1,4 @@
 import httpx
-import logging
 from selectolax.parser import HTMLParser
 from .base_scraper import BaseScraper, ScraperException
 
@@ -20,8 +19,6 @@ class GoOutdoorsScraper(BaseScraper):
     TITLE_SELECTOR = "span.product-name"
     URL = ""
     SKU = ""
-    retrieved_html = False
-    html = HTMLParser("")
 
     def __init__(self, id: str):
         """
@@ -37,35 +34,19 @@ class GoOutdoorsScraper(BaseScraper):
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(id='{self.SKU}')"
 
-    def __retrieve_html(self) -> None:
+    def run(self) -> bool:
         try:
             response = httpx.get(self.URL, headers=self.HEADERS)
             response.raise_for_status()
-            self.html = HTMLParser(response.text)
-            self.retrieved_html = True
+            temp_html = HTMLParser(response.text)
+
+            self.html = temp_html.html
+            self.price = temp_html.css_first(self.PRICE_SELECTOR).text(strip=True)
+            self.title = temp_html.css_first(self.TITLE_SELECTOR).text(strip=True)
+            return True
+        except AttributeError:
+            self.price = self.PRICE_404
+            self.title = self.TITLE_404
+            return False
         except Exception as e:
-            logging.error(f"Error getting HTML for {self!r}: {e}")
-            raise ScraperException(f"Failed to get HTML for {self!r}")
-
-    def get_html(self) -> str | None:
-        if not self.retrieved_html:
-            self.__retrieve_html()
-        return self.html.html
-
-    def get_price(self) -> str:
-        if not self.retrieved_html:
-            self.__retrieve_html()
-        try:
-            return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
-        except AttributeError as e:
-            logging.warning(f"Error getting price for {self!r}: {e}")
-            return self.PRICE_404
-
-    def get_title(self) -> str:
-        if not self.retrieved_html:
-            self.__retrieve_html()
-        try:
-            return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
-        except AttributeError as e:
-            logging.warning(f"Error getting title for {self!r}: {e}")
-            return self.TITLE_404
+            raise ScraperException(f"{self!r}: {e}")
