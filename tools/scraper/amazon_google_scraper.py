@@ -1,7 +1,6 @@
 from playwright.sync_api import sync_playwright
 from selectolax.parser import HTMLParser, Node
 from .base_scraper import BaseScraper, ScraperException
-import logging
 import textdistance as td
 
 
@@ -24,10 +23,6 @@ class AmazonGoogleScraper(BaseScraper):
     REJECT_COOKIES_SELECTOR = "div.VfPpkd-RLmnJb"
     PRODUCT_CARDS_SELECTOR = "div.KZmu8e"
     PRODUCT_DETAILS_SELECTOR = "div.HUOptb"
-    retrieved_html = False
-    retrieved_node = False
-    html = HTMLParser("")
-    node = Node()
 
     def __init__(self, id: str):
         """
@@ -57,51 +52,38 @@ class AmazonGoogleScraper(BaseScraper):
         pw.stop()
         return str(content)
 
-    def __retrieve_html(self) -> None:
+    def run(self) -> bool:
         try:
-            self.html = HTMLParser(self.__get_html_with_playwright())
-            self.retrieved_html = True
+            temp_html = HTMLParser(self.__get_html_with_playwright())
+            self.html = temp_html.html
 
-            nodes = self.html.css(self.PRODUCT_CARDS_SELECTOR)
-            for node in nodes:
-                if node.select(self.PRODUCT_DETAILS_SELECTOR).any_text_contains(
+            product_cards = temp_html.css(self.PRODUCT_CARDS_SELECTOR)
+            if not product_cards:
+                raise AttributeError
+
+            for product_card in product_cards:
+                if product_card.select(self.PRODUCT_DETAILS_SELECTOR).any_text_contains(
                     "Amazon.co.uk"
-                ) and self.__title_match(node):
+                ) and self.__title_match(product_card):
                     # Found a likely match
-                    self.node = node
-                    self.retrieved_node = True
-                    break
+                    self.price = product_card.css_first(self.PRICE_SELECTOR).text(
+                        strip=True
+                    )
+                    self.title = product_card.css_first(self.TITLE_SELECTOR).text(
+                        strip=True
+                    )
+                    return True
+        except AttributeError:
+            self.price = self.PRICE_404
+            self.title = self.TITLE_404
+            return False
         except Exception as e:
-            logging.error(f"Error getting HTML for {self!r}: {e}")
-            raise ScraperException(f"Failed to get HTML for {self!r}")
+            raise ScraperException(f"{self!r}: {e}")
 
-    def __title_match(self, node: Node) -> bool:
+    def __title_match(self, product_card: Node) -> bool:
         """Returns True if the scraped product title has over 50% similarity
         to the query value
         """
-        title = node.css_first(self.TITLE_SELECTOR).text(strip=True)
+        title = product_card.css_first(self.TITLE_SELECTOR).text(strip=True)
         similarity: float = td.levenshtein.normalized_similarity(self.query, title)
         return similarity > 0.5
-
-    def get_html(self) -> str | None:
-        if not self.retrieved_html:
-            self.__retrieve_html()
-        return self.html.html
-
-    def get_price(self) -> str:
-        if not self.retrieved_node:
-            self.__retrieve_html()
-        try:
-            return self.node.css_first(self.PRICE_SELECTOR).text(strip=True)
-        except AttributeError as e:
-            logging.warning(f"Error getting price for {self!r}: {e}")
-            return self.PRICE_404
-
-    def get_title(self) -> str:
-        if not self.retrieved_node:
-            self.__retrieve_html()
-        try:
-            return self.node.css_first(self.TITLE_SELECTOR).text(strip=True)
-        except AttributeError as e:
-            logging.warning(f"Error getting title for {self!r}: {e}")
-            return self.TITLE_404
