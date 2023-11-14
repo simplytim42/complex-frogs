@@ -73,6 +73,7 @@ class AmazonGoogleScraper(BaseScraper):
                         strip=True
                     )
                     return True
+            return False
         except AttributeError:
             self.price = self.PRICE_404
             self.title = self.TITLE_404
