@@ -1,10 +1,15 @@
+# standard library imports
 import json
 import time
 import os
 import logging
 from pathlib import Path
+
+# third party imports
 from py_pushover_client import PushoverAPIClient
 from dotenv import load_dotenv
+
+# local imports
 from tools.database import Database
 from tools.scraper.scraper_dispatcher import get_scraper
 from tools.scraper.base_scraper import ScraperException
