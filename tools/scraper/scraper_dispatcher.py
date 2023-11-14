@@ -21,6 +21,7 @@ def get_scraper(site: Literal["amz", "amz-g", "go_od"], product_id: str) -> Base
         return AmazonGoogleScraper(product_id)
     if site == "go_od":
         return GoOutdoorsScraper(product_id)
+    if site == "amz":
+        return AmazonScraper(product_id)
 
-    # Default to Amazon
-    return AmazonScraper(product_id)
+    raise Exception(f"Invalid site: {site}")
