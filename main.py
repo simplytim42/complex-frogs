@@ -50,7 +50,7 @@ for product in products:
             logging.info(f"Could not find price and title for '{product['id']}'")
             # error getting data so we save the raw html for debugging
             write_file(
-                dir="html_logs",
+                dir=Path(__file__).parent / "html_logs",
                 filename=f"{product['id']}.html",
                 content=str(scraper.get_html()),
             )
