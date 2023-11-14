@@ -6,13 +6,13 @@ import logging
 class Database:
     """A simple text file database for storing product data."""
 
-    db_name = "products.txt"
+    db = Path("")
 
-    def __init__(self) -> None:
-        self.db = Path(__file__).resolve().parent.parent / self.db_name
+    def __init__(self, db_name: str = "products.txt") -> None:
+        self.db = Path(__file__).resolve().parent.parent / db_name
         if not self.db.exists():
             self.db.touch()
-            logging.debug(f"Created database '{self.db_name}'")
+            logging.debug(f"Created database '{db_name}'")
 
     def add_record(self, *args: str) -> None:
         """Add a record to the database if it doesn't already exist.

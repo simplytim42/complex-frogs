@@ -1,13 +1,19 @@
+# standard library imports
 import json
 import time
-import datetime
 import os
 import logging
 from pathlib import Path
+
+# third party imports
 from py_pushover_client import PushoverAPIClient
 from dotenv import load_dotenv
+
+# local imports
 from tools.database import Database
 from tools.scraper.scraper_dispatcher import get_scraper
+from tools.scraper.base_scraper import ScraperException
+from tools.functions import write_file
 
 
 logging.basicConfig(
@@ -34,28 +40,29 @@ for product in products:
     try:
         logging.info(f"Getting data for '{product['id']}'")
         scraper = get_scraper(product["site"], product["id"])
-        price = scraper.get_price()
-        title = scraper.get_title()
 
-        if price == scraper.PRICE_404 and title == scraper.TITLE_404:
-            logging.info(f"Could not find price and title for '{product['id']}'")
-            # error getting data so we save the raw html for debugging
-            timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            filename = f"html_logs/{timestamp}_{product['id']}.html"
-            with Path(__file__).resolve().parent / filename as f:
-                f.parent.mkdir(parents=True, exist_ok=True)
-                html = str(scraper.get_html())
-                f.write_text(html)
-        else:
+        if scraper.run():
+            price = scraper.get_price()
+            title = scraper.get_title()
+
             # save data to database and send notification if needed
             db.add_record(title, price)
 
             if product["notification"]:
                 notification.send(title=title, message=price)
                 logging.info(f"Sent notification for '{product['id']}'")
-
+        else:
+            logging.info(f"Could not find price and title for '{product['id']}'")
+            # error getting data so we save the raw html for debugging
+            write_file(
+                dir=Path(__file__).parent / "html_logs",
+                filename=f"{product['id']}.html",
+                content=str(scraper.get_html()),
+            )
+    except ScraperException as e:
+        logging.error(f"Scraper failure: {e}")
     except Exception as e:
-        logging.error(f"Error getting data for '{product['id']}': {e}")
+        logging.error(f"Unexpected error: {e}")
 
     # Sleep for 5 seconds to avoid getting blocked
-    time.sleep(5)
+    time.sleep(1)

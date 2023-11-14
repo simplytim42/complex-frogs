@@ -7,7 +7,9 @@ class ScraperException(Exception):
 
 class BaseScraper(ABC):
     """
-    An abstract base class for web scrapers.
+    An abstract base class for web scrapers. Classes that inherit from this class
+    must implement the run() method and ensure that it overwrites the html, price and
+    title attributes.
 
     Attributes:
         HEADERS (dict): A dictionary of HTTP headers to use when making requests.
@@ -20,8 +22,20 @@ class BaseScraper(ABC):
     }
     PRICE_404 = "Price not found"
     TITLE_404 = "Title not found"
+    html: str | None = ""
+    price = ""
+    title = ""
 
     @abstractmethod
+    def run(self) -> bool:
+        """
+        Download the HTML content of the page and scrape the data"
+
+        Returns:
+            bool: True if the data was scraped successfully, otherwise False.
+        """
+        pass  # pragma: no cover
+
     def get_html(self) -> str | None:
         """
         Get the HTML content of the page.
@@ -29,9 +43,8 @@ class BaseScraper(ABC):
         Returns:
             str: The HTML content of the page.
         """
-        pass  # pragma: no cover
+        return self.html
 
-    @abstractmethod
     def get_price(self) -> str:
         """
         Get the price of the product.
@@ -39,9 +52,8 @@ class BaseScraper(ABC):
         Returns:
             str: The price of the product.
         """
-        pass  # pragma: no cover
+        return self.price
 
-    @abstractmethod
     def get_title(self) -> str:
         """
         Get the title of the product.
@@ -49,4 +61,4 @@ class BaseScraper(ABC):
         Returns:
             str: The title of the product.
         """
-        pass  # pragma: no cover
+        return self.title

@@ -1,7 +1,6 @@
 from playwright.sync_api import sync_playwright
 from selectolax.parser import HTMLParser
 from .base_scraper import BaseScraper, ScraperException
-import logging
 
 
 class AmazonScraper(BaseScraper):
@@ -22,8 +21,6 @@ class AmazonScraper(BaseScraper):
     TITLE_SELECTOR = "span#productTitle"
     URL = ""
     ASIN = ""
-    retrieved_html = False
-    html = HTMLParser("")
 
     def __init__(self, id: str):
         """
@@ -49,33 +46,16 @@ class AmazonScraper(BaseScraper):
         pw.stop()
         return str(content)
 
-    def __retrieve_html(self) -> None:
+    def run(self) -> bool:
         try:
-            self.html = HTMLParser(self.__get_html_with_playwright())
-            self.retrieved_html = True
+            temp_html = HTMLParser(self.__get_html_with_playwright())
+            self.html = temp_html.html
+            self.price = temp_html.css_first(self.PRICE_SELECTOR).text(strip=True)
+            self.title = temp_html.css_first(self.TITLE_SELECTOR).text(strip=True)
+            return True
+        except AttributeError:
+            self.price = self.PRICE_404
+            self.title = self.TITLE_404
+            return False
         except Exception as e:
-            logging.error(f"Error getting HTML for {self!r}: {e}")
-            raise ScraperException(f"Failed to get HTML {self!r}")
-
-    def get_html(self) -> str | None:
-        if not self.retrieved_html:
-            self.__retrieve_html()
-        return self.html.html
-
-    def get_price(self) -> str:
-        if not self.retrieved_html:
-            self.__retrieve_html()
-        try:
-            return self.html.css_first(self.PRICE_SELECTOR).text(strip=True)
-        except AttributeError as e:
-            logging.warning(f"Error getting price for {self!r}: {e}")
-            return self.PRICE_404
-
-    def get_title(self) -> str:
-        if not self.retrieved_html:
-            self.__retrieve_html()
-        try:
-            return self.html.css_first(self.TITLE_SELECTOR).text(strip=True)
-        except AttributeError as e:
-            logging.warning(f"Error getting title for {self!r}: {e}")
-            return self.TITLE_404
+            raise ScraperException(f"{self!r}: {e}")
