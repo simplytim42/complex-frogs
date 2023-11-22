@@ -27,7 +27,7 @@ class ScrapeTargets(Base):
         back_populates="scrape_target", cascade="all, delete-orphan"
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"ScrapeTarget(site={self.site!r}, sku={self.sku!r}, send_notification={self.send_notification!r})"
 
 
@@ -42,5 +42,5 @@ class ScrapedData(Base):
 
     scrape_target: Mapped["ScrapeTargets"] = relationship(back_populates="scraped_data")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"ScrapedData(scrape_target_id={self.scrape_target_id!r}, title={self.title!r}, price={self.price!r})"
