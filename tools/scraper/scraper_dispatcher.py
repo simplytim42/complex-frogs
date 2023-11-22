@@ -2,10 +2,9 @@ from .amazon_scraper import AmazonScraper
 from .go_od_scraper import GoOutdoorsScraper
 from .amazon_google_scraper import AmazonGoogleScraper
 from .base_scraper import BaseScraper
-from typing import Literal
 
 
-def get_scraper(site: Literal["amz", "amz-g", "go_od"], product_id: str) -> BaseScraper:
+def get_scraper(site: str, product_id: str) -> BaseScraper:
     """
     Returns a scraper instance for the specified site and product ID.
 
