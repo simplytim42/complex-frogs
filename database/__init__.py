@@ -1,3 +1,5 @@
 from sqlalchemy import create_engine
+from pathlib import Path
 
-engine = create_engine("sqlite:///frog.db", echo=True)
+db_location = Path(__file__).resolve().parent.parent / "frog.db"
+engine = create_engine(f"sqlite:////{db_location}")
