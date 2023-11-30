@@ -18,12 +18,14 @@ from tools.functions import write_file
 from database import engine
 from database.models import ScrapeTargets, ScrapedData
 
+LOGS_DIR = Path(__file__).parent / "logs"
+
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
-    filename="frog.log",
+    filename=LOGS_DIR / "frog.log",
 )
 
 
@@ -65,7 +67,7 @@ for product in products:
             logging.info(f"Could not find price and title for '{product.sku}'")
             # error getting data so we save the raw html for debugging
             write_file(
-                dir=Path(__file__).parent / "html_logs",
+                dir=LOGS_DIR / "html_logs",
                 filename=f"{product.sku}.html",
                 content=str(scraper.get_html()),
             )
@@ -75,4 +77,4 @@ for product in products:
         logging.error(f"Unexpected error: {e}")
 
     # Sleep for 5 seconds to avoid getting blocked
-    time.sleep(1)
+    time.sleep(5)
