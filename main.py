@@ -64,7 +64,7 @@ for product in products:
                 notification.send(title=title, message=price)
                 logging.info(f"Sent notification for '{product.sku}'")
         else:
-            logging.info(f"Could not find price and title for '{product.sku}'")
+            logging.warning(f"Could not find price and title for '{product.sku}'")
             # error getting data so we save the raw html for debugging
             write_file(
                 dir=LOGS_DIR / "html_logs",
@@ -76,5 +76,5 @@ for product in products:
     except Exception as e:
         logging.error(f"Unexpected error: {e}")
 
-    # Sleep for 5 seconds to avoid getting blocked
-    time.sleep(5)
+    # Sleep for 1 second to avoid getting blocked
+    time.sleep(1)
