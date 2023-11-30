@@ -5,11 +5,12 @@ web scraping to track the price of things I would like to buy and send me daily 
 1. sign up to https://pushover.net and generate an API TOKEN and a USER KEY.
 1. `python -m venv venv`
 1. `source venv/bin/activate`
-1. `pip install -r requirements.lock`
-1. `playwright install`
-1. if installing on a server you may need to run `playwright install-deps`
 1. rename `.env-example` to `.env` and populate the variables with your API TOKEN and USER KEY.
-1. `python main.py`
+1. `make install`
+1. `make run`
+
+## run all QA checks
+1. `make QA`
 
 ## run tests
 1. open a terminal and ensure you are in the project's root dir
@@ -18,7 +19,7 @@ web scraping to track the price of things I would like to buy and send me daily 
 ## run test coverage
 1. open a terminal and ensure you are in the project's root dir
 1. `pytest --cov .` will produce an overview report in the cli
-1. `pytest --cov --cov-config=.coveragerc --cov-report=html .` will produce html reports detailing exactly what code is not covered.
+1. `make test-cov` will produce html reports detailing exactly what code is not covered.
 
 ## code quality checks
 1. open a terminal and ensure you are in the project's root dir
