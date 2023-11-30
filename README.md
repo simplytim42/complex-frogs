@@ -19,9 +19,15 @@ web scraping to track the price of things I would like to buy and send me daily 
 ## run test coverage
 1. open a terminal and ensure you are in the project's root dir
 1. `pytest --cov .` will produce an overview report in the cli
-1. `make test-cov` will produce html reports detailing exactly what code is not covered.
+1. `make test-cov` will produce html reports in a `htmlcov` directory
 
 ## code quality checks
 1. open a terminal and ensure you are in the project's root dir
 1. `ruff check .` will run the code linter
 1. `mypy .` will run the type checker
+
+## remove cache files
+1. `make clean`
+
+## remove cache files, logs and db (fresh start for dev)
+1. `make deep-clean`
