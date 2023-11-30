@@ -1,4 +1,5 @@
 install:
+	mkdir logs
 	pip install -r requirements.lock
 	playwright install
 	playwright install-deps
@@ -12,9 +13,8 @@ clean:
 	rm -rf .ruff_cache
 
 deep-clean: clean
+	rm -rf logs/*
 	rm -rf htmlcov
-	rm -rf html_logs
-	rm -rf frog.log
 	rm -rf frog.db
 
 test-cov:
