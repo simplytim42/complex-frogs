@@ -1,6 +1,6 @@
 # standard library imports
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 import logging
 from pathlib import Path
@@ -50,12 +50,12 @@ for product in products:
             # save data to database and send notification if needed
             product.scraped_data.append(
                 ScrapedData(
-                    timestamp=datetime.now(),
+                    timestamp=datetime.now(timezone.utc),
                     price=price,
                     title=title,
                 )
             )
-            product.last_scraped = datetime.now()
+            product.last_scraped = datetime.now(timezone.utc)
             session.add(product)
             session.commit()
 
