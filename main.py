@@ -12,8 +12,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 
 # local imports
-from tools.scraper.scraper_dispatcher import get_scraper
-from tools.scraper.base_scraper import ScraperException
+from tools.scraper import get_scraper, ScraperException
 from tools.functions import write_file
 from database import engine
 from database.models import ScrapeTargets, ScrapedData

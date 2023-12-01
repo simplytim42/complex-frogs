@@ -1,5 +1,4 @@
-from tools.scraper.go_od_scraper import GoOutdoorsScraper
-from tools.scraper.base_scraper import ScraperException
+from tools.scraper import GoOutdoorsScraper, ScraperException
 import pytest
 
 

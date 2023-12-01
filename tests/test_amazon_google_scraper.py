@@ -1,5 +1,4 @@
-from tools.scraper.amazon_google_scraper import AmazonGoogleScraper
-from tools.scraper.base_scraper import ScraperException
+from tools.scraper import AmazonGoogleScraper, ScraperException
 import pytest
 
 
@@ -8,7 +7,6 @@ def get_html_namespace():
     namespaces = [
         "tools",
         "scraper",
-        "amazon_google_scraper",
         "AmazonGoogleScraper",
         "_AmazonGoogleScraper__get_html_with_playwright",
     ]
