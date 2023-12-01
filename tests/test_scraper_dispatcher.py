@@ -1,7 +1,9 @@
-from tools.scraper.scraper_dispatcher import get_scraper
-from tools.scraper.amazon_scraper import AmazonScraper
-from tools.scraper.go_od_scraper import GoOutdoorsScraper
-from tools.scraper.amazon_google_scraper import AmazonGoogleScraper
+from tools.scraper import (
+    get_scraper,
+    AmazonScraper,
+    GoOutdoorsScraper,
+    AmazonGoogleScraper,
+)
 import pytest
 
 

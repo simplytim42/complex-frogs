@@ -1,5 +1,4 @@
-from tools.scraper.amazon_google_scraper import AmazonGoogleScraper
-from tools.scraper.base_scraper import ScraperException
+from tools.scraper import AmazonGoogleScraper, ScraperException
 import pytest
 
 
