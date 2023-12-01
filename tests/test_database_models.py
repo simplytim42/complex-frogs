@@ -1,5 +1,5 @@
 import pytest
-from datetime import datetime, timezone
+from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -16,7 +16,7 @@ def session():
 
 
 def test_create_scrape_target(session):
-    now = datetime.now(timezone.utc)
+    now = datetime.now()
     target = ScrapeTargets(
         site="test site",
         sku="test sku",
@@ -38,7 +38,7 @@ def test_create_scrape_target(session):
 
 
 def test_create_scrape_data(session):
-    now = datetime.now(timezone.utc)
+    now = datetime.now()
     target = ScrapeTargets(
         site="test site",
         sku="test sku",
