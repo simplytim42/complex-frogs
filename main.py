@@ -1,6 +1,6 @@
 # standard library imports
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 import logging
 from pathlib import Path
@@ -46,16 +46,19 @@ for product in products:
         if scraper.run():
             price = scraper.get_price()
             title = scraper.get_title()
+            # get current time in UTC but remove timezone info so it can be stored in sqlite
+            # this is different from datetime.now() which returns local time (not UTC)
+            timestamp = datetime.now(timezone.utc).replace(tzinfo=None)
 
             # save data to database and send notification if needed
             product.scraped_data.append(
                 ScrapedData(
-                    timestamp=datetime.now(),
+                    timestamp=timestamp,
                     price=price,
                     title=title,
                 )
             )
-            product.last_scraped = datetime.now()
+            product.last_scraped = timestamp
             session.add(product)
             session.commit()
 
