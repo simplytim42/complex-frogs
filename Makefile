@@ -1,5 +1,5 @@
 install:
-	mkdir logs
+	mkdir -p logs
 	pip install -r requirements.lock
 	playwright install
 	playwright install-deps
