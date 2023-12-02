@@ -1,5 +1,6 @@
 from tools.scraper import (
     get_scraper,
+    InvalidSiteException,
     AmazonScraper,
     GoOutdoorsScraper,
     AmazonGoogleScraper,
@@ -20,5 +21,5 @@ def test_get_scraper(key, instance):
 
 
 def test_get_scraper_incorrect_site():
-    with pytest.raises(Exception):
+    with pytest.raises(InvalidSiteException):
         get_scraper("invalid", "test")

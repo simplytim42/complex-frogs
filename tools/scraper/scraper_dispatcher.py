@@ -4,6 +4,10 @@ from .amazon_google_scraper import AmazonGoogleScraper
 from .base_scraper import BaseScraper
 
 
+class InvalidSiteException(Exception):
+    pass
+
+
 def get_scraper(site: str, product_id: str) -> BaseScraper:
     """
     Returns a scraper instance for the specified site and product ID.
@@ -23,4 +27,4 @@ def get_scraper(site: str, product_id: str) -> BaseScraper:
     if site == "amz":
         return AmazonScraper(product_id)
 
-    raise Exception(f"Invalid site: {site}")
+    raise InvalidSiteException(f"Invalid site: {site}")
