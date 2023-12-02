@@ -49,4 +49,4 @@ class GoOutdoorsScraper(BaseScraper):
             self.title = self.TITLE_404
             return False
         except Exception as e:
-            raise ScraperException(f"{self!r}: {e}")
+            raise ScraperException(f"{self!r}: {e}") from e
