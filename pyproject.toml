@@ -1,0 +1,9 @@
+[tool.ruff.lint]
+# 1. Enable flake8-bugbear (`B`) rules, in addition to the defaults.
+select = [
+    "E", # pycodestyle
+    "F", # pyflakes
+    "B" # flake8-bugbear
+    ]
+
+ignore = ["E501"] # line length
