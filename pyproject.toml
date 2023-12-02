@@ -7,3 +7,9 @@ select = [
     ]
 
 ignore = ["E501"] # line length
+
+
+[tool.coverage.run]
+omit = [
+    "tests/*"
+]
