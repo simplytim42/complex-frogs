@@ -1,9 +1,10 @@
-import pytest
 from datetime import datetime
-from sqlalchemy import create_engine
-from sqlalchemy import select
+
+import pytest
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
-from database.models import Base, ScrapeTargets, ScrapedData
+
+from database.models import Base, ScrapedData, ScrapeTargets
 
 
 @pytest.fixture(scope="function")

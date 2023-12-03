@@ -1,5 +1,6 @@
-from tools.scraper import GoOutdoorsScraper, ScraperException
 import pytest
+
+from tools.scraper import GoOutdoorsScraper, ScraperException
 
 
 @pytest.fixture
@@ -42,7 +43,7 @@ def scraper():
 def test_init(scraper):
     expected_url = "https://www.gooutdoors.co.uk/123456/down-jacket-123456"
     assert scraper.SKU == "123456"
-    assert scraper.URL == expected_url
+    assert expected_url == scraper.URL
 
 
 def test_repr(scraper):

@@ -1,21 +1,18 @@
-# standard library imports
+import logging
+import os
 import time
 from datetime import datetime, timezone
-import os
-import logging
 from pathlib import Path
 
-# third party imports
-from py_pushover_client import PushoverAPIClient
 from dotenv import load_dotenv
-from sqlalchemy.orm import Session
+from py_pushover_client import PushoverAPIClient
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
-# local imports
-from tools.scraper import get_scraper, ScraperException
-from tools.functions import write_file
 from database import engine
-from database.models import ScrapeTargets, ScrapedData
+from database.models import ScrapedData, ScrapeTargets
+from tools.functions import write_file
+from tools.scraper import ScraperException, get_scraper
 
 LOGS_DIR = Path(__file__).parent / "logs"
 

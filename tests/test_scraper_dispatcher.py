@@ -1,11 +1,12 @@
+import pytest
+
 from tools.scraper import (
-    get_scraper,
-    InvalidSiteException,
+    AmazonGoogleScraper,
     AmazonScraper,
     GoOutdoorsScraper,
-    AmazonGoogleScraper,
+    InvalidSiteException,
+    get_scraper,
 )
-import pytest
 
 
 @pytest.mark.parametrize(

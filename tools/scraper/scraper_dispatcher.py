@@ -1,7 +1,7 @@
-from .amazon_scraper import AmazonScraper
-from .go_od_scraper import GoOutdoorsScraper
 from .amazon_google_scraper import AmazonGoogleScraper
+from .amazon_scraper import AmazonScraper
 from .base_scraper import BaseScraper
+from .go_od_scraper import GoOutdoorsScraper
 
 
 class InvalidSiteException(Exception):

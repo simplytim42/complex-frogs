@@ -1,5 +1,6 @@
 import httpx
 from selectolax.parser import HTMLParser
+
 from .base_scraper import BaseScraper, ScraperException
 
 

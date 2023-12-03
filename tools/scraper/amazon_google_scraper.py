@@ -1,7 +1,8 @@
+import textdistance as td
 from playwright.sync_api import sync_playwright
 from selectolax.parser import HTMLParser, Node
+
 from .base_scraper import BaseScraper, ScraperException
-import textdistance as td
 
 
 class AmazonGoogleScraper(BaseScraper):

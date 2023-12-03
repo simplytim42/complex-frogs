@@ -1,6 +1,6 @@
+import logging
 from datetime import datetime, timezone
 from pathlib import Path
-import logging
 
 
 def write_file(dir: Path, filename: str, content: str) -> Path:

@@ -1,5 +1,6 @@
-from tools.scraper import AmazonScraper, ScraperException
 import pytest
+
+from tools.scraper import AmazonScraper, ScraperException
 
 
 @pytest.fixture

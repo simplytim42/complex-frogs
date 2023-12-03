@@ -1,5 +1,6 @@
-from tools.scraper import AmazonGoogleScraper, ScraperException
 import pytest
+
+from tools.scraper import AmazonGoogleScraper, ScraperException
 
 
 @pytest.fixture
@@ -51,7 +52,7 @@ def scraper():
 def test_init(scraper):
     expected_url = "https://www.google.com/search?q=Coding+Book&tbm=shop"
     assert scraper.query == "Coding Book"
-    assert scraper.URL == expected_url
+    assert expected_url == scraper.URL
 
 
 def test_repr(scraper):
