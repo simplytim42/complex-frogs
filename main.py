@@ -66,7 +66,7 @@ for product in products:
             logging.warning(f"Could not find price and title for '{product.sku}'")
             # error getting data so we save the raw html for debugging
             write_file(
-                dir=LOGS_DIR / "html_logs",
+                directory=LOGS_DIR / "html_logs",
                 filename=f"{product.sku}.html",
                 content=str(scraper.get_html()),
             )
