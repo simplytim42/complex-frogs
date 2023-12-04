@@ -15,7 +15,7 @@ deep-clean: clean
 	rm -rf frog.db
 
 test-cov:
-	pytest --cov --cov-report=html .
+	pytest --cov=complex_frogs --cov-report=html .
 
 QA:
 	pytest .
