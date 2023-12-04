@@ -11,8 +11,8 @@ from py_pushover_client import PushoverAPIClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from database import engine
-from database.models import ScrapedData, ScrapeTargets
+from tools.database import engine
+from tools.database.models import ScrapedData, ScrapeTargets
 from tools.functions import write_file
 from tools.scraper import ScraperError, get_scraper
 
