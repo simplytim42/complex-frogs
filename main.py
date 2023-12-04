@@ -11,10 +11,10 @@ from py_pushover_client import PushoverAPIClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from database import engine
-from database.models import ScrapedData, ScrapeTargets
-from tools.functions import write_file
-from tools.scraper import ScraperError, get_scraper
+from complex_frogs.database import engine
+from complex_frogs.database.models import ScrapedData, ScrapeTargets
+from complex_frogs.functions import write_file
+from complex_frogs.scraper import ScraperError, get_scraper
 
 LOGS_DIR = Path(__file__).parent / "logs"
 

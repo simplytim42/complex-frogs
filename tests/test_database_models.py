@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
-from database.models import Base, ScrapedData, ScrapeTargets
+from complex_frogs.database.models import Base, ScrapedData, ScrapeTargets
 
 
 @pytest.fixture()

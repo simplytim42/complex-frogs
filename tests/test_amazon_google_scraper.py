@@ -1,12 +1,12 @@
 import pytest
 
-from tools.scraper import AmazonGoogleScraper, ScraperError
+from complex_frogs.scraper import AmazonGoogleScraper, ScraperError
 
 
 @pytest.fixture()
 def get_html_namespace():
     namespaces = [
-        "tools",
+        "complex_frogs",
         "scraper",
         "amazon_google_scraper",
         "AmazonGoogleScraper",
