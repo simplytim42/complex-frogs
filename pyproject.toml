@@ -50,6 +50,10 @@ extend-ignore = ["E501"] # line length
 convention = "pep257"
 
 
+[tool.pytest.ini_options]
+cache_dir = "~/.cache/pytest"
+
+
 [tool.coverage.run]
 omit = [
     "tests/*" # don't generate test coverage for the tests themselves
@@ -57,6 +61,7 @@ omit = [
 
 
 [tool.mypy]
+cache_dir = "~/.cache/mypy"
 strict = true 
 ignore_missing_imports = true
 exclude = "^tests/"
