@@ -1,7 +1,7 @@
 import httpx
 from selectolax.parser import HTMLParser
 
-from .base_scraper import BaseScraper, ScraperException
+from .base_scraper import BaseScraper, ScraperError
 
 
 class GoOutdoorsScraper(BaseScraper):
@@ -50,4 +50,4 @@ class GoOutdoorsScraper(BaseScraper):
             self.title = self.TITLE_404
             return False
         except Exception as e:
-            raise ScraperException(f"{self!r}: {e}") from e
+            raise ScraperError(f"{self!r}: {e}") from e

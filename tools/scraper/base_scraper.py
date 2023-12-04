@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class ScraperException(Exception):
+class ScraperError(Exception):
     pass
 
 

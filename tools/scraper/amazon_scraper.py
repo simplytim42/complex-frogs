@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
 from selectolax.parser import HTMLParser
 
-from .base_scraper import BaseScraper, ScraperException
+from .base_scraper import BaseScraper, ScraperError
 
 
 class AmazonScraper(BaseScraper):
@@ -59,4 +59,4 @@ class AmazonScraper(BaseScraper):
             self.title = self.TITLE_404
             return False
         except Exception as e:
-            raise ScraperException(f"{self!r}: {e}") from e
+            raise ScraperError(f"{self!r}: {e}") from e

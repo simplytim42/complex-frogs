@@ -15,7 +15,7 @@ extend-select = [
     "W", # pycodestyle warnings (optional)
     "C", # mccabe complexity
     "I", # isort
-    # "N", # pep8-naming (optional)
+    "N", # pep8-naming (optional)
     # "D", # pydocstyle
     "UP", # pyupgrade
     "S", # bandit

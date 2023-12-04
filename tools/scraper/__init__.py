@@ -1,14 +1,14 @@
 from .amazon_google_scraper import AmazonGoogleScraper
 from .amazon_scraper import AmazonScraper
-from .base_scraper import BaseScraper, ScraperException
+from .base_scraper import BaseScraper, ScraperError
 from .go_od_scraper import GoOutdoorsScraper
-from .scraper_dispatcher import InvalidSiteException, get_scraper
+from .scraper_dispatcher import InvalidSiteError, get_scraper
 
 __all__ = [
-    "ScraperException",
+    "ScraperError",
     "BaseScraper",
     "get_scraper",
-    "InvalidSiteException",
+    "InvalidSiteError",
     "AmazonGoogleScraper",
     "AmazonScraper",
     "GoOutdoorsScraper",

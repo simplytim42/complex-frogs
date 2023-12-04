@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from database import engine
 from database.models import ScrapedData, ScrapeTargets
 from tools.functions import write_file
-from tools.scraper import ScraperException, get_scraper
+from tools.scraper import ScraperError, get_scraper
 
 LOGS_DIR = Path(__file__).parent / "logs"
 
@@ -70,7 +70,7 @@ for product in products:
                 filename=f"{product.sku}.html",
                 content=str(scraper.get_html()),
             )
-    except ScraperException as e:
+    except ScraperError as e:
         logging.error(f"Scraper failure: {e}")
     except Exception as e:
         logging.error(f"Unexpected error: {e}")

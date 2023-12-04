@@ -1,6 +1,6 @@
 import pytest
 
-from tools.scraper import AmazonGoogleScraper, ScraperException
+from tools.scraper import AmazonGoogleScraper, ScraperError
 
 
 @pytest.fixture
@@ -68,7 +68,7 @@ def test_get_html(mock_http_get_with_data, scraper):
 
 
 def test_get_html_no_html(mock_http_get_no_html, scraper):
-    with pytest.raises(ScraperException):
+    with pytest.raises(ScraperError):
         scraper.run()
         scraper.get_html()
 

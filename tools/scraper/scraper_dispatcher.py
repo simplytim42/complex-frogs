@@ -4,7 +4,7 @@ from .base_scraper import BaseScraper
 from .go_od_scraper import GoOutdoorsScraper
 
 
-class InvalidSiteException(Exception):
+class InvalidSiteError(Exception):
     pass
 
 
@@ -27,4 +27,4 @@ def get_scraper(site: str, product_id: str) -> BaseScraper:
     if site == "amz":
         return AmazonScraper(product_id)
 
-    raise InvalidSiteException(f"Invalid site: {site}")
+    raise InvalidSiteError(f"Invalid site: {site}")

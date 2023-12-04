@@ -2,7 +2,7 @@ import textdistance as td
 from playwright.sync_api import sync_playwright
 from selectolax.parser import HTMLParser, Node
 
-from .base_scraper import BaseScraper, ScraperException
+from .base_scraper import BaseScraper, ScraperError
 
 
 class AmazonGoogleScraper(BaseScraper):
@@ -80,7 +80,7 @@ class AmazonGoogleScraper(BaseScraper):
             self.title = self.TITLE_404
             return False
         except Exception as e:
-            raise ScraperException(f"{self!r}: {e}") from e
+            raise ScraperError(f"{self!r}: {e}") from e
 
     def __title_match(self, product_card: Node) -> bool:
         """Returns True if the scraped product title has over 50% similarity
