@@ -12,14 +12,10 @@ class BaseScraper(ABC):
     title attributes.
 
     Attributes:
-        HEADERS (dict): A dictionary of HTTP headers to use when making requests.
         PRICE_404 (str): A string to use when the price cannot be found.
         TITLE_404 (str): A string to use when the title cannot be found.
     """
 
-    HEADERS = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-    }
     PRICE_404 = "Price not found"
     TITLE_404 = "Title not found"
     html: str | None = ""
@@ -35,6 +31,17 @@ class BaseScraper(ABC):
             bool: True if the data was scraped successfully, otherwise False.
         """
         raise NotImplementedError
+
+    def _get_headers(self) -> dict:
+        """
+        Get the HTTP headers to use when making requests.
+
+        Returns:
+            dict: The HTTP headers to use when making requests.
+        """
+        return {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
+        }
 
     def get_html(self) -> str | None:
         """

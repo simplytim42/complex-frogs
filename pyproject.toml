@@ -41,7 +41,7 @@ extend-select = [
     "TRY", # tryceratops
     "NPY", # numpy-specific rules
     "PERF", #perlint (performance)
-    # "RUF", # ruff-specific
+    "RUF", # ruff-specific
     ]
 
 extend-ignore = ["E501"] # line length

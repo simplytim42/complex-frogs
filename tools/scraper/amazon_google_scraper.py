@@ -43,7 +43,7 @@ class AmazonGoogleScraper(BaseScraper):
     def __get_html_with_playwright(self) -> str:
         pw = sync_playwright().start()
         browser = pw.chromium.launch()
-        context = browser.new_context(extra_http_headers=self.HEADERS)
+        context = browser.new_context(extra_http_headers=self._get_headers())
         page = context.new_page()
         page.goto(self.URL)
         page.click(self.REJECT_COOKIES_SELECTOR)

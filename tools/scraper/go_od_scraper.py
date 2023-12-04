@@ -37,7 +37,7 @@ class GoOutdoorsScraper(BaseScraper):
 
     def run(self) -> bool:
         try:
-            response = httpx.get(self.URL, headers=self.HEADERS)
+            response = httpx.get(self.URL, headers=self._get_headers())
             response.raise_for_status()
             temp_html = HTMLParser(response.text)
 
