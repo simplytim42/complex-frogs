@@ -34,7 +34,7 @@ class AmazonScraper(BaseScraper):
         self.URL = f"https://www.amazon.co.uk/dp/{product_id}"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(id='{self.ASIN}')"
+        return f"{self.__class__.__name__}(product_id='{self.ASIN}')"
 
     def __get_html_with_playwright(self) -> str:
         pw = sync_playwright().start()

@@ -33,7 +33,7 @@ class GoOutdoorsScraper(BaseScraper):
         self.URL = f"https://www.gooutdoors.co.uk/{self.SKU}/{product_id}"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(id='{self.SKU}')"
+        return f"{self.__class__.__name__}(product_id='{self.SKU}')"
 
     def run(self) -> bool:
         try:

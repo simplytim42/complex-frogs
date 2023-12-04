@@ -38,7 +38,7 @@ class AmazonGoogleScraper(BaseScraper):
         self.URL = f"https://www.google.com/search?q={url_query}&tbm=shop"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(id='{self.query}')"
+        return f"{self.__class__.__name__}(product_id='{self.query}')"
 
     def __get_html_with_playwright(self) -> str:
         pw = sync_playwright().start()
