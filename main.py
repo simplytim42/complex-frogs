@@ -53,7 +53,7 @@ for product in products:
                     timestamp=timestamp,
                     price=price,
                     title=title,
-                )
+                ),
             )
             product.last_scraped = timestamp
             session.add(product)

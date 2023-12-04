@@ -64,14 +64,14 @@ class AmazonGoogleScraper(BaseScraper):
 
             for product_card in product_cards:
                 if product_card.select(self.PRODUCT_DETAILS_SELECTOR).any_text_contains(
-                    "Amazon.co.uk"
+                    "Amazon.co.uk",
                 ) and self.__title_match(product_card):
                     # Found a likely match
                     self.price = product_card.css_first(self.PRICE_SELECTOR).text(
-                        strip=True
+                        strip=True,
                     )
                     self.title = product_card.css_first(self.TITLE_SELECTOR).text(
-                        strip=True
+                        strip=True,
                     )
                     return True
             return False

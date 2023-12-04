@@ -20,7 +20,8 @@ class ScrapeTargets(Base):
     last_scraped: Mapped[Optional[datetime]]
 
     scraped_data: Mapped[List["ScrapedData"]] = relationship(
-        back_populates="scrape_target", cascade="all, delete-orphan"
+        back_populates="scrape_target",
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self) -> str:
