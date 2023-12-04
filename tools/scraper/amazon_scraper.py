@@ -59,4 +59,5 @@ class AmazonScraper(BaseScraper):
             self.title = self.TITLE_404
             return False
         except Exception as e:
-            raise ScraperError(f"{self!r}: {e}") from e
+            msg = f"{self!r}: {e}"
+            raise ScraperError(msg) from e

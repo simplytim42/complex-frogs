@@ -25,7 +25,7 @@ extend-select = [
     "C4", # flake8-comprehensions
     "DTZ", # flake8-datetimez
     "T10", # flake8-debugger
-    # "EM", # flake8-errmsg
+    "EM", # flake8-errmsg
     # "G", # flake8-logging-format
     # "PIE", # flake8-pie
     "T20", # flake8-print

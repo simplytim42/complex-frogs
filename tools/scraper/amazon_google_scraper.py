@@ -80,7 +80,8 @@ class AmazonGoogleScraper(BaseScraper):
             self.title = self.TITLE_404
             return False
         except Exception as e:
-            raise ScraperError(f"{self!r}: {e}") from e
+            msg = f"{self!r}: {e}"
+            raise ScraperError(msg) from e
 
     def __title_match(self, product_card: Node) -> bool:
         """Returns True if the scraped product title has over 50% similarity

@@ -27,4 +27,5 @@ def get_scraper(site: str, product_id: str) -> BaseScraper:
     if site == "amz":
         return AmazonScraper(product_id)
 
-    raise InvalidSiteError(f"Invalid site: {site}")
+    msg = f"Invalid site: {site}"
+    raise InvalidSiteError(msg)
