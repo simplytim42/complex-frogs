@@ -29,7 +29,7 @@ extend-select = [
     "G", # flake8-logging-format
     "PIE", # flake8-pie
     "T20", # flake8-print
-    # "PT", # flake8-pytest-style
+    "PT", # flake8-pytest-style
     "Q", # flake8-quotes
     "RET", # flake8-return
     "SLF", # flake8-self

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from database.models import Base, ScrapedData, ScrapeTargets
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def session():
     engine = create_engine("sqlite:///:memory:")
     session = Session(engine)

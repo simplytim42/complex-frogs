@@ -10,7 +10,7 @@ from tools.scraper import (
 
 
 @pytest.mark.parametrize(
-    "key, instance",
+    ("key", "instance"),
     [
         ("amz", AmazonScraper),
         ("amz-g", AmazonGoogleScraper),

@@ -3,7 +3,7 @@ import pytest
 from tools.scraper import AmazonGoogleScraper, ScraperError
 
 
-@pytest.fixture
+@pytest.fixture()
 def get_html_namespace():
     namespaces = [
         "tools",
@@ -15,7 +15,7 @@ def get_html_namespace():
     return ".".join(namespaces)
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_http_get_with_data(mocker, get_html_namespace):
     mock_get = mocker.patch(get_html_namespace)
     mock_get.return_value = """
@@ -30,21 +30,21 @@ def mock_http_get_with_data(mocker, get_html_namespace):
     return mock_get
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_http_get_no_data(mocker, get_html_namespace):
     mock_get = mocker.patch(get_html_namespace)
     mock_get.return_value = "<html></html>"
     return mock_get
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_http_get_no_html(mocker, get_html_namespace):
     mock_get = mocker.patch(get_html_namespace)
     mock_get.return_value = 42
     return mock_get
 
 
-@pytest.fixture
+@pytest.fixture()
 def scraper():
     return AmazonGoogleScraper("Coding Book")
 
@@ -70,7 +70,6 @@ def test_get_html(mock_http_get_with_data, scraper):
 def test_get_html_no_html(mock_http_get_no_html, scraper):
     with pytest.raises(ScraperError):
         scraper.run()
-        scraper.get_html()
 
 
 def test_get_title(mock_http_get_with_data, scraper):
