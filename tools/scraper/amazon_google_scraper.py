@@ -60,7 +60,7 @@ class AmazonGoogleScraper(BaseScraper):
 
             product_cards = temp_html.css(self.PRODUCT_CARDS_SELECTOR)
             if not product_cards:
-                raise AttributeError
+                raise AttributeError  # noqa TRY301
 
             for product_card in product_cards:
                 if product_card.select(self.PRODUCT_DETAILS_SELECTOR).any_text_contains(
@@ -73,8 +73,6 @@ class AmazonGoogleScraper(BaseScraper):
                     self.title = product_card.css_first(self.TITLE_SELECTOR).text(
                         strip=True,
                     )
-                    return True
-            return False
         except AttributeError:
             self.price = self.PRICE_404
             self.title = self.TITLE_404
@@ -82,6 +80,8 @@ class AmazonGoogleScraper(BaseScraper):
         except Exception as e:
             msg = f"{self!r}: {e}"
             raise ScraperError(msg) from e
+        else:
+            return True
 
     def __title_match(self, product_card: Node) -> bool:
         """Returns True if the scraped product title has over 50% similarity

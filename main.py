@@ -75,10 +75,10 @@ for product in products:
             )
     except ScraperError as e:
         msg = f"Scraper failure: {e}"
-        logging.error(msg=msg)
+        logging.exception(msg=msg)
     except Exception as e:
         msg = f"Unexpected error: {e}"
-        logging.error(msg=msg)
+        logging.exception(msg=msg)
 
     # Sleep for 1 second to avoid getting blocked
     time.sleep(1)

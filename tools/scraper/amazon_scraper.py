@@ -53,7 +53,6 @@ class AmazonScraper(BaseScraper):
             self.html = temp_html.html
             self.price = temp_html.css_first(self.PRICE_SELECTOR).text(strip=True)
             self.title = temp_html.css_first(self.TITLE_SELECTOR).text(strip=True)
-            return True
         except AttributeError:
             self.price = self.PRICE_404
             self.title = self.TITLE_404
@@ -61,3 +60,5 @@ class AmazonScraper(BaseScraper):
         except Exception as e:
             msg = f"{self!r}: {e}"
             raise ScraperError(msg) from e
+        else:
+            return True

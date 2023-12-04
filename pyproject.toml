@@ -38,7 +38,7 @@ extend-select = [
     "ERA", # eradicate
     "PD", # pandas-vet
     "PL", # pylint
-    # "TRY", # tryceratops
+    "TRY", # tryceratops
     "NPY", # numpy-specific rules
     "PERF", #perlint (performance)
     # "RUF", # ruff-specific
