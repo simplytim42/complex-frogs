@@ -1,3 +1,5 @@
+"""Main script to run the scraper and save data to database."""
+
 import logging
 import os
 import time

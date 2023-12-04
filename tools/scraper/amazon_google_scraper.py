@@ -1,3 +1,5 @@
+"""Scraper for retrieving Amazon UK product information from the Google Shopping search results page."""
+
 import textdistance as td
 from playwright.sync_api import sync_playwright
 from selectolax.parser import HTMLParser, Node
@@ -27,7 +29,7 @@ class AmazonGoogleScraper(BaseScraper):
 
     def __init__(self, product_id: str):
         """
-        Initializes a new instance of the AmazonGoogleScraper class.
+        Initialise a new instance of the AmazonGoogleScraper class.
 
         Args:
             product_id (str): The search query to use. Ideally this should be the
@@ -38,6 +40,7 @@ class AmazonGoogleScraper(BaseScraper):
         self.URL = f"https://www.google.com/search?q={url_query}&tbm=shop"
 
     def __repr__(self) -> str:
+        """Return a string representation of the object."""
         return f"{self.__class__.__name__}(product_id='{self.query}')"
 
     def __get_html_with_playwright(self) -> str:
@@ -54,6 +57,7 @@ class AmazonGoogleScraper(BaseScraper):
         return str(content)
 
     def run(self) -> bool:
+        """Run the scraper and return True if data is retrieved successfully."""
         try:
             temp_html = HTMLParser(self.__get_html_with_playwright())
             self.html = temp_html.html
@@ -84,9 +88,7 @@ class AmazonGoogleScraper(BaseScraper):
             return True
 
     def __title_match(self, product_card: Node) -> bool:
-        """Returns True if the scraped product title has over 50% similarity
-        to the query value
-        """
+        """Return True if the scraped product title has over 50% similarity to the query value."""
         title = product_card.css_first(self.TITLE_SELECTOR).text(strip=True)
         similarity: float = td.levenshtein.normalized_similarity(self.query, title)
         fifty_percent = 0.5

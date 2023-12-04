@@ -1,13 +1,16 @@
+"""The Base Scraper class. Designed to be inherited by other scraper classes."""
+
 from abc import ABC, abstractmethod
 
 
 class ScraperError(Exception):
-    pass
+    """An exception raised when an error occurs during scraping."""
 
 
 class BaseScraper(ABC):
-    """
-    An abstract base class for web scrapers. Classes that inherit from this class
+    """An abstract base class for web scrapers.
+
+    Classes that inherit from this class
     must implement the run() method and ensure that it overwrites the html, price and
     title attributes.
 
@@ -24,8 +27,7 @@ class BaseScraper(ABC):
 
     @abstractmethod
     def run(self) -> bool:
-        """
-        Download the HTML content of the page and scrape the data"
+        """Download the HTML content of the page and scrape the data.
 
         Returns:
             bool: True if the data was scraped successfully, otherwise False.

@@ -1,3 +1,5 @@
+"""Scraper for retrieving Go Outdoors product information."""
+
 import httpx
 from selectolax.parser import HTMLParser
 
@@ -22,8 +24,7 @@ class GoOutdoorsScraper(BaseScraper):
     SKU = ""
 
     def __init__(self, product_id: str):
-        """
-        Initializes a new instance of the GoOutdoorsScraper class.
+        """Initialise a new instance of the GoOutdoorsScraper class.
 
         Args:
             product_id (str): The product ID in the format found in the URL.
@@ -33,9 +34,11 @@ class GoOutdoorsScraper(BaseScraper):
         self.URL = f"https://www.gooutdoors.co.uk/{self.SKU}/{product_id}"
 
     def __repr__(self) -> str:
+        """Return a string representation of the object."""
         return f"{self.__class__.__name__}(product_id='{self.SKU}')"
 
     def run(self) -> bool:
+        """Run the scraper and return True if data is retrieved successfully."""
         try:
             response = httpx.get(self.URL, headers=self._get_headers())
             response.raise_for_status()

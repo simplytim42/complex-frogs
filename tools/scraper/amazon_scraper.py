@@ -1,3 +1,5 @@
+"""Scraper for retrieving Amazon UK product information."""
+
 from playwright.sync_api import sync_playwright
 from selectolax.parser import HTMLParser
 
@@ -25,7 +27,7 @@ class AmazonScraper(BaseScraper):
 
     def __init__(self, product_id: str):
         """
-        Initializes a new instance of the AmazonScraper class.
+        Initialise a new instance of the AmazonScraper class.
 
         Args:
             product_id (str): The Amazon Standard Identification Number (ASIN) of the product to scrape.
@@ -34,6 +36,7 @@ class AmazonScraper(BaseScraper):
         self.URL = f"https://www.amazon.co.uk/dp/{product_id}"
 
     def __repr__(self) -> str:
+        """Return a string representation of the object."""
         return f"{self.__class__.__name__}(product_id='{self.ASIN}')"
 
     def __get_html_with_playwright(self) -> str:
@@ -48,6 +51,7 @@ class AmazonScraper(BaseScraper):
         return str(content)
 
     def run(self) -> bool:
+        """Run the scraper and return True if data is retrieved successfully."""
         try:
             temp_html = HTMLParser(self.__get_html_with_playwright())
             self.html = temp_html.html

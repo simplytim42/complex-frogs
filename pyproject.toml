@@ -7,6 +7,9 @@ cache-dir = "~/.cache/ruff"
     "S", # bandit
     "D", # pydocstyle
     ]
+"__init__.py" = [
+    "D104", # ignore missing docstring in public package
+    ]
 
 [tool.ruff.lint]
 extend-select = [
@@ -16,7 +19,7 @@ extend-select = [
     "C", # mccabe complexity
     "I", # isort
     "N", # pep8-naming (optional)
-    # "D", # pydocstyle
+    "D", # pydocstyle
     "UP", # pyupgrade
     "S", # bandit
     "B", # flake8-bugbear

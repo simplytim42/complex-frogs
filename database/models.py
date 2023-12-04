@@ -1,3 +1,5 @@
+"""Database models."""
+
 from datetime import datetime
 from typing import List, Optional
 
@@ -6,10 +8,15 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
-    pass
+    """Base class for all database models."""
 
 
 class ScrapeTargets(Base):
+    """This table stores the targets to scrape.
+
+    A target is a combination of a site and a SKU.
+    """
+
     __tablename__ = "scrape_targets"
 
     id: Mapped[int] = mapped_column(primary_key=True)  # noqa: A003
@@ -25,10 +32,13 @@ class ScrapeTargets(Base):
     )
 
     def __repr__(self) -> str:
+        """Return a string representation of the object."""
         return f"ScrapeTarget(site={self.site!r}, sku={self.sku!r}, send_notification={self.send_notification!r})"
 
 
 class ScrapedData(Base):
+    """This table stores the scraped data."""
+
     __tablename__ = "scraped_data"
 
     id: Mapped[int] = mapped_column(primary_key=True)  # noqa: A003
@@ -40,4 +50,5 @@ class ScrapedData(Base):
     scrape_target: Mapped["ScrapeTargets"] = relationship(back_populates="scraped_data")
 
     def __repr__(self) -> str:
+        """Return a string representation of the object."""
         return f"ScrapedData(scrape_target_id={self.scrape_target_id!r}, title={self.title!r}, price={self.price!r})"
