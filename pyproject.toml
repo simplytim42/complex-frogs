@@ -37,7 +37,7 @@ extend-select = [
     "PTH", # flake8-use-pathlib
     "ERA", # eradicate
     "PD", # pandas-vet
-    # "PL", # pylint
+    "PL", # pylint
     # "TRY", # tryceratops
     "NPY", # numpy-specific rules
     "PERF", #perlint (performance)

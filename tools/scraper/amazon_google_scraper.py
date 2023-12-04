@@ -89,4 +89,5 @@ class AmazonGoogleScraper(BaseScraper):
         """
         title = product_card.css_first(self.TITLE_SELECTOR).text(strip=True)
         similarity: float = td.levenshtein.normalized_similarity(self.query, title)
-        return similarity > 0.5
+        fifty_percent = 0.5
+        return similarity > fifty_percent
