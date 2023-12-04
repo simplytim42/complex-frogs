@@ -12,7 +12,7 @@ class Base(DeclarativeBase):
 class ScrapeTargets(Base):
     __tablename__ = "scrape_targets"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)  # noqa: A003
     site: Mapped[str]
     sku: Mapped[str]
     send_notification: Mapped[bool]
@@ -30,7 +30,7 @@ class ScrapeTargets(Base):
 class ScrapedData(Base):
     __tablename__ = "scraped_data"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)  # noqa: A003
     scrape_target_id: Mapped[int] = mapped_column(ForeignKey("scrape_targets.id"))
     title: Mapped[str]
     price: Mapped[str]
