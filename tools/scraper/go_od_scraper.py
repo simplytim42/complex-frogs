@@ -21,16 +21,16 @@ class GoOutdoorsScraper(BaseScraper):
     URL = ""
     SKU = ""
 
-    def __init__(self, id: str):
+    def __init__(self, product_id: str):
         """
         Initializes a new instance of the GoOutdoorsScraper class.
 
         Args:
-            id (str): The product ID in the format found in the URL.
+            product_id (str): The product ID in the format found in the URL.
             For example: "waterproof-down-jacket-123456".
         """
-        self.SKU = id.split("-")[-1]
-        self.URL = f"https://www.gooutdoors.co.uk/{self.SKU}/{id}"
+        self.SKU = product_id.split("-")[-1]
+        self.URL = f"https://www.gooutdoors.co.uk/{self.SKU}/{product_id}"
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(id='{self.SKU}')"

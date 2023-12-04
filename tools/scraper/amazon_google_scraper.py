@@ -25,16 +25,16 @@ class AmazonGoogleScraper(BaseScraper):
     PRODUCT_CARDS_SELECTOR = "div.KZmu8e"
     PRODUCT_DETAILS_SELECTOR = "div.HUOptb"
 
-    def __init__(self, id: str):
+    def __init__(self, product_id: str):
         """
         Initializes a new instance of the AmazonGoogleScraper class.
 
         Args:
-            id (str): The search query to use. Ideally this should be the
+            product_id (str): The search query to use. Ideally this should be the
             product name as it appears on Amazon.
         """
-        self.query = id
-        url_query = id.replace(" ", "+")
+        self.query = product_id
+        url_query = product_id.replace(" ", "+")
         self.URL = f"https://www.google.com/search?q={url_query}&tbm=shop"
 
     def __repr__(self) -> str:

@@ -38,7 +38,7 @@ products = session.scalars(stmt)
 for product in products:
     try:
         logging.info(f"Getting data for '{product.sku}'")
-        scraper = get_scraper(product.site, product.sku)
+        scraper = get_scraper(site=product.site, product_id=product.sku)
 
         if scraper.run():
             price = scraper.get_price()
