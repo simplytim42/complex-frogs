@@ -32,7 +32,7 @@ class BaseScraper(ABC):
         """
         raise NotImplementedError
 
-    def _get_headers(self) -> dict:
+    def _get_headers(self) -> dict[str, str]:
         """
         Get the HTTP headers to use when making requests.
 
