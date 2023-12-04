@@ -27,7 +27,7 @@ extend-select = [
     "T10", # flake8-debugger
     "EM", # flake8-errmsg
     "G", # flake8-logging-format
-    # "PIE", # flake8-pie
+    "PIE", # flake8-pie
     "T20", # flake8-print
     # "PT", # flake8-pytest-style
     "Q", # flake8-quotes

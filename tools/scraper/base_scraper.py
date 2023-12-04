@@ -34,7 +34,7 @@ class BaseScraper(ABC):
         Returns:
             bool: True if the data was scraped successfully, otherwise False.
         """
-        pass  # pragma: no cover
+        raise NotImplementedError
 
     def get_html(self) -> str | None:
         """
