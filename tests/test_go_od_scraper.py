@@ -1,8 +1,9 @@
-from tools.scraper import GoOutdoorsScraper, ScraperException
 import pytest
 
+from tools.scraper import GoOutdoorsScraper, ScraperError
 
-@pytest.fixture
+
+@pytest.fixture()
 def mock_http_get_with_data(mocker):
     mock_response = mocker.Mock()
     mock_response.text = """
@@ -16,7 +17,7 @@ def mock_http_get_with_data(mocker):
     return mock_get
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_http_get_no_data(mocker):
     mock_response = mocker.Mock()
     mock_response.text = "<html></html>"
@@ -25,7 +26,7 @@ def mock_http_get_no_data(mocker):
     return mock_get
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_http_get_no_html(mocker):
     mock_response = mocker.Mock()
     mock_response.text = 42
@@ -34,7 +35,7 @@ def mock_http_get_no_html(mocker):
     return mock_get
 
 
-@pytest.fixture
+@pytest.fixture()
 def scraper():
     return GoOutdoorsScraper("down-jacket-123456")
 
@@ -42,7 +43,7 @@ def scraper():
 def test_init(scraper):
     expected_url = "https://www.gooutdoors.co.uk/123456/down-jacket-123456"
     assert scraper.SKU == "123456"
-    assert scraper.URL == expected_url
+    assert expected_url == scraper.URL
 
 
 def test_repr(scraper):
@@ -59,9 +60,8 @@ def test_get_html(mock_http_get_with_data, scraper):
 
 
 def test_get_html_no_html(mock_http_get_no_html, scraper):
-    with pytest.raises(ScraperException):
+    with pytest.raises(ScraperError):
         scraper.run()
-        scraper.get_html()
 
 
 def test_get_title(mock_http_get_with_data, scraper):

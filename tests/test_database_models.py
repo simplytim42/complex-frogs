@@ -1,12 +1,13 @@
+from datetime import datetime, timezone
+
 import pytest
-from datetime import datetime
-from sqlalchemy import create_engine
-from sqlalchemy import select
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
-from database.models import Base, ScrapeTargets, ScrapedData
+
+from database.models import Base, ScrapedData, ScrapeTargets
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def session():
     engine = create_engine("sqlite:///:memory:")
     session = Session(engine)
@@ -16,7 +17,7 @@ def session():
 
 
 def test_create_scrape_target(session):
-    now = datetime.now()
+    now = datetime.now(tz=timezone.utc)
     target = ScrapeTargets(
         site="test site",
         sku="test sku",
@@ -30,15 +31,24 @@ def test_create_scrape_target(session):
     stmt = select(ScrapeTargets)
     retrieved_target = session.scalars(stmt).first()
 
+    # make datetimes aware
+    retrieved_target.date_added = retrieved_target.date_added.replace(
+        tzinfo=timezone.utc,
+    )
+    retrieved_target.last_scraped = retrieved_target.last_scraped.replace(
+        tzinfo=timezone.utc,
+    )
+
     assert retrieved_target.site == "test site"
     assert retrieved_target.sku == "test sku"
     assert retrieved_target.send_notification is True
+    # testing datetimes as aware to ensure they can be entereted into the db as naive
     assert retrieved_target.date_added == now
     assert retrieved_target.last_scraped == now
 
 
 def test_create_scrape_data(session):
-    now = datetime.now()
+    now = datetime.now(tz=timezone.utc)
     target = ScrapeTargets(
         site="test site",
         sku="test sku",
@@ -60,6 +70,11 @@ def test_create_scrape_data(session):
 
     stmt = select(ScrapedData)
     retrieved_data = session.scalars(stmt).first()
+
+    # make datetimes aware
+    retrieved_data.timestamp = retrieved_data.timestamp.replace(
+        tzinfo=timezone.utc,
+    )
 
     assert retrieved_data.scrape_target_id == target.id
     assert retrieved_data.title == "test title"

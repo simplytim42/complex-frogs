@@ -1,21 +1,20 @@
-# standard library imports
+"""Main script to run the scraper and save data to database."""
+
+import logging
+import os
 import time
 from datetime import datetime, timezone
-import os
-import logging
 from pathlib import Path
 
-# third party imports
-from py_pushover_client import PushoverAPIClient
 from dotenv import load_dotenv
-from sqlalchemy.orm import Session
+from py_pushover_client import PushoverAPIClient
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
-# local imports
-from tools.scraper import get_scraper, ScraperException
-from tools.functions import write_file
 from database import engine
-from database.models import ScrapeTargets, ScrapedData
+from database.models import ScrapedData, ScrapeTargets
+from tools.functions import write_file
+from tools.scraper import ScraperError, get_scraper
 
 LOGS_DIR = Path(__file__).parent / "logs"
 
@@ -40,8 +39,9 @@ products = session.scalars(stmt)
 
 for product in products:
     try:
-        logging.info(f"Getting data for '{product.sku}'")
-        scraper = get_scraper(product.site, product.sku)
+        msg = f"Getting data for '{product.sku}'"
+        logging.info(msg=msg)
+        scraper = get_scraper(site=product.site, product_id=product.sku)
 
         if scraper.run():
             price = scraper.get_price()
@@ -56,7 +56,7 @@ for product in products:
                     timestamp=timestamp,
                     price=price,
                     title=title,
-                )
+                ),
             )
             product.last_scraped = timestamp
             session.add(product)
@@ -64,19 +64,23 @@ for product in products:
 
             if product.send_notification:
                 notification.send(title=title, message=price)
-                logging.info(f"Sent notification for '{product.sku}'")
+                msg = f"Sent notification for '{product.sku}'"
+                logging.info(msg=msg)
         else:
-            logging.warning(f"Could not find price and title for '{product.sku}'")
+            msg = f"Could not find price and title for '{product.sku}'"
+            logging.warning(msg=msg)
             # error getting data so we save the raw html for debugging
             write_file(
-                dir=LOGS_DIR / "html_logs",
+                directory=LOGS_DIR / "html_logs",
                 filename=f"{product.sku}.html",
                 content=str(scraper.get_html()),
             )
-    except ScraperException as e:
-        logging.error(f"Scraper failure: {e}")
+    except ScraperError as e:
+        msg = f"Scraper failure: {e}"
+        logging.exception(msg=msg)
     except Exception as e:
-        logging.error(f"Unexpected error: {e}")
+        msg = f"Unexpected error: {e}"
+        logging.exception(msg=msg)
 
     # Sleep for 1 second to avoid getting blocked
     time.sleep(1)

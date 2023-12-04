@@ -1,5 +1,7 @@
-from sqlalchemy import create_engine
 from pathlib import Path
+
+from sqlalchemy import create_engine
+
 from .models import Base
 
 db_location = Path(__file__).resolve().parent.parent / "frog.db"

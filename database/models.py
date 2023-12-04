@@ -1,22 +1,25 @@
+"""Database models."""
+
 from datetime import datetime
-from typing import List
-from typing import Optional
+from typing import List, Optional
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
-    pass
+    """Base class for all database models."""
 
 
 class ScrapeTargets(Base):
+    """This table stores the targets to scrape.
+
+    A target is a combination of a site and a SKU.
+    """
+
     __tablename__ = "scrape_targets"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)  # noqa: A003
     site: Mapped[str]
     sku: Mapped[str]
     send_notification: Mapped[bool]
@@ -24,17 +27,21 @@ class ScrapeTargets(Base):
     last_scraped: Mapped[Optional[datetime]]
 
     scraped_data: Mapped[List["ScrapedData"]] = relationship(
-        back_populates="scrape_target", cascade="all, delete-orphan"
+        back_populates="scrape_target",
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self) -> str:
+        """Return a string representation of the object."""
         return f"ScrapeTarget(site={self.site!r}, sku={self.sku!r}, send_notification={self.send_notification!r})"
 
 
 class ScrapedData(Base):
+    """This table stores the scraped data."""
+
     __tablename__ = "scraped_data"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)  # noqa: A003
     scrape_target_id: Mapped[int] = mapped_column(ForeignKey("scrape_targets.id"))
     title: Mapped[str]
     price: Mapped[str]
@@ -43,4 +50,5 @@ class ScrapedData(Base):
     scrape_target: Mapped["ScrapeTargets"] = relationship(back_populates="scraped_data")
 
     def __repr__(self) -> str:
+        """Return a string representation of the object."""
         return f"ScrapedData(scrape_target_id={self.scrape_target_id!r}, title={self.title!r}, price={self.price!r})"

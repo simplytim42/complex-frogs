@@ -1,14 +1,16 @@
+import pytest
+
 from tools.scraper import (
-    get_scraper,
+    AmazonGoogleScraper,
     AmazonScraper,
     GoOutdoorsScraper,
-    AmazonGoogleScraper,
+    InvalidSiteError,
+    get_scraper,
 )
-import pytest
 
 
 @pytest.mark.parametrize(
-    "key, instance",
+    ("key", "instance"),
     [
         ("amz", AmazonScraper),
         ("amz-g", AmazonGoogleScraper),
@@ -20,5 +22,5 @@ def test_get_scraper(key, instance):
 
 
 def test_get_scraper_incorrect_site():
-    with pytest.raises(Exception):
+    with pytest.raises(InvalidSiteError):
         get_scraper("invalid", "test")

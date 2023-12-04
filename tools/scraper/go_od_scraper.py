@@ -1,6 +1,9 @@
+"""Scraper for retrieving Go Outdoors product information."""
+
 import httpx
 from selectolax.parser import HTMLParser
-from .base_scraper import BaseScraper, ScraperException
+
+from .base_scraper import BaseScraper, ScraperError
 
 
 class GoOutdoorsScraper(BaseScraper):
@@ -20,33 +23,36 @@ class GoOutdoorsScraper(BaseScraper):
     URL = ""
     SKU = ""
 
-    def __init__(self, id: str):
-        """
-        Initializes a new instance of the GoOutdoorsScraper class.
+    def __init__(self, product_id: str):
+        """Initialise a new instance of the GoOutdoorsScraper class.
 
         Args:
-            id (str): The product ID in the format found in the URL.
+            product_id (str): The product ID in the format found in the URL.
             For example: "waterproof-down-jacket-123456".
         """
-        self.SKU = id.split("-")[-1]
-        self.URL = f"https://www.gooutdoors.co.uk/{self.SKU}/{id}"
+        self.SKU = product_id.split("-")[-1]
+        self.URL = f"https://www.gooutdoors.co.uk/{self.SKU}/{product_id}"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(id='{self.SKU}')"
+        """Return a string representation of the object."""
+        return f"{self.__class__.__name__}(product_id='{self.SKU}')"
 
     def run(self) -> bool:
+        """Run the scraper and return True if data is retrieved successfully."""
         try:
-            response = httpx.get(self.URL, headers=self.HEADERS)
+            response = httpx.get(self.URL, headers=self._get_headers())
             response.raise_for_status()
             temp_html = HTMLParser(response.text)
 
             self.html = temp_html.html
             self.price = temp_html.css_first(self.PRICE_SELECTOR).text(strip=True)
             self.title = temp_html.css_first(self.TITLE_SELECTOR).text(strip=True)
-            return True
         except AttributeError:
             self.price = self.PRICE_404
             self.title = self.TITLE_404
             return False
         except Exception as e:
-            raise ScraperException(f"{self!r}: {e}")
+            msg = f"{self!r}: {e}"
+            raise ScraperError(msg) from e
+        else:
+            return True
