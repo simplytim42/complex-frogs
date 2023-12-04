@@ -1,12 +1,53 @@
-[tool.ruff.lint]
-# 1. Enable flake8-bugbear (`B`) rules, in addition to the defaults.
-select = [
-    "E", # pycodestyle
-    "F", # pyflakes
-    "B" # flake8-bugbear
+[tool.ruff]
+cache-dir = "~/.cache/ruff"
+
+[tool.ruff.extend-per-file-ignores]
+# don't lint the tests with the following rules:
+"tests/*" = [
+    "S", # bandit
+    "D", # pydocstyle
     ]
 
-ignore = ["E501"] # line length
+[tool.ruff.lint]
+extend-select = [
+    "F", # Pyflakes
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings (optional)
+    "C", # mccabe complexity
+    "I", # isort
+    # "N", # pep8-naming (optional)
+    # "D", # pydocstyle
+    "UP", # pyupgrade
+    "S", # bandit
+    "B", # flake8-bugbear
+    # "A", # flake8-builtins
+    # "COM", # flake8-commas
+    "C4", # flake8-comprehensions
+    # "DTZ", # flake8-datetimez
+    "T10", # flake8-debugger
+    # "EM", # flake8-errmsg
+    # "G", # flake8-logging-format
+    # "PIE", # flake8-pie
+    "T20", # flake8-print
+    # "PT", # flake8-pytest-style
+    "Q", # flake8-quotes
+    "RET", # flake8-return
+    "SLF", # flake8-self
+    "SIM", # flake8-simplify
+    "PTH", # flake8-use-pathlib
+    "ERA", # eradicate
+    "PD", # pandas-vet
+    # "PL", # pylint
+    # "TRY", # tryceratops
+    "NPY", # numpy-specific rules
+    "PERF", #perlint (performance)
+    # "RUF", # ruff-specific
+    ]
+
+extend-ignore = ["E501"] # line length
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
 
 
 [tool.coverage.run]
