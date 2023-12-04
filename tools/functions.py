@@ -11,5 +11,6 @@ def write_file(directory: Path, filename: str, content: str) -> Path:
     with Path(__file__).resolve().parent / filepath as file:
         file.parent.mkdir(parents=True, exist_ok=True)
         file.write_text(content)
-        logging.info(f"writing file to '{file.name}'")
+        msg = f"writing file to '{file.name}'"
+        logging.info(msg=msg)
         return file

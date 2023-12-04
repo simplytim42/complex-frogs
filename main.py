@@ -37,7 +37,8 @@ products = session.scalars(stmt)
 
 for product in products:
     try:
-        logging.info(f"Getting data for '{product.sku}'")
+        msg = f"Getting data for '{product.sku}'"
+        logging.info(msg=msg)
         scraper = get_scraper(site=product.site, product_id=product.sku)
 
         if scraper.run():
@@ -61,9 +62,11 @@ for product in products:
 
             if product.send_notification:
                 notification.send(title=title, message=price)
-                logging.info(f"Sent notification for '{product.sku}'")
+                msg = f"Sent notification for '{product.sku}'"
+                logging.info(msg=msg)
         else:
-            logging.warning(f"Could not find price and title for '{product.sku}'")
+            msg = f"Could not find price and title for '{product.sku}'"
+            logging.warning(msg=msg)
             # error getting data so we save the raw html for debugging
             write_file(
                 directory=LOGS_DIR / "html_logs",
@@ -71,9 +74,11 @@ for product in products:
                 content=str(scraper.get_html()),
             )
     except ScraperError as e:
-        logging.error(f"Scraper failure: {e}")
+        msg = f"Scraper failure: {e}"
+        logging.error(msg=msg)
     except Exception as e:
-        logging.error(f"Unexpected error: {e}")
+        msg = f"Unexpected error: {e}"
+        logging.error(msg=msg)
 
     # Sleep for 1 second to avoid getting blocked
     time.sleep(1)
