@@ -6,6 +6,7 @@ selectolax==0.3.16
 SQLAlchemy==2.0.23
 textdistance==4.6.0
 fastapi==0.104.1
+uvicorn==0.24.0.post1
 
 # dev dependencies
 mypy==1.6.1
