@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 
 from complex_frogs.database import engine
 from complex_frogs.database.models import ScrapedData, ScrapeTargets
-from complex_frogs.functions import write_file
+from complex_frogs.functions.utils import write_file
 from complex_frogs.logger.config import LOGS_DIR, setup_logger
 from complex_frogs.scraper import ScraperError, get_scraper
 

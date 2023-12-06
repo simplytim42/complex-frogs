@@ -1,7 +1,7 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from complex_frogs.functions import write_file
+from complex_frogs.functions.utils import write_file
 
 
 def test_write_file():
