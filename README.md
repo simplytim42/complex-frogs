@@ -6,7 +6,7 @@ web scraping to track the price of things I would like to buy and send me daily 
 1. `python -m venv venv`
 1. `source venv/bin/activate`
 1. rename `.env-example` to `.env` and populate the variables with your API TOKEN and USER KEY.
-1. `make install`
+1. `make install` (or `make dev-install` for local development)
 1. `make run`
 
 ## run all QA checks

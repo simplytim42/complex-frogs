@@ -1,14 +1,10 @@
+# Scraper Deps
 httpx==0.25.0
 playwright==1.38.0
 python-dotenv==1.0.0
-py-pushover-client==1.0.0.dev2
 selectolax==0.3.16
-SQLAlchemy==2.0.23
 textdistance==4.6.0
 
-# dev dependencies
-mypy==1.6.1
-pytest==7.4.2
-pytest-mock==3.12.0
-pytest-cov==4.1.0
-ruff==0.1.5
+# App Deps
+py-pushover-client==1.0.0.dev2
+SQLAlchemy==2.0.23
