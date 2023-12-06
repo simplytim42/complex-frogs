@@ -4,7 +4,6 @@ import logging
 import os
 import time
 from datetime import datetime, timezone
-from pathlib import Path
 
 from dotenv import load_dotenv
 from py_pushover_client import PushoverAPIClient
@@ -14,29 +13,19 @@ from sqlalchemy.orm import Session
 from complex_frogs.database import engine
 from complex_frogs.database.models import ScrapedData, ScrapeTargets
 from complex_frogs.functions import write_file
+from complex_frogs.logger.config import LOGS_DIR, setup_logger
 from complex_frogs.scraper import ScraperError, get_scraper
 
-LOGS_DIR = Path(__file__).parent / "logs"
-
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    filename=LOGS_DIR / "frog.log",
-)
-
+setup_logger(filepath=LOGS_DIR / "frog.log")
 
 load_dotenv()
 API_TOKEN = os.getenv("NOTIFICATION_TOKEN")
 USER_KEY = os.getenv("NOTIFICATION_USER_KEY")
 notification = PushoverAPIClient(api_token=API_TOKEN, user_key=USER_KEY)
-
 session = Session(engine)
+
 stmt = select(ScrapeTargets)
 products = session.scalars(stmt)
-
-
 for product in products:
     try:
         msg = f"Getting data for '{product.sku}'"
