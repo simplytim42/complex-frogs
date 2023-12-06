@@ -5,6 +5,7 @@ py-pushover-client==1.0.0.dev2
 selectolax==0.3.16
 SQLAlchemy==2.0.23
 textdistance==4.6.0
+fastapi==0.104.1
 
 # dev dependencies
 mypy==1.6.1
