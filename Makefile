@@ -1,8 +1,11 @@
 install:
 	mkdir -p logs
-	pip install -r requirements.lock
+	pip install -r requirements.txt
 	playwright install
 	playwright install-deps
+
+dev-install: install
+	pip install -r requirements-dev.txt
 
 clean:
 	find . -name '*.pyc' -delete
