@@ -25,5 +25,8 @@ QA:
 	mypy .
 	ruff check .
 
-run:
-	python main.py
+run-api:
+	uvicorn run_api:app --reload
+
+run-scraper:
+	python run_scraper.py
