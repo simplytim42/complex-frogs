@@ -16,14 +16,14 @@ session = Session(engine)
 
 
 @app.get("/")
-def root():
+def root() -> dict[str, str]:
     """Root endpoint for API."""
     logging.info("Root endpoint hit")
     return {"message": "Complex Frogs API"}
 
 
-@app.get("/targets", response_model=list[Target])
-def get_targets():
+@app.get("/targets")
+def get_targets() -> list[Target]:
     """Get all scraping targets from database."""
     try:
         logging.info("Getting targets from database")
@@ -33,7 +33,7 @@ def get_targets():
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return targets
+        return targets  # type: ignore[return-value]
 
 
 session.close()
