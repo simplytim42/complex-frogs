@@ -3,6 +3,9 @@ install:
 	pip install -r requirements.txt
 	playwright install
 	playwright install-deps
+	
+	# run the scraper once to create the database
+	python run_scraper.py
 
 dev-install: install
 	pip install -r requirements-dev.txt
