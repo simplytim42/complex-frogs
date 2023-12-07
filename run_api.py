@@ -9,7 +9,10 @@ from sqlalchemy.orm import Session
 
 from complex_frogs.database import engine
 from complex_frogs.database.models import ScrapeTargets
+from complex_frogs.logger.config import LOGS_DIR, setup_logger
 from complex_frogs.models.scraper import Target
+
+setup_logger(LOGS_DIR / "api.log")
 
 app = FastAPI()
 session = Session(engine)
