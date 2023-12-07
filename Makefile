@@ -3,7 +3,7 @@ install:
 	pip install -r requirements.txt
 	playwright install
 	playwright install-deps
-	
+
 	# run the scraper once to create the database
 	python run_scraper.py
 
@@ -27,9 +27,3 @@ QA:
 	pytest .
 	mypy .
 	ruff check .
-
-run-api:
-	uvicorn run_api:app --reload
-
-run-scraper:
-	python run_scraper.py
