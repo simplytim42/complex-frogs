@@ -22,3 +22,13 @@ class NewTarget(BaseModel):
     site: str
     sku: str
     send_notification: bool
+
+
+class ScrapeResult(BaseModel):
+    """model for a scrape result."""
+
+    id: int  # noqa: A003
+    scrape_target_id: int
+    title: str
+    price: str
+    timestamp: datetime
