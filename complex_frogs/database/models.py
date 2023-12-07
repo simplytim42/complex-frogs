@@ -1,7 +1,7 @@
 """Database models."""
 
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -24,7 +24,7 @@ class ScrapeTargets(Base):
     sku: Mapped[str]
     send_notification: Mapped[bool]
     date_added: Mapped[datetime]
-    last_scraped: Mapped[Optional[datetime]]
+    last_scraped: Mapped[datetime]
 
     scraped_data: Mapped[List["ScrapedData"]] = relationship(
         back_populates="scrape_target",
