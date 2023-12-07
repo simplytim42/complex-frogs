@@ -140,7 +140,7 @@ def get_scrape_data_for_target(target_id: int) -> list[ScrapeResult]:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return scraped_data
+        return scraped_data  # type: ignore[return-value]
 
 
 session.close()
