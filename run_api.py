@@ -9,9 +9,9 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from complex_frogs.database import engine
-from complex_frogs.database.models import ScrapeTargets
+from complex_frogs.database.models import ScrapedData, ScrapeTargets
 from complex_frogs.logger.config import LOGS_DIR, setup_logger
-from complex_frogs.models.scraper import NewTarget, Target
+from complex_frogs.models.scraper import NewTarget, ScrapeResult, Target
 
 setup_logger(LOGS_DIR / "api.log")
 
@@ -112,6 +112,35 @@ def delete_target(target_id: int) -> dict[str, str]:
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
         return {"message": f"Target with id {target_id} deleted"}
+
+
+@app.get("/scrape-data")
+def get_scrape_data() -> list[ScrapeResult]:
+    """Get all scrape data from database."""
+    try:
+        logging.info("Getting all scrape data from database")
+        stmt = select(ScrapedData)
+        scraped_data = session.scalars(stmt)
+    except SQLAlchemyError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=500, detail="Database error") from None
+    else:
+        return scraped_data  # type: ignore[return-value]
+
+
+@app.get("/scrape-data/target/{target_id}")
+def get_scrape_data_for_target(target_id: int) -> list[ScrapeResult]:
+    """Get all scrape data for a target from database."""
+    try:
+        msg = f"Getting all scrape data for target with id {target_id} from database"
+        logging.info(msg=msg)
+        stmt = select(ScrapedData).where(ScrapedData.scrape_target_id == target_id)
+        scraped_data = session.scalars(stmt)
+    except SQLAlchemyError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=500, detail="Database error") from None
+    else:
+        return scraped_data  # type: ignore[return-value]
 
 
 session.close()
