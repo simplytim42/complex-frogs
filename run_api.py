@@ -44,7 +44,7 @@ def get_targets() -> list[Target]:
 def get_target(target_id: int) -> Target:
     """Get a single scraping target from database."""
     try:
-        msg = f"Getting target {target_id} from database"
+        msg = f"Getting target with id {target_id} from database"
         logging.info(msg=msg)
         stmt = select(ScrapeTargets).where(ScrapeTargets.id == target_id)
         target = session.scalar(stmt)
@@ -61,7 +61,7 @@ def get_target(target_id: int) -> Target:
 def create_target(new_target: NewTarget) -> NewTarget:
     """Create a new scraping target in the database."""
     try:
-        msg = f"Creating target {new_target.sku} in database"
+        msg = f"Creating new target with sku '{new_target.sku}' in database"
         logging.info(msg=msg)
         now = datetime.now(tz=timezone.utc)
         stmt = ScrapeTargets(
@@ -84,7 +84,7 @@ def create_target(new_target: NewTarget) -> NewTarget:
 def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
     """Update a scraping target in the database."""
     try:
-        msg = f"Updating target {target_id} in database"
+        msg = f"Updating target with id {target_id} in database"
         logging.info(msg=msg)
         target = get_target(target_id)
         target.site = new_target.site
