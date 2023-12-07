@@ -98,4 +98,20 @@ def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
         return new_target
 
 
+@app.delete("/targets/{target_id}")
+def delete_target(target_id: int) -> dict[str, str]:
+    """Delete a scraping target from the database."""
+    try:
+        msg = f"Deleting target with id {target_id} from database"
+        logging.info(msg=msg)
+        target = get_target(target_id)
+        session.delete(target)
+        session.commit()
+    except SQLAlchemyError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=500, detail="Database error") from None
+    else:
+        return {"message": f"Target with id {target_id} deleted"}
+
+
 session.close()
