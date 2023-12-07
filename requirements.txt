@@ -4,6 +4,8 @@ playwright==1.38.0
 python-dotenv==1.0.0
 selectolax==0.3.16
 textdistance==4.6.0
+fastapi==0.104.1
+uvicorn==0.24.0.post1
 
 # App Deps
 py-pushover-client==1.0.0.dev2

@@ -24,6 +24,3 @@ QA:
 	pytest .
 	mypy .
 	ruff check .
-
-run:
-	python main.py

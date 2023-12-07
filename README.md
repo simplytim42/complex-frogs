@@ -1,13 +1,16 @@
 # complex-frogs
 web scraping to track the price of things I would like to buy and send me daily notifications using https://pushover.net
 
+there are two main scripts, the first is the scraper that collects the data. The second is the API which enables user interaction with the data.
+
 ## setup
 1. sign up to https://pushover.net and generate an API TOKEN and a USER KEY.
 1. `python -m venv venv`
 1. `source venv/bin/activate`
 1. rename `.env-example` to `.env` and populate the variables with your API TOKEN and USER KEY.
 1. `make install` (or `make dev-install` for local development)
-1. `make run`
+1. to execute the scraper use the command `python run_scraper`. If you want this run daily you should trigger it from cronjob etc.
+1. to activate the API use `uvicorn run_api:app --reload`
 
 ## run all QA checks
 1. `make QA`
