@@ -143,4 +143,21 @@ def get_scrape_data_for_target(target_id: int) -> list[ScrapeResult]:
         return scraped_data  # type: ignore[return-value]
 
 
+@app.delete("/scrape-data/{scrape_data_id}")
+def delete_scrape_data(scrape_data_id: int) -> dict[str, str]:
+    """Delete individual scrape data from the database."""
+    try:
+        msg = f"Deleting scrape data with id {scrape_data_id} from database"
+        logging.info(msg=msg)
+        stmt = select(ScrapedData).where(ScrapedData.id == scrape_data_id)
+        scrape_data = session.scalar(stmt)
+        session.delete(scrape_data)
+        session.commit()
+    except SQLAlchemyError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=500, detail="Database error") from None
+    else:
+        return {"message": f"Scrape data with id {scrape_data_id} deleted"}
+
+
 session.close()
