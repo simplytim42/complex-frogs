@@ -30,7 +30,7 @@ def root() -> dict[str, str]:
 def get_targets() -> list[Target]:
     """Get all scraping targets from database."""
     try:
-        logging.info("Getting targets from database")
+        logging.info("Getting all targets from database")
         stmt = select(ScrapeTargets)
         targets = session.scalars(stmt)
     except SQLAlchemyError as e:
@@ -44,7 +44,8 @@ def get_targets() -> list[Target]:
 def get_target(target_id: int) -> Target:
     """Get a single scraping target from database."""
     try:
-        logging.info("Getting individual target from database")
+        msg = f"Getting target {target_id} from database"
+        logging.info(msg=msg)
         stmt = select(ScrapeTargets).where(ScrapeTargets.id == target_id)
         target = session.scalar(stmt)
     except SQLAlchemyError as e:
@@ -60,7 +61,8 @@ def get_target(target_id: int) -> Target:
 def create_target(new_target: NewTarget) -> NewTarget:
     """Create a new scraping target in the database."""
     try:
-        logging.info("Creating target in database")
+        msg = f"Creating target {new_target.sku} in database"
+        logging.info(msg=msg)
         now = datetime.now(tz=timezone.utc)
         stmt = ScrapeTargets(
             site=new_target.site,
@@ -82,7 +84,8 @@ def create_target(new_target: NewTarget) -> NewTarget:
 def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
     """Update a scraping target in the database."""
     try:
-        logging.info("Updating target in database")
+        msg = f"Updating target {target_id} in database"
+        logging.info(msg=msg)
         target = get_target(target_id)
         target.site = new_target.site
         target.sku = new_target.sku
