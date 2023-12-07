@@ -99,7 +99,7 @@ def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
 
 
 @app.delete("/targets/{target_id}")
-def delete_target(target_id: int) -> None:
+def delete_target(target_id: int) -> dict[str, str]:
     """Delete a scraping target from the database."""
     try:
         msg = f"Deleting target with id {target_id} from database"
