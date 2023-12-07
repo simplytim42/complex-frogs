@@ -30,7 +30,7 @@ def root() -> dict[str, str]:
 def get_targets() -> list[Target]:
     """Get all scraping targets from database."""
     try:
-        logging.info("Getting targets from database")
+        logging.info("Getting all targets from database")
         stmt = select(ScrapeTargets)
         targets = session.scalars(stmt)
     except SQLAlchemyError as e:
@@ -44,7 +44,8 @@ def get_targets() -> list[Target]:
 def get_target(target_id: int) -> Target:
     """Get a single scraping target from database."""
     try:
-        logging.info("Getting individual target from database")
+        msg = f"Getting target with id {target_id} from database"
+        logging.info(msg=msg)
         stmt = select(ScrapeTargets).where(ScrapeTargets.id == target_id)
         target = session.scalar(stmt)
     except SQLAlchemyError as e:
@@ -60,7 +61,8 @@ def get_target(target_id: int) -> Target:
 def create_target(new_target: NewTarget) -> NewTarget:
     """Create a new scraping target in the database."""
     try:
-        logging.info("Creating target in database")
+        msg = f"Creating new target with sku '{new_target.sku}' in database"
+        logging.info(msg=msg)
         now = datetime.now(tz=timezone.utc)
         stmt = ScrapeTargets(
             site=new_target.site,
@@ -70,6 +72,24 @@ def create_target(new_target: NewTarget) -> NewTarget:
             last_scraped=datetime(1970, 1, 1, tzinfo=timezone.utc),
         )
         session.add(stmt)
+        session.commit()
+    except SQLAlchemyError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=500, detail="Database error") from None
+    else:
+        return new_target
+
+
+@app.put("/targets/{target_id}")
+def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
+    """Update a scraping target in the database."""
+    try:
+        msg = f"Updating target with id {target_id} in database"
+        logging.info(msg=msg)
+        target = get_target(target_id)
+        target.site = new_target.site
+        target.sku = new_target.sku
+        target.send_notification = new_target.send_notification
         session.commit()
     except SQLAlchemyError as e:
         logging.exception(msg=e)
