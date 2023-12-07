@@ -78,4 +78,21 @@ def create_target(new_target: NewTarget) -> NewTarget:
         return new_target
 
 
+@app.put("/targets/{target_id}")
+def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
+    """Update a scraping target in the database."""
+    try:
+        logging.info("Updating target in database")
+        target = get_target(target_id)
+        target.site = new_target.site
+        target.sku = new_target.sku
+        target.send_notification = new_target.send_notification
+        session.commit()
+    except SQLAlchemyError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=500, detail="Database error") from None
+    else:
+        return new_target
+
+
 session.close()
