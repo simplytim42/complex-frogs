@@ -9,7 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from complex_frogs.database import engine
-from complex_frogs.database.crud import read_targets
+from complex_frogs.database.crud import read_targets, read_target
 from complex_frogs.database.models import ScrapedData, ScrapeTargets
 from complex_frogs.logger.config import LOGS_DIR, setup_logger
 from complex_frogs.models.scraper import NewTarget, ScrapeResult, Target
@@ -46,8 +46,7 @@ def get_target(target_id: int) -> Target:
     try:
         msg = f"Getting target with id {target_id} from database"
         logging.info(msg=msg)
-        stmt = select(ScrapeTargets).where(ScrapeTargets.id == target_id)
-        target = session.scalar(stmt)
+        target = read_target(session, target_id)
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
@@ -86,7 +85,7 @@ def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
     try:
         msg = f"Updating target with id {target_id} in database"
         logging.info(msg=msg)
-        target = get_target(target_id)
+        target = read_target(session, target_id)
         target.site = new_target.site
         target.sku = new_target.sku
         target.send_notification = new_target.send_notification
@@ -104,7 +103,7 @@ def delete_target(target_id: int) -> dict[str, str]:
     try:
         msg = f"Deleting target with id {target_id} from database"
         logging.info(msg=msg)
-        target = get_target(target_id)
+        target = read_target(session, target_id)
         session.delete(target)
         session.commit()
     except SQLAlchemyError as e:
