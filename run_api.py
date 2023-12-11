@@ -100,9 +100,10 @@ def delete_target(target_id: int) -> dict[str, str]:
     try:
         msg = f"Deleting target with id {target_id} from database"
         logging.info(msg=msg)
-        target = crud.read_target(session, target_id)
-        session.delete(target)
-        session.commit()
+        crud.delete_target(session, target_id)
+    except crud.TargetDoesNotExistError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=404, detail="Target not found") from None
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None

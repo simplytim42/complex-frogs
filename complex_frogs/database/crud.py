@@ -71,3 +71,14 @@ def update_target(
     target.sku = new_target.sku
     session.commit()
     return target
+
+
+def delete_target(session: Session, target_id: int) -> None:
+    """Delete a scraping target from the database."""
+    target = read_target(session, target_id, for_update=True)
+
+    if target is None:
+        raise TargetDoesNotExistError
+
+    session.delete(target)
+    session.commit()
