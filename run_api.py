@@ -46,7 +46,7 @@ def get_target(target_id: int) -> Target:
         msg = f"Getting target with id {target_id} from database"
         logging.info(msg=msg)
         target = crud.read_target(session, target_id)
-        if not target:
+        if target is None:
             raise HTTPException(status_code=404, detail="Target not found")
     except SQLAlchemyError as e:
         logging.exception(msg=e)
@@ -83,20 +83,15 @@ def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
     try:
         msg = f"Updating target with id {target_id} in database"
         logging.info(msg=msg)
-        target = crud.read_target(session, target_id)
-
-        if not target:
-            raise HTTPException(status_code=404, detail="Target not found")
-
-        target.site = new_target.site
-        target.sku = new_target.sku
-        target.send_notification = new_target.send_notification
-        session.commit()
+        target = crud.update_target(session, target_id, new_target)
+    except crud.TargetDoesNotExistError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=404, detail="Target not found") from None
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return new_target
+        return target
 
 
 @app.delete("/targets/{target_id}")

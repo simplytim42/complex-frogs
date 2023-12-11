@@ -12,15 +12,28 @@ class TargetExistsError(Exception):
     """Raised when a target already exists in the database."""
 
 
+class TargetDoesNotExistError(Exception):
+    """Raised when a target does not exist in the database."""
+
+
 def read_targets(session: Session) -> Sequence[ScrapeTargets]:
     """Get all scraping targets from database."""
     stmt = select(ScrapeTargets)
     return session.scalars(stmt).all()
 
 
-def read_target(session: Session, target_id: int) -> ScrapeTargets | None:
+def read_target(
+    session: Session,
+    target_id: int,
+    for_update: bool = False,
+) -> ScrapeTargets | None:
     """Get a single scraping target from database."""
-    stmt = select(ScrapeTargets).where(ScrapeTargets.id == target_id)
+    if for_update:
+        stmt = (
+            select(ScrapeTargets).where(ScrapeTargets.id == target_id).with_for_update()
+        )
+    else:
+        stmt = select(ScrapeTargets).where(ScrapeTargets.id == target_id)
     return session.scalar(stmt)
 
 
@@ -39,5 +52,22 @@ def create_target(session: Session, target: ScrapeTargets) -> ScrapeTargets:
         raise TargetExistsError
 
     session.add(target)
+    session.commit()
+    return target
+
+
+def update_target(
+    session: Session,
+    target_id: int,
+    new_target: ScrapeTargets,
+) -> ScrapeTargets:
+    """Update a scraping target in the database."""
+    target = read_target(session, target_id, for_update=True)
+
+    if target is None:
+        raise TargetDoesNotExistError
+
+    target.site = new_target.site
+    target.sku = new_target.sku
     session.commit()
     return target
