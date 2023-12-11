@@ -9,6 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from complex_frogs.database import engine
+from complex_frogs.database.crud import read_targets
 from complex_frogs.database.models import ScrapedData, ScrapeTargets
 from complex_frogs.logger.config import LOGS_DIR, setup_logger
 from complex_frogs.models.scraper import NewTarget, ScrapeResult, Target
@@ -31,8 +32,7 @@ def get_targets() -> list[Target]:
     """Get all scraping targets from database."""
     try:
         logging.info("Getting all targets from database")
-        stmt = select(ScrapeTargets)
-        targets = session.scalars(stmt)
+        targets = read_targets(session)
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
