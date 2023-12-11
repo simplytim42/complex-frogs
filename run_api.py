@@ -116,8 +116,7 @@ def get_scrape_data() -> list[ScrapeResult]:
     """Get all scrape data from database."""
     try:
         logging.info("Getting all scrape data from database")
-        stmt = select(ScrapedData)
-        scraped_data = session.scalars(stmt)
+        scraped_data = crud.read_scrape_data(session)
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
@@ -131,8 +130,10 @@ def get_scrape_data_for_target(target_id: int) -> list[ScrapeResult]:
     try:
         msg = f"Getting all scrape data for target with id {target_id} from database"
         logging.info(msg=msg)
-        stmt = select(ScrapedData).where(ScrapedData.scrape_target_id == target_id)
-        scraped_data = session.scalars(stmt)
+        scraped_data = crud.read_scrape_data_for_target(session, target_id)
+    except crud.TargetDoesNotExistError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=404, detail="Target not found") from None
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None

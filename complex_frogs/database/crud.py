@@ -5,7 +5,7 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .models import ScrapeTargets
+from .models import ScrapedData, ScrapeTargets
 
 
 class TargetExistsError(Exception):
@@ -82,3 +82,21 @@ def delete_target(session: Session, target_id: int) -> None:
 
     session.delete(target)
     session.commit()
+
+
+def read_scrape_data(session: Session) -> Sequence[ScrapedData]:
+    """Get all scrape data from database."""
+    stmt = select(ScrapedData)
+    return session.scalars(stmt).all()
+
+
+def read_scrape_data_for_target(
+    session: Session,
+    target_id: int,
+) -> Sequence[ScrapedData]:
+    """Get all scrape data for a target from database."""
+    if not read_target(session, target_id):
+        raise TargetDoesNotExistError
+
+    stmt = select(ScrapedData).where(ScrapedData.scrape_target_id == target_id)
+    return session.scalars(stmt).all()
