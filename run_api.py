@@ -4,12 +4,11 @@ import logging
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, HTTPException
-from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from complex_frogs.database import crud, engine
-from complex_frogs.database.models import ScrapedData, ScrapeTargets
+from complex_frogs.database.models import ScrapeTargets
 from complex_frogs.logger.config import LOGS_DIR, setup_logger
 from complex_frogs.models.scraper import NewTarget, ScrapeResult, Target
 
@@ -64,9 +63,11 @@ def new_target(new_target: NewTarget) -> NewTarget:
         now = datetime.now(tz=timezone.utc)
         last = datetime(1970, 1, 1, tzinfo=timezone.utc)
         target = ScrapeTargets(
-            **new_target.model_dump(), date_added=now, last_scraped=last
+            **new_target.model_dump(),
+            date_added=now,
+            last_scraped=last,
         )
-        new_target = crud.create_target(session, target)
+        created_target = crud.create_target(session, target)
     except crud.TargetExistsError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=409, detail="Target already exists") from None
@@ -74,7 +75,7 @@ def new_target(new_target: NewTarget) -> NewTarget:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return new_target
+        return created_target  # type: ignore[return-value]
 
 
 @app.put("/targets/{target_id}")
@@ -91,7 +92,7 @@ def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return target
+        return target  # type: ignore[return-value]
 
 
 @app.delete("/targets/{target_id}")
@@ -141,16 +142,33 @@ def get_scrape_data_for_target(target_id: int) -> list[ScrapeResult]:
         return scraped_data  # type: ignore[return-value]
 
 
+@app.get("/scrape-data/{scrape_data_id}")
+def get_scrape_data_by_id(scrape_data_id: int) -> ScrapeResult:
+    """Get specific scrape data by id from database."""
+    try:
+        msg = f"Getting scrape data with id {scrape_data_id} from database"
+        logging.info(msg=msg)
+        scraped_data = crud.read_scrape_data_by_id(session, scrape_data_id)
+    except crud.ScrapedDataDoesNotExistError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=404, detail="Scrape data not found") from None
+    except SQLAlchemyError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=500, detail="Database error") from None
+    else:
+        return scraped_data  # type: ignore[return-value]
+
+
 @app.delete("/scrape-data/{scrape_data_id}")
 def delete_scrape_data(scrape_data_id: int) -> dict[str, str]:
     """Delete individual scrape data from the database."""
     try:
         msg = f"Deleting scrape data with id {scrape_data_id} from database"
         logging.info(msg=msg)
-        stmt = select(ScrapedData).where(ScrapedData.id == scrape_data_id)
-        scrape_data = session.scalar(stmt)
-        session.delete(scrape_data)
-        session.commit()
+        crud.delete_scrape_data(session, scrape_data_id)
+    except crud.ScrapedDataDoesNotExistError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=404, detail="Scrape data not found") from None
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None

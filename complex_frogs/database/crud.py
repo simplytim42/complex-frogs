@@ -5,6 +5,7 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from ..models.scraper import NewTarget
 from .models import ScrapedData, ScrapeTargets
 
 
@@ -14,6 +15,10 @@ class TargetExistsError(Exception):
 
 class TargetDoesNotExistError(Exception):
     """Raised when a target does not exist in the database."""
+
+
+class ScrapedDataDoesNotExistError(Exception):
+    """Raised when scraped data does not exist in the database."""
 
 
 def read_targets(session: Session) -> Sequence[ScrapeTargets]:
@@ -59,7 +64,7 @@ def create_target(session: Session, target: ScrapeTargets) -> ScrapeTargets:
 def update_target(
     session: Session,
     target_id: int,
-    new_target: ScrapeTargets,
+    new_target: NewTarget,
 ) -> ScrapeTargets:
     """Update a scraping target in the database."""
     target = read_target(session, target_id, for_update=True)
@@ -100,3 +105,21 @@ def read_scrape_data_for_target(
 
     stmt = select(ScrapedData).where(ScrapedData.scrape_target_id == target_id)
     return session.scalars(stmt).all()
+
+
+def read_scrape_data_by_id(session: Session, scrape_data_id: int) -> ScrapedData:
+    """Get specific scrape data by id from database."""
+    stmt = select(ScrapedData).where(ScrapedData.id == scrape_data_id)
+    scraped_data = session.scalar(stmt)
+
+    if scraped_data is None:
+        raise ScrapedDataDoesNotExistError
+
+    return scraped_data
+
+
+def delete_scrape_data(session: Session, scrape_data_id: int) -> None:
+    """Delete scrape data for a target from the database."""
+    scraped_data = read_scrape_data_by_id(session, scrape_data_id)
+    session.delete(scraped_data)
+    session.commit()
