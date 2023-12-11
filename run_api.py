@@ -8,8 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from complex_frogs.database import engine
-from complex_frogs.database.crud import read_target, read_targets
+from complex_frogs.database import crud, engine
 from complex_frogs.database.models import ScrapedData, ScrapeTargets
 from complex_frogs.logger.config import LOGS_DIR, setup_logger
 from complex_frogs.models.scraper import NewTarget, ScrapeResult, Target
@@ -32,7 +31,7 @@ def get_targets() -> list[Target]:
     """Get all scraping targets from database."""
     try:
         logging.info("Getting all targets from database")
-        targets = read_targets(session)
+        targets = crud.read_targets(session)
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
@@ -46,32 +45,31 @@ def get_target(target_id: int) -> Target:
     try:
         msg = f"Getting target with id {target_id} from database"
         logging.info(msg=msg)
-        target = read_target(session, target_id)
+        target = crud.read_target(session, target_id)
+        if not target:
+            raise HTTPException(status_code=404, detail="Target not found")
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        if target is None:
-            raise HTTPException(status_code=404, detail="Target not found")
         return target  # type: ignore[return-value]
 
 
 @app.post("/targets")
-def create_target(new_target: NewTarget) -> NewTarget:
+def new_target(new_target: NewTarget) -> NewTarget:
     """Create a new scraping target in the database."""
     try:
         msg = f"Creating new target with sku '{new_target.sku}' in database"
         logging.info(msg=msg)
         now = datetime.now(tz=timezone.utc)
-        stmt = ScrapeTargets(
-            site=new_target.site,
-            sku=new_target.sku,
-            send_notification=new_target.send_notification,
-            date_added=now,
-            last_scraped=datetime(1970, 1, 1, tzinfo=timezone.utc),
+        last = datetime(1970, 1, 1, tzinfo=timezone.utc)
+        target = ScrapeTargets(
+            **new_target.model_dump(), date_added=now, last_scraped=last
         )
-        session.add(stmt)
-        session.commit()
+        new_target = crud.create_target(session, target)
+    except crud.TargetExistsError as e:
+        logging.exception(msg=e)
+        raise HTTPException(status_code=409, detail="Target already exists") from None
     except SQLAlchemyError as e:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
@@ -85,7 +83,7 @@ def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
     try:
         msg = f"Updating target with id {target_id} in database"
         logging.info(msg=msg)
-        target = read_target(session, target_id)
+        target = crud.read_target(session, target_id)
 
         if not target:
             raise HTTPException(status_code=404, detail="Target not found")
@@ -107,7 +105,7 @@ def delete_target(target_id: int) -> dict[str, str]:
     try:
         msg = f"Deleting target with id {target_id} from database"
         logging.info(msg=msg)
-        target = read_target(session, target_id)
+        target = crud.read_target(session, target_id)
         session.delete(target)
         session.commit()
     except SQLAlchemyError as e:
