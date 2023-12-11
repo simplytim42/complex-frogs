@@ -21,6 +21,9 @@ class ScrapedDataDoesNotExistError(Exception):
     """Raised when scraped data does not exist in the database."""
 
 
+# ----------------------
+# FUNCTIONS FOR TARGETS
+# ----------------------
 def read_targets(session: Session) -> Sequence[ScrapeTargets]:
     """Get all scraping targets from database."""
     stmt = select(ScrapeTargets)
@@ -58,6 +61,7 @@ def create_target(session: Session, target: ScrapeTargets) -> ScrapeTargets:
 
     session.add(target)
     session.commit()
+    session.refresh(target)
     return target
 
 
@@ -75,6 +79,7 @@ def update_target(
     target.site = new_target.site
     target.sku = new_target.sku
     session.commit()
+    session.refresh(target)
     return target
 
 
@@ -89,6 +94,9 @@ def delete_target(session: Session, target_id: int) -> None:
     session.commit()
 
 
+# ---------------------------
+# FUNCTIONS FOR SCRAPED DATA
+# ---------------------------
 def read_scrape_data(session: Session) -> Sequence[ScrapedData]:
     """Get all scrape data from database."""
     stmt = select(ScrapedData)
