@@ -9,7 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from complex_frogs.database import engine
-from complex_frogs.database.crud import read_targets, read_target
+from complex_frogs.database.crud import read_target, read_targets
 from complex_frogs.database.models import ScrapedData, ScrapeTargets
 from complex_frogs.logger.config import LOGS_DIR, setup_logger
 from complex_frogs.models.scraper import NewTarget, ScrapeResult, Target
