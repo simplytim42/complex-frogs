@@ -86,6 +86,10 @@ def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
         msg = f"Updating target with id {target_id} in database"
         logging.info(msg=msg)
         target = read_target(session, target_id)
+
+        if not target:
+            raise HTTPException(status_code=404, detail="Target not found")
+
         target.site = new_target.site
         target.sku = new_target.sku
         target.send_notification = new_target.send_notification
