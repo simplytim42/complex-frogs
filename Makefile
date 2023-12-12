@@ -24,3 +24,6 @@ QA:
 	pytest .
 	mypy .
 	ruff check .
+
+api:
+	uvicorn run_api:app --reload
