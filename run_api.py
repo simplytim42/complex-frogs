@@ -167,7 +167,7 @@ def delete_target(
     """Delete a Scraping Target from the database."""
     try:
         crud.delete_target(session, target_id)
-    except crud.TargetDoesNotExistError as e:
+    except crud.TargetDoesNotExistError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Target not found",
@@ -217,12 +217,12 @@ def get_scrape_data_for_target(
     """Get all Scrape Data for a specific Target from database."""
     try:
         scraped_data = crud.read_scrape_data_for_target(session, target_id)
-    except crud.TargetDoesNotExistError as e:
+    except crud.TargetDoesNotExistError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Target not found",
         ) from None
-    except SQLAlchemyError as e:
+    except SQLAlchemyError:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Database error",
@@ -246,7 +246,7 @@ def get_scrape_data_by_id(
     """Get specific Scrape Data by ID from database."""
     try:
         scraped_data = crud.read_scrape_data_by_id(session, scrape_data_id)
-    except crud.ScrapedDataDoesNotExistError as e:
+    except crud.ScrapedDataDoesNotExistError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Scrape data not found",
@@ -276,7 +276,7 @@ def delete_scrape_data(
     """Delete specific Scrape Data from the database."""
     try:
         crud.delete_scrape_data(session, scrape_data_id)
-    except crud.ScrapedDataDoesNotExistError as e:
+    except crud.ScrapedDataDoesNotExistError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Scrape data not found",
