@@ -5,8 +5,8 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ..models.scraper import NewTarget
 from .models import ScrapedData, ScrapeTargets
+from .schema import NewTarget
 
 
 class TargetExistsError(Exception):

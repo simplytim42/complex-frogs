@@ -9,10 +9,8 @@ from fastapi import FastAPI, HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from complex_frogs.database import crud, engine
-from complex_frogs.database.models import ScrapeTargets
+from complex_frogs.database import crud, engine, models, schema
 from complex_frogs.logger.config import LOGS_DIR, setup_logger
-from complex_frogs.models.scraper import NewTarget, ScrapeResult, Target
 
 setup_logger(LOGS_DIR / "api.log")
 
@@ -39,7 +37,7 @@ def root() -> dict[str, str]:
 
 @app.get(
     "/targets",
-    response_model=list[Target],
+    response_model=list[schema.Target],
     tags=[Tags.targets],
 )
 def get_targets() -> Any:
@@ -59,7 +57,7 @@ def get_targets() -> Any:
 
 @app.get(
     "/targets/{target_id}",
-    response_model=Target,
+    response_model=schema.Target,
     tags=[Tags.targets],
 )
 def get_target(target_id: int) -> Any:
@@ -85,18 +83,18 @@ def get_target(target_id: int) -> Any:
 
 @app.post(
     "/targets",
-    response_model=NewTarget,
+    response_model=schema.NewTarget,
     status_code=status.HTTP_201_CREATED,
     tags=[Tags.targets],
 )
-def new_target(new_target: NewTarget) -> Any:
+def new_target(new_target: schema.NewTarget) -> Any:
     """Create a new scraping target in the database."""
     try:
         msg = f"Creating new target with sku '{new_target.sku}' in database"
         logging.info(msg=msg)
         now = datetime.now(tz=timezone.utc)
         last = datetime(1970, 1, 1, tzinfo=timezone.utc)
-        target = ScrapeTargets(
+        target = models.ScrapeTargets(
             **new_target.model_dump(),
             date_added=now,
             last_scraped=last,
@@ -120,10 +118,10 @@ def new_target(new_target: NewTarget) -> Any:
 
 @app.put(
     "/targets/{target_id}",
-    response_model=NewTarget,
+    response_model=schema.NewTarget,
     tags=[Tags.targets],
 )
-def update_target(target_id: int, new_target: NewTarget) -> Any:
+def update_target(target_id: int, new_target: schema.NewTarget) -> Any:
     """Update a scraping target in the database."""
     try:
         msg = f"Updating target with id {target_id} in database"
@@ -150,7 +148,7 @@ def update_target(target_id: int, new_target: NewTarget) -> Any:
     status_code=status.HTTP_204_NO_CONTENT,
     tags=[Tags.targets],
 )
-def delete_target(target_id: int):
+def delete_target(target_id: int) -> None:
     """Delete a scraping target from the database."""
     try:
         msg = f"Deleting target with id {target_id} from database"
@@ -172,7 +170,7 @@ def delete_target(target_id: int):
 
 @app.get(
     "/scrape-data",
-    response_model=list[ScrapeResult],
+    response_model=list[schema.ScrapeResult],
     tags=[Tags.scrape_data],
 )
 def get_scrape_data() -> Any:
@@ -192,7 +190,7 @@ def get_scrape_data() -> Any:
 
 @app.get(
     "/scrape-data/target/{target_id}",
-    response_model=list[ScrapeResult],
+    response_model=list[schema.ScrapeResult],
     tags=[Tags.scrape_data],
 )
 def get_scrape_data_for_target(target_id: int) -> Any:
@@ -219,7 +217,7 @@ def get_scrape_data_for_target(target_id: int) -> Any:
 
 @app.get(
     "/scrape-data/{scrape_data_id}",
-    response_model=ScrapeResult,
+    response_model=schema.ScrapeResult,
     tags=[Tags.scrape_data],
 )
 def get_scrape_data_by_id(scrape_data_id: int) -> Any:
@@ -249,7 +247,7 @@ def get_scrape_data_by_id(scrape_data_id: int) -> Any:
     status_code=status.HTTP_204_NO_CONTENT,
     tags=[Tags.scrape_data],
 )
-def delete_scrape_data(scrape_data_id: int):
+def delete_scrape_data(scrape_data_id: int) -> None:
     """Delete individual scrape data from the database."""
     try:
         msg = f"Deleting scrape data with id {scrape_data_id} from database"
