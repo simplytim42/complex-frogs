@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .models import ScrapedData, ScrapeTargets
-from .schema import NewTarget
+from .schema import TargetIn
 
 
 class TargetExistsError(Exception):
@@ -68,7 +68,7 @@ def create_target(session: Session, target: ScrapeTargets) -> ScrapeTargets:
 def update_target(
     session: Session,
     target_id: int,
-    new_target: NewTarget,
+    new_target: TargetIn,
 ) -> ScrapeTargets:
     """Update a scraping target in the database."""
     target = read_target(session, target_id, for_update=True)

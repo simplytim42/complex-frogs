@@ -36,7 +36,7 @@ def root() -> dict[str, str]:
 
 @app.get(
     "/targets",
-    response_model=list[schema.Target],
+    response_model=list[schema.TargetOut],
     tags=[Tags.targets],
     response_description="A list of all Scraping Targets",
 )
@@ -57,7 +57,7 @@ def get_targets(session: Annotated[Session, Depends(get_db)]) -> Any:
 
 @app.get(
     "/targets/{target_id}",
-    response_model=schema.Target,
+    response_model=schema.TargetOut,
     tags=[Tags.targets],
     response_description="The requested Scraping Target",
 )
@@ -87,13 +87,13 @@ def get_target(
 
 @app.post(
     "/targets",
-    response_model=schema.NewTarget,
+    response_model=schema.TargetOut,
     status_code=status.HTTP_201_CREATED,
     tags=[Tags.targets],
     response_description="The newly created Scraping Target",
 )
 def new_target(
-    new_target: schema.NewTarget,
+    new_target: schema.TargetIn,
     session: Annotated[Session, Depends(get_db)],
 ) -> Any:
     """Create a new Scraping Target in the database."""
@@ -126,13 +126,13 @@ def new_target(
 
 @app.put(
     "/targets/{target_id}",
-    response_model=schema.NewTarget,
+    response_model=schema.TargetOut,
     tags=[Tags.targets],
     response_description="The updated Scraping Target",
 )
 def update_target(
     target_id: int,
-    new_target: schema.NewTarget,
+    new_target: schema.TargetIn,
     session: Annotated[Session, Depends(get_db)],
 ) -> Any:
     """Update a Scraping Target in the database."""
@@ -187,7 +187,7 @@ def delete_target(
 
 @app.get(
     "/scrape-data",
-    response_model=list[schema.ScrapeResult],
+    response_model=list[schema.ScrapeDataOut],
     tags=[Tags.scrape_data],
     response_description="A list of all Scrape Data!",
 )
@@ -208,7 +208,7 @@ def get_scrape_data(session: Annotated[Session, Depends(get_db)]) -> Any:
 
 @app.get(
     "/scrape-data/target/{target_id}",
-    response_model=list[schema.ScrapeResult],
+    response_model=list[schema.ScrapeDataOut],
     tags=[Tags.scrape_data],
     response_description="A list of all Scrape Data for the specified Target",
 )
@@ -239,7 +239,7 @@ def get_scrape_data_for_target(
 
 @app.get(
     "/scrape-data/{scrape_data_id}",
-    response_model=schema.ScrapeResult,
+    response_model=schema.ScrapeDataOut,
     tags=[Tags.scrape_data],
     response_description="The specified Scrape Data",
 )

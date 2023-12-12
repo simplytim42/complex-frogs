@@ -5,30 +5,40 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class Target(BaseModel):
-    """model for a scraping target."""
+class TargetBase(BaseModel):
+    """base model for a scraping target."""
 
-    id: int  # noqa: A003
     site: str
     sku: str
     send_notification: bool
+
+
+class TargetIn(TargetBase):
+    """model for a new scraping target."""
+
+
+class TargetOut(TargetBase):
+    """model for a scraping target."""
+
+    id: int  # noqa: A003
     date_added: datetime
     last_scraped: datetime
 
 
-class NewTarget(BaseModel):
-    """model for a new scraping target."""
+class ScrapeDataBase(BaseModel):
+    """base model for the scrape data."""
 
-    site: str
-    sku: str
-    send_notification: bool
-
-
-class ScrapeResult(BaseModel):
-    """model for a scrape result."""
-
-    id: int  # noqa: A003
     scrape_target_id: int
     title: str
     price: str
     timestamp: datetime
+
+
+class ScrapeDataIn(ScrapeDataBase):
+    """model for new scraping data."""
+
+
+class ScrapeDataOut(ScrapeDataBase):
+    """model for a scrape data."""
+
+    id: int  # noqa: A003
