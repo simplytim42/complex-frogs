@@ -1,6 +1,8 @@
 from pathlib import Path
+from typing import Generator
 
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
 from .models import Base
 
@@ -9,3 +11,12 @@ db_location = root_dir / "frog.db"
 engine = create_engine(f"sqlite:////{db_location}")
 
 Base.metadata.create_all(bind=engine, checkfirst=True)
+
+
+def get_db() -> Generator[Session, None, None]:
+    """Get a database session."""
+    try:
+        db = Session(engine)
+        yield db
+    finally:
+        db.close()
