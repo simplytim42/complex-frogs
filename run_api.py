@@ -3,19 +3,18 @@
 import logging
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any
+from typing import Annotated, Any
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from complex_frogs.database import crud, engine, models, schema
+from complex_frogs.database import crud, get_db, models, schema
 from complex_frogs.logger.config import LOGS_DIR, setup_logger
 
 setup_logger(LOGS_DIR / "api.log")
 
 app = FastAPI()
-session = Session(engine)
 
 
 class Tags(Enum):
@@ -41,7 +40,7 @@ def root() -> dict[str, str]:
     tags=[Tags.targets],
     response_description="A list of all Scraping Targets",
 )
-def get_targets() -> Any:
+def get_targets(session: Annotated[Session, Depends(get_db)]) -> Any:
     """Get all Scraping Targets from the database."""
     try:
         logging.info("Getting all targets from database")
@@ -62,7 +61,10 @@ def get_targets() -> Any:
     tags=[Tags.targets],
     response_description="The requested Scraping Target",
 )
-def get_target(target_id: int) -> Any:
+def get_target(
+    target_id: int,
+    session: Annotated[Session, Depends(get_db)],
+) -> Any:
     """Get a single Scraping Target from database."""
     try:
         msg = f"Getting target with id {target_id} from database"
@@ -90,7 +92,10 @@ def get_target(target_id: int) -> Any:
     tags=[Tags.targets],
     response_description="The newly created Scraping Target",
 )
-def new_target(new_target: schema.NewTarget) -> Any:
+def new_target(
+    new_target: schema.NewTarget,
+    session: Annotated[Session, Depends(get_db)],
+) -> Any:
     """Create a new Scraping Target in the database."""
     try:
         msg = f"Creating new target with sku '{new_target.sku}' in database"
@@ -125,7 +130,11 @@ def new_target(new_target: schema.NewTarget) -> Any:
     tags=[Tags.targets],
     response_description="The updated Scraping Target",
 )
-def update_target(target_id: int, new_target: schema.NewTarget) -> Any:
+def update_target(
+    target_id: int,
+    new_target: schema.NewTarget,
+    session: Annotated[Session, Depends(get_db)],
+) -> Any:
     """Update a Scraping Target in the database."""
     try:
         msg = f"Updating target with id {target_id} in database"
@@ -153,7 +162,10 @@ def update_target(target_id: int, new_target: schema.NewTarget) -> Any:
     tags=[Tags.targets],
     response_description="No content",
 )
-def delete_target(target_id: int) -> None:
+def delete_target(
+    target_id: int,
+    session: Annotated[Session, Depends(get_db)],
+) -> None:
     """Delete a Scraping Target from the database."""
     try:
         msg = f"Deleting target with id {target_id} from database"
@@ -179,7 +191,7 @@ def delete_target(target_id: int) -> None:
     tags=[Tags.scrape_data],
     response_description="A list of all Scrape Data!",
 )
-def get_scrape_data() -> Any:
+def get_scrape_data(session: Annotated[Session, Depends(get_db)]) -> Any:
     """Get all Scrape Data from database."""
     try:
         logging.info("Getting all scrape data from database")
@@ -200,7 +212,10 @@ def get_scrape_data() -> Any:
     tags=[Tags.scrape_data],
     response_description="A list of all Scrape Data for the specified Target",
 )
-def get_scrape_data_for_target(target_id: int) -> Any:
+def get_scrape_data_for_target(
+    target_id: int,
+    session: Annotated[Session, Depends(get_db)],
+) -> Any:
     """Get all Scrape Data for a specific Target from database."""
     try:
         msg = f"Getting all scrape data for target with id {target_id} from database"
@@ -228,7 +243,10 @@ def get_scrape_data_for_target(target_id: int) -> Any:
     tags=[Tags.scrape_data],
     response_description="The specified Scrape Data",
 )
-def get_scrape_data_by_id(scrape_data_id: int) -> Any:
+def get_scrape_data_by_id(
+    scrape_data_id: int,
+    session: Annotated[Session, Depends(get_db)],
+) -> Any:
     """Get specific Scrape Data by ID from database."""
     try:
         msg = f"Getting scrape data with id {scrape_data_id} from database"
@@ -256,7 +274,10 @@ def get_scrape_data_by_id(scrape_data_id: int) -> Any:
     tags=[Tags.scrape_data],
     response_description="No content",
 )
-def delete_scrape_data(scrape_data_id: int) -> None:
+def delete_scrape_data(
+    scrape_data_id: int,
+    session: Annotated[Session, Depends(get_db)],
+) -> None:
     """Delete specific Scrape Data from the database."""
     try:
         msg = f"Deleting scrape data with id {scrape_data_id} from database"
@@ -274,6 +295,3 @@ def delete_scrape_data(scrape_data_id: int) -> None:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Database error",
         ) from None
-
-
-session.close()
