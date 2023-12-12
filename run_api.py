@@ -2,6 +2,7 @@
 
 import logging
 from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from sqlalchemy.exc import SQLAlchemyError
@@ -25,8 +26,8 @@ def root() -> dict[str, str]:
     return {"message": "Complex Frogs API"}
 
 
-@app.get("/targets")
-def get_targets() -> list[Target]:
+@app.get("/targets", response_model=list[Target])
+def get_targets() -> Any:
     """Get all scraping targets from database."""
     try:
         logging.info("Getting all targets from database")
@@ -35,11 +36,11 @@ def get_targets() -> list[Target]:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return targets  # type: ignore[return-value]
+        return targets
 
 
-@app.get("/targets/{target_id}")
-def get_target(target_id: int) -> Target:
+@app.get("/targets/{target_id}", response_model=Target)
+def get_target(target_id: int) -> Any:
     """Get a single scraping target from database."""
     try:
         msg = f"Getting target with id {target_id} from database"
@@ -51,11 +52,11 @@ def get_target(target_id: int) -> Target:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return target  # type: ignore[return-value]
+        return target
 
 
-@app.post("/targets")
-def new_target(new_target: NewTarget) -> NewTarget:
+@app.post("/targets", response_model=NewTarget)
+def new_target(new_target: NewTarget) -> Any:
     """Create a new scraping target in the database."""
     try:
         msg = f"Creating new target with sku '{new_target.sku}' in database"
@@ -75,11 +76,11 @@ def new_target(new_target: NewTarget) -> NewTarget:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return created_target  # type: ignore[return-value]
+        return created_target
 
 
-@app.put("/targets/{target_id}")
-def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
+@app.put("/targets/{target_id}", response_model=NewTarget)
+def update_target(target_id: int, new_target: NewTarget) -> Any:
     """Update a scraping target in the database."""
     try:
         msg = f"Updating target with id {target_id} in database"
@@ -92,7 +93,7 @@ def update_target(target_id: int, new_target: NewTarget) -> NewTarget:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return target  # type: ignore[return-value]
+        return target
 
 
 @app.delete("/targets/{target_id}")
@@ -112,8 +113,8 @@ def delete_target(target_id: int) -> dict[str, str]:
         return {"message": f"Target with id {target_id} deleted"}
 
 
-@app.get("/scrape-data")
-def get_scrape_data() -> list[ScrapeResult]:
+@app.get("/scrape-data", response_model=list[ScrapeResult])
+def get_scrape_data() -> Any:
     """Get all scrape data from database."""
     try:
         logging.info("Getting all scrape data from database")
@@ -122,11 +123,11 @@ def get_scrape_data() -> list[ScrapeResult]:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return scraped_data  # type: ignore[return-value]
+        return scraped_data
 
 
-@app.get("/scrape-data/target/{target_id}")
-def get_scrape_data_for_target(target_id: int) -> list[ScrapeResult]:
+@app.get("/scrape-data/target/{target_id}", response_model=list[ScrapeResult])
+def get_scrape_data_for_target(target_id: int) -> Any:
     """Get all scrape data for a target from database."""
     try:
         msg = f"Getting all scrape data for target with id {target_id} from database"
@@ -139,11 +140,11 @@ def get_scrape_data_for_target(target_id: int) -> list[ScrapeResult]:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return scraped_data  # type: ignore[return-value]
+        return scraped_data
 
 
-@app.get("/scrape-data/{scrape_data_id}")
-def get_scrape_data_by_id(scrape_data_id: int) -> ScrapeResult:
+@app.get("/scrape-data/{scrape_data_id}", response_model=ScrapeResult)
+def get_scrape_data_by_id(scrape_data_id: int) -> Any:
     """Get specific scrape data by id from database."""
     try:
         msg = f"Getting scrape data with id {scrape_data_id} from database"
@@ -156,7 +157,7 @@ def get_scrape_data_by_id(scrape_data_id: int) -> ScrapeResult:
         logging.exception(msg=e)
         raise HTTPException(status_code=500, detail="Database error") from None
     else:
-        return scraped_data  # type: ignore[return-value]
+        return scraped_data
 
 
 @app.delete("/scrape-data/{scrape_data_id}")
