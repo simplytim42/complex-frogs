@@ -28,10 +28,10 @@ class Tags(Enum):
 @app.get(
     "/",
     status_code=status.HTTP_418_IM_A_TEAPOT,
+    response_description="Generic Message. Used to confirm API is running.",
 )
 def root() -> dict[str, str]:
     """Root endpoint for API."""
-    logging.info("Root endpoint hit")
     return {"message": "Complex Frogs API"}
 
 
@@ -39,9 +39,10 @@ def root() -> dict[str, str]:
     "/targets",
     response_model=list[schema.Target],
     tags=[Tags.targets],
+    response_description="A list of all Scraping Targets",
 )
 def get_targets() -> Any:
-    """Get all scraping targets from database."""
+    """Get all Scraping Targets from the database."""
     try:
         logging.info("Getting all targets from database")
         targets = crud.read_targets(session)
@@ -59,9 +60,10 @@ def get_targets() -> Any:
     "/targets/{target_id}",
     response_model=schema.Target,
     tags=[Tags.targets],
+    response_description="The requested Scraping Target",
 )
 def get_target(target_id: int) -> Any:
-    """Get a single scraping target from database."""
+    """Get a single Scraping Target from database."""
     try:
         msg = f"Getting target with id {target_id} from database"
         logging.info(msg=msg)
@@ -86,9 +88,10 @@ def get_target(target_id: int) -> Any:
     response_model=schema.NewTarget,
     status_code=status.HTTP_201_CREATED,
     tags=[Tags.targets],
+    response_description="The newly created Scraping Target",
 )
 def new_target(new_target: schema.NewTarget) -> Any:
-    """Create a new scraping target in the database."""
+    """Create a new Scraping Target in the database."""
     try:
         msg = f"Creating new target with sku '{new_target.sku}' in database"
         logging.info(msg=msg)
@@ -120,9 +123,10 @@ def new_target(new_target: schema.NewTarget) -> Any:
     "/targets/{target_id}",
     response_model=schema.NewTarget,
     tags=[Tags.targets],
+    response_description="The updated Scraping Target",
 )
 def update_target(target_id: int, new_target: schema.NewTarget) -> Any:
-    """Update a scraping target in the database."""
+    """Update a Scraping Target in the database."""
     try:
         msg = f"Updating target with id {target_id} in database"
         logging.info(msg=msg)
@@ -147,9 +151,10 @@ def update_target(target_id: int, new_target: schema.NewTarget) -> Any:
     "/targets/{target_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     tags=[Tags.targets],
+    response_description="No content",
 )
 def delete_target(target_id: int) -> None:
-    """Delete a scraping target from the database."""
+    """Delete a Scraping Target from the database."""
     try:
         msg = f"Deleting target with id {target_id} from database"
         logging.info(msg=msg)
@@ -172,9 +177,10 @@ def delete_target(target_id: int) -> None:
     "/scrape-data",
     response_model=list[schema.ScrapeResult],
     tags=[Tags.scrape_data],
+    response_description="A list of all Scrape Data!",
 )
 def get_scrape_data() -> Any:
-    """Get all scrape data from database."""
+    """Get all Scrape Data from database."""
     try:
         logging.info("Getting all scrape data from database")
         scraped_data = crud.read_scrape_data(session)
@@ -192,9 +198,10 @@ def get_scrape_data() -> Any:
     "/scrape-data/target/{target_id}",
     response_model=list[schema.ScrapeResult],
     tags=[Tags.scrape_data],
+    response_description="A list of all Scrape Data for the specified Target",
 )
 def get_scrape_data_for_target(target_id: int) -> Any:
-    """Get all scrape data for a target from database."""
+    """Get all Scrape Data for a specific Target from database."""
     try:
         msg = f"Getting all scrape data for target with id {target_id} from database"
         logging.info(msg=msg)
@@ -219,9 +226,10 @@ def get_scrape_data_for_target(target_id: int) -> Any:
     "/scrape-data/{scrape_data_id}",
     response_model=schema.ScrapeResult,
     tags=[Tags.scrape_data],
+    response_description="The specified Scrape Data",
 )
 def get_scrape_data_by_id(scrape_data_id: int) -> Any:
-    """Get specific scrape data by id from database."""
+    """Get specific Scrape Data by ID from database."""
     try:
         msg = f"Getting scrape data with id {scrape_data_id} from database"
         logging.info(msg=msg)
@@ -246,9 +254,10 @@ def get_scrape_data_by_id(scrape_data_id: int) -> Any:
     "/scrape-data/{scrape_data_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     tags=[Tags.scrape_data],
+    response_description="No content",
 )
 def delete_scrape_data(scrape_data_id: int) -> None:
-    """Delete individual scrape data from the database."""
+    """Delete specific Scrape Data from the database."""
     try:
         msg = f"Deleting scrape data with id {scrape_data_id} from database"
         logging.info(msg=msg)
