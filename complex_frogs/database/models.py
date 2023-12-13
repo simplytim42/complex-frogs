@@ -33,7 +33,7 @@ class ScrapeTargets(Base):
 
     def __repr__(self) -> str:
         """Return a string representation of the object."""
-        return f"ScrapeTarget(site={self.site!r}, sku={self.sku!r}, send_notification={self.send_notification!r})"
+        return f"{self.__class__.__name__}(site={self.site!r}, sku={self.sku!r}, send_notification={self.send_notification!r})"
 
 
 class ScrapedData(Base):
@@ -51,4 +51,4 @@ class ScrapedData(Base):
 
     def __repr__(self) -> str:
         """Return a string representation of the object."""
-        return f"ScrapedData(scrape_target_id={self.scrape_target_id!r}, title={self.title!r}, price={self.price!r})"
+        return f"{self.__class__.__name__}(scrape_target_id={self.scrape_target_id!r}, title={self.title!r}, price={self.price!r})"
