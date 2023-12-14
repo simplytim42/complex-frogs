@@ -11,7 +11,7 @@ from complex_frogs.database import crud, get_db, schema
 
 router = APIRouter(
     prefix="/scrape-data",
-    tags=["scrape data"],
+    tags=["Scrape Data"],
 )
 
 

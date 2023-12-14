@@ -12,7 +12,7 @@ from complex_frogs.database import crud, get_db, models, schema
 
 router = APIRouter(
     prefix="/targets",
-    tags=["targets"],
+    tags=["Targets"],
 )
 
 
