@@ -3,14 +3,31 @@ web scraping to track the price of things I would like to buy and send me daily 
 
 there are two main scripts, the first is the scraper that collects the data. The second is the API which enables user interaction with the data.
 
+NOTE: This project is intended to be deployed on a RaspberryPi and thus this README assumes such.
+
 ## setup
 1. sign up to https://pushover.net and generate an API TOKEN and a USER KEY.
+1. clone repo and `cd` into it
 1. `python -m venv venv`
 1. `source venv/bin/activate`
 1. rename `.env-example` to `.env` and populate the variables with your API TOKEN and USER KEY.
 1. `make install` (or `make dev-install` for local development)
-1. to execute the scraper use the command `python run_scraper`. If you want this run daily you should trigger it from cronjob etc.
-1. to activate the API use `uvicorn run_api:app --reload`
+
+### deploy locally
+1. to execute the scraper use the command `make scraper`
+1. to activate the API use `make api`
+
+### deploy to RPI
+1. setup a cronjob to run the scraper once a day
+1. update the following variables in the systemd service file to represent the RPI environment:
+    - ExecStart
+    - WorkingDirectory
+    - User
+    - Group
+1. `cp` the file into the `/etc/systemd/system` directory
+1. run `sudo systemctl enable complex-frogs` to set the script to boot on startup
+1. run `sudo systemctl start complex-frogs` to start the script now (without having to reboot)
+
 
 ## run all QA checks
 1. `make QA`
