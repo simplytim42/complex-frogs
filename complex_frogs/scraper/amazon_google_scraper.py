@@ -77,6 +77,8 @@ class AmazonGoogleScraper(BaseScraper):
                     self.title = product_card.css_first(self.TITLE_SELECTOR).text(
                         strip=True,
                     )
+            if not self.price or not self.title:
+                raise AttributeError  # noqa TRY301
         except AttributeError:
             self.price = self.PRICE_404
             self.title = self.TITLE_404
