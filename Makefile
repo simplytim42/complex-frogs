@@ -27,3 +27,6 @@ QA:
 
 api:
 	uvicorn run_api:app --reload
+
+scraper:
+	python run_scraper.py
