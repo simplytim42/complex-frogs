@@ -46,7 +46,21 @@ def new_target(
     new_target: schema.TargetIn,
     session: Annotated[Session, Depends(get_db)],
 ) -> Any:
-    """Create a new Scraping Target in the database."""
+    """Create a new Scraping Target in the database.
+
+    ## Usage Notes
+    ### Amazon UK Target
+    - `site` must be set to `amz`
+    - `sku` must be set to the Amazon product ASIN
+
+    ### Amazon UK via Google Shopping Target
+    - `site` must be set to `amz-g`
+    - `sku` must be set to the full name of the book as shown on Amazon UK. The closer the name is to the actual name on Amazon UK, the better the results will be.
+
+    ### Go Outdoors Target
+    - `site` must be set to `go_od`
+    - `sku` must be set to the Product ID and name as set in the URL of the product page on Go Outdoors. For example, for the product at `https://www.gooutdoors.co.uk/15903050/family-tent-123456`, the `sku` would be `family-tent-123456`
+    """
     try:
         now = datetime.now(tz=timezone.utc)
         last = datetime(1970, 1, 1, tzinfo=timezone.utc)
@@ -112,7 +126,10 @@ def update_target(
     new_target: schema.TargetIn,
     session: Annotated[Session, Depends(get_db)],
 ) -> Any:
-    """Update a Scraping Target in the database."""
+    """Update a Scraping Target in the database.
+
+    See *Usage Notes* for `POST /targets/` for helpful details about updating Scraping Targets.
+    """
     try:
         target = crud.update_target(session, target_id, new_target)
     except crud.TargetDoesNotExistError:
