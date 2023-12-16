@@ -1,5 +1,7 @@
+import pytest
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
+from sqlalchemy.exc import SQLAlchemyError
 
 from complex_frogs.api import targets
 from complex_frogs.database import get_db
@@ -8,7 +10,6 @@ from tests.test_data import (
     new_scrape_target,
     scrape_target1,
     scrape_target2,
-    scraped_data1,
 )
 
 app = FastAPI()
@@ -28,6 +29,17 @@ def test_get_targets():
     assert data[1]["site"] == scrape_target2["site"]
 
 
+def test_get_targets_db_error(mocker):
+    mocker.patch(
+        "complex_frogs.database.crud.read_targets",
+        side_effect=SQLAlchemyError,
+    )
+    response = client.get("/targets/")
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    data = response.json()
+    assert data["detail"] == "Database error"
+
+
 def test_post_new_target():
     response = client.post("/targets/", json=new_scrape_target)
     assert response.status_code == status.HTTP_201_CREATED
@@ -42,3 +54,96 @@ def test_post_new_target_already_exists():
     assert response.status_code == status.HTTP_409_CONFLICT
     data = response.json()
     assert data["detail"] == "Target already exists"
+
+
+def test_post_new_target_db_error(mocker):
+    mocker.patch(
+        "complex_frogs.database.crud.create_target",
+        side_effect=SQLAlchemyError,
+    )
+    response = client.post("/targets/", json=new_scrape_target)
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    data = response.json()
+    assert data["detail"] == "Database error"
+
+
+def test_get_target_with_id():
+    response = client.get(f"/targets/{scrape_target2['id']}")
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    assert data["site"] == scrape_target2["site"]
+
+
+def test_get_target_with_id_not_found():
+    response = client.get("/targets/99999")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    data = response.json()
+    assert data["detail"] == "Target not found"
+
+
+def test_get_target_with_id_db_error(mocker):
+    mocker.patch(
+        "complex_frogs.database.crud.read_target",
+        side_effect=SQLAlchemyError,
+    )
+    response = client.get(f"/targets/{scrape_target2['id']}")
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    data = response.json()
+    assert data["detail"] == "Database error"
+
+
+def test_put_update_target():
+    response = client.put(
+        f"/targets/{scrape_target1['id']}",
+        json=new_scrape_target,
+    )
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    assert data["site"] == new_scrape_target["site"]
+
+
+def test_put_update_target_not_found():
+    response = client.put(
+        "/targets/99999",
+        json=new_scrape_target,
+    )
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    data = response.json()
+    assert data["detail"] == "Target not found"
+
+
+def test_put_update_target_db_error(mocker):
+    mocker.patch(
+        "complex_frogs.database.crud.update_target",
+        side_effect=SQLAlchemyError,
+    )
+    response = client.put(
+        f"/targets/{scrape_target1['id']}",
+        json=new_scrape_target,
+    )
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    data = response.json()
+    assert data["detail"] == "Database error"
+
+
+def test_delete_target():
+    response = client.delete(f"/targets/{scrape_target1['id']}")
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+def test_delete_target_not_found():
+    response = client.delete("/targets/99999")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    data = response.json()
+    assert data["detail"] == "Target not found"
+
+
+def test_delete_target_db_error(mocker):
+    mocker.patch(
+        "complex_frogs.database.crud.delete_target",
+        side_effect=SQLAlchemyError,
+    )
+    response = client.delete(f"/targets/{scrape_target1['id']}")
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    data = response.json()
+    assert data["detail"] == "Database error"
