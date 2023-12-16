@@ -1,11 +1,10 @@
-import pytest
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 from sqlalchemy.exc import SQLAlchemyError
 
 from complex_frogs.api import targets
 from complex_frogs.database import get_db
-from tests.test_data import (
+from tests.dummy_data import (
     get_test_db,
     new_scrape_target,
     scrape_target1,

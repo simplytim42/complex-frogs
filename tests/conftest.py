@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from complex_frogs.database.models import Base, ScrapedData, ScrapeTargets
 
-from . import test_data as data
+from . import dummy_data as data
 
 
 @pytest.fixture()
