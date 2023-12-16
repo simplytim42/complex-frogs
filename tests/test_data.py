@@ -10,18 +10,21 @@ from complex_frogs.database.models import Base, ScrapedData, ScrapeTargets
 timestamp = datetime.now(tz=timezone.utc)
 
 scrape_target1 = {
+    "id": 1,
     "site": "test site1",
     "sku": "test sku1",
     "send_notification": True,
 }
 
 scrape_target2 = {
+    "id": 2,
     "site": "test site2",
     "sku": "test sku2",
     "send_notification": True,
 }
 
 new_scrape_target = {
+    "id": 3,
     "site": "test site3",
     "sku": "test sku3",
     "send_notification": False,
@@ -53,6 +56,7 @@ def get_test_db() -> Session:
     Base.metadata.create_all(bind=engine)
     session = Session(bind=engine)
     one = ScrapeTargets(
+        id=scrape_target1["id"],
         site=scrape_target1["site"],
         sku=scrape_target1["sku"],
         send_notification=scrape_target1["send_notification"],
@@ -68,6 +72,7 @@ def get_test_db() -> Session:
         ),
     )
     two = ScrapeTargets(
+        id=scrape_target2["id"],
         site=scrape_target2["site"],
         sku=scrape_target2["sku"],
         send_notification=scrape_target2["send_notification"],
