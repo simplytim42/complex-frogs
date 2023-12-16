@@ -37,17 +37,6 @@ scraped_data1 = {
 }
 
 
-def get_empty_db() -> Session:
-    engine = create_engine(
-        "sqlite:///:memory:",
-        connect_args={"check_same_thread": False},
-    )
-    Base.metadata.create_all(bind=engine)
-    session = Session(bind=engine)
-    yield session
-    Base.metadata.drop_all(bind=engine)
-
-
 def get_test_db() -> Session:
     engine = create_engine(
         "sqlite:///:memory:",
