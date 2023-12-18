@@ -55,11 +55,6 @@ def test_init(scraper):
     assert expected_url == scraper.URL
 
 
-def test_repr(scraper):
-    result = repr(scraper)
-    assert result == repr(eval(result))
-
-
 def test_get_html(mock_http_get_with_data, scraper):
     # as we've added span tags to the html, we can check for them here instead of checking
     # for the whole html.

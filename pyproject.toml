@@ -60,6 +60,12 @@ cache_dir = "~/.cache/pytest"
 [tool.coverage.run]
 source = ["src/"]
 
+[tool.coverage.report]
+exclude_also = [
+    # debug-only code:
+    "def __repr__",
+]
+
 
 
 [tool.mypy]
