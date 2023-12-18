@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from complex_frogs.database import crud, get_db, schema
+from src.database import crud, get_db, schema
 
 router = APIRouter(
     prefix="/scrape-data",

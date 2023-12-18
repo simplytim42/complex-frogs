@@ -1,7 +1,7 @@
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 
-from complex_frogs.api import root
+from src.api import root
 
 app = FastAPI()
 app.include_router(root.router)

@@ -1,6 +1,6 @@
 import pytest
 
-from complex_frogs.scraper import (
+from src.scraper import (
     AmazonGoogleScraper,
     AmazonScraper,
     GoOutdoorsScraper,

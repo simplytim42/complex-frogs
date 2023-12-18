@@ -10,11 +10,11 @@ from py_pushover_client import PushoverAPIClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from complex_frogs.database import engine
-from complex_frogs.database.models import ScrapedData, ScrapeTargets
-from complex_frogs.functions.utils import write_file
-from complex_frogs.logger.config import LOGS_DIR, setup_logger
-from complex_frogs.scraper import ScraperError, get_scraper
+from src.database import engine
+from src.database.models import ScrapedData, ScrapeTargets
+from src.functions.utils import write_file
+from src.logger.config import LOGS_DIR, setup_logger
+from src.scraper import ScraperError, get_scraper
 
 setup_logger(filepath=LOGS_DIR / "frog.log")
 

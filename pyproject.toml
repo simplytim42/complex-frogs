@@ -58,7 +58,7 @@ cache_dir = "~/.cache/pytest"
 
 
 [tool.coverage.run]
-source = ["complex_frogs/"]
+source = ["src/"]
 
 
 

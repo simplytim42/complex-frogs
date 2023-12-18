@@ -1,7 +1,7 @@
 from pathlib import Path
 from tempfile import NamedTemporaryFile, TemporaryDirectory
 
-from complex_frogs.logger.config import setup_logger
+from src.logger.config import setup_logger
 
 
 def test_setup_logger():
