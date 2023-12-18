@@ -58,9 +58,11 @@ cache_dir = "~/.cache/pytest"
 
 
 [tool.coverage.run]
-omit = [
-    "tests/*" # don't generate test coverage for the tests themselves
-]
+source = ["complex_frogs/"]
+# omit = [
+#     "tests/*" # don't generate test coverage for the tests themselves
+# ]
+
 
 
 [tool.mypy]

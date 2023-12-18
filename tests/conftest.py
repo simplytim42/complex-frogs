@@ -1,46 +1,41 @@
-from datetime import datetime, timezone
-
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 from complex_frogs.database.models import Base, ScrapedData, ScrapeTargets
 
-
-@pytest.fixture()
-def timestamp():
-    return datetime.now(tz=timezone.utc)
+from . import dummy_data as data
 
 
 @pytest.fixture()
-def scrape_target1(timestamp):
+def scrape_target1():
     return ScrapeTargets(
-        site="test site1",
-        sku="test sku1",
-        send_notification=True,
-        date_added=timestamp,
-        last_scraped=timestamp,
+        site=data.scrape_target1["site"],
+        sku=data.scrape_target1["sku"],
+        send_notification=data.scrape_target1["send_notification"],
+        date_added=data.timestamp,
+        last_scraped=data.timestamp,
     )
 
 
 @pytest.fixture()
-def scrape_target2(timestamp):
+def scrape_target2():
     return ScrapeTargets(
-        site="test site2",
-        sku="test sku2",
-        send_notification=True,
-        date_added=timestamp,
-        last_scraped=timestamp,
+        site=data.scrape_target2["site"],
+        sku=data.scrape_target2["sku"],
+        send_notification=data.scrape_target2["send_notification"],
+        date_added=data.timestamp,
+        last_scraped=data.timestamp,
     )
 
 
 @pytest.fixture()
-def scraped_data1(timestamp):
+def scraped_data1():
     return ScrapedData(
-        scrape_target_id=1,
-        title="test title1",
-        price="£10",
-        timestamp=timestamp,
+        scrape_target_id=data.scraped_data1["scrape_target_id"],
+        title=data.scraped_data1["title"],
+        price=data.scraped_data1["price"],
+        timestamp=data.timestamp,
     )
 
 

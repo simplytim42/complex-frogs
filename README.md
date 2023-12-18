@@ -27,6 +27,7 @@ NOTE: This project is intended to be deployed on a RaspberryPi and thus this REA
 1. `cp` the file into the `/etc/systemd/system` directory
 1. run `sudo systemctl enable complex-frogs` to set the script to boot on startup
 1. run `sudo systemctl start complex-frogs` to start the script now (without having to reboot)
+1. (if you need to restart the process, for example after updating to a new version, run `sudo systemctl restart complex-frogs` to reboot the process)
 
 
 ## run all QA checks

@@ -78,6 +78,7 @@ def update_target(
 
     target.site = new_target.site
     target.sku = new_target.sku
+    target.send_notification = new_target.send_notification
     session.commit()
     session.refresh(target)
     return target
