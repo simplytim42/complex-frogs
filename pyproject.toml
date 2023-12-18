@@ -64,6 +64,8 @@ source = ["src/"]
 exclude_also = [
     # debug-only code:
     "def __repr__",
+    # defensive assertions:
+    "raise NotImplementedError",
 ]
 
 
