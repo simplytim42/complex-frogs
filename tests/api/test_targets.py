@@ -2,8 +2,8 @@ from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 from sqlalchemy.exc import SQLAlchemyError
 
-from complex_frogs.api import targets
-from complex_frogs.database import get_db
+from src.api import targets
+from src.database import get_db
 from tests.dummy_data import (
     get_test_db,
     new_scrape_target,
@@ -35,7 +35,7 @@ def test_get_targets():
 
 def test_get_targets_db_error(mocker):
     mocker.patch(
-        "complex_frogs.database.crud.read_targets",
+        "src.database.crud.read_targets",
         side_effect=SQLAlchemyError,
     )
     response = client.get("/targets/")
@@ -62,7 +62,7 @@ def test_post_new_target_already_exists():
 
 def test_post_new_target_db_error(mocker):
     mocker.patch(
-        "complex_frogs.database.crud.create_target",
+        "src.database.crud.create_target",
         side_effect=SQLAlchemyError,
     )
     response = client.post("/targets/", json=new_scrape_target)
@@ -89,7 +89,7 @@ def test_get_target_with_id_not_found():
 
 def test_get_target_with_id_db_error(mocker):
     mocker.patch(
-        "complex_frogs.database.crud.read_target",
+        "src.database.crud.read_target",
         side_effect=SQLAlchemyError,
     )
     response = client.get(f"/targets/{scrape_target2['id']}")
@@ -122,7 +122,7 @@ def test_put_update_target_not_found():
 
 def test_put_update_target_db_error(mocker):
     mocker.patch(
-        "complex_frogs.database.crud.update_target",
+        "src.database.crud.update_target",
         side_effect=SQLAlchemyError,
     )
     response = client.put(
@@ -148,7 +148,7 @@ def test_delete_target_not_found():
 
 def test_delete_target_db_error(mocker):
     mocker.patch(
-        "complex_frogs.database.crud.delete_target",
+        "src.database.crud.delete_target",
         side_effect=SQLAlchemyError,
     )
     response = client.delete(f"/targets/{scrape_target1['id']}")

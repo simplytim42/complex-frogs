@@ -1,8 +1,8 @@
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 
-from complex_frogs.api import scrape_data, targets
-from complex_frogs.database import get_db
+from src.api import scrape_data, targets
+from src.database import get_db
 from tests.dummy_data import (
     get_empty_db,
     new_scrape_target,

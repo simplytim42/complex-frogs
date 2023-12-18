@@ -2,8 +2,8 @@
 
 from fastapi import FastAPI
 
-from complex_frogs.api import root, scrape_data, targets
-from complex_frogs.logger.config import LOGS_DIR, setup_logger
+from src.api import root, scrape_data, targets
+from src.logger.config import LOGS_DIR, setup_logger
 
 setup_logger(LOGS_DIR / "api.log")
 

@@ -2,8 +2,8 @@ from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 from sqlalchemy.exc import SQLAlchemyError
 
-from complex_frogs.api import scrape_data
-from complex_frogs.database import get_db
+from src.api import scrape_data
+from src.database import get_db
 from tests.dummy_data import (
     get_test_db,
     scrape_target1,
@@ -27,7 +27,7 @@ def test_get_scrape_data():
 
 def test_get_scrape_data_db_error(mocker):
     mocker.patch(
-        "complex_frogs.database.crud.read_scrape_data",
+        "src.database.crud.read_scrape_data",
         side_effect=SQLAlchemyError,
     )
     response = client.get("/scrape-data/")
@@ -53,7 +53,7 @@ def test_get_scrape_data_for_target_not_found():
 
 def test_get_scrape_data_for_target_db_error(mocker):
     mocker.patch(
-        "complex_frogs.database.crud.read_scrape_data_for_target",
+        "src.database.crud.read_scrape_data_for_target",
         side_effect=SQLAlchemyError,
     )
     response = client.get(f"/scrape-data/target/{scrape_target1['id']}")
@@ -79,7 +79,7 @@ def test_get_scrape_data_by_id_not_found():
 
 def test_get_scrape_data_by_id_db_error(mocker):
     mocker.patch(
-        "complex_frogs.database.crud.read_scrape_data_by_id",
+        "src.database.crud.read_scrape_data_by_id",
         side_effect=SQLAlchemyError,
     )
     response = client.get(f"/scrape-data/{scraped_data1['scrape_target_id']}")
@@ -102,7 +102,7 @@ def test_delete_scrape_data_not_found():
 
 def test_delete_scrape_data_db_error(mocker):
     mocker.patch(
-        "complex_frogs.database.crud.delete_scrape_data",
+        "src.database.crud.delete_scrape_data",
         side_effect=SQLAlchemyError,
     )
     response = client.delete(f"/scrape-data/{scraped_data1['scrape_target_id']}")

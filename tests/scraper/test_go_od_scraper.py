@@ -1,6 +1,6 @@
 import pytest
 
-from complex_frogs.scraper import GoOutdoorsScraper, ScraperError
+from src.scraper import GoOutdoorsScraper, ScraperError
 
 
 @pytest.fixture()

@@ -3,7 +3,7 @@ from datetime import timezone
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from complex_frogs.database.models import ScrapedData, ScrapeTargets
+from src.database.models import ScrapedData, ScrapeTargets
 
 
 def test_scrape_target_repr(scrape_target1: ScrapeTargets):

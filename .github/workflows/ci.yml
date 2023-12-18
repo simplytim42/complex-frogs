@@ -69,4 +69,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --cov=complex_frogs tests/
+          pytest --cov=src tests/

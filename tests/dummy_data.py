@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from complex_frogs.database.models import Base, ScrapedData, ScrapeTargets
+from src.database.models import Base, ScrapedData, ScrapeTargets
 
 timestamp = datetime.now(tz=timezone.utc)
 

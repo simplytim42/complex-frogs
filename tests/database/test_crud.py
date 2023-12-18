@@ -1,8 +1,8 @@
 import pytest
 from sqlalchemy.orm import Session
 
-from complex_frogs.database import crud
-from complex_frogs.database.models import ScrapedData, ScrapeTargets
+from src.database import crud
+from src.database.models import ScrapedData, ScrapeTargets
 
 
 def test_read_targets(dummy_db: Session, scrape_target1: ScrapeTargets):
