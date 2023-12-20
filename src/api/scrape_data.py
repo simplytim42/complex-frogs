@@ -4,7 +4,6 @@ import logging
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from src.database import crud, get_db, schema
@@ -22,17 +21,9 @@ router = APIRouter(
 )
 def get_scrape_data(session: Annotated[Session, Depends(get_db)]) -> Any:
     """Get all Scrape Data from database."""
-    try:
-        scraped_data = crud.read_scrape_data(session)
-    except SQLAlchemyError as e:
-        logging.exception(msg=e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error",
-        ) from None
-    else:
-        logging.info("Getting all scrape data from database")
-        return scraped_data
+    scraped_data = crud.read_scrape_data(session)
+    logging.info("Getting all scrape data from database")
+    return scraped_data
 
 
 @router.get(
@@ -45,22 +36,10 @@ def get_scrape_data_for_target(
     session: Annotated[Session, Depends(get_db)],
 ) -> Any:
     """Get all Scrape Data for a specific Target from database."""
-    try:
-        scraped_data = crud.read_scrape_data_for_target(session, target_id)
-    except crud.TargetDoesNotExistError:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Target not found",
-        ) from None
-    except SQLAlchemyError:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error",
-        ) from None
-    else:
-        msg = f"Getting all scrape data for target with id {target_id} from database"
-        logging.info(msg=msg)
-        return scraped_data
+    scraped_data = crud.read_scrape_data_for_target(session, target_id)
+    msg = f"Getting all scrape data for target with id {target_id} from database"
+    logging.info(msg=msg)
+    return scraped_data
 
 
 @router.get(
@@ -73,23 +52,10 @@ def get_scrape_data_by_id(
     session: Annotated[Session, Depends(get_db)],
 ) -> Any:
     """Get specific Scrape Data by ID from database."""
-    try:
-        scraped_data = crud.read_scrape_data_by_id(session, scrape_data_id)
-    except crud.ScrapedDataDoesNotExistError:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Scrape data not found",
-        ) from None
-    except SQLAlchemyError as e:
-        logging.exception(msg=e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error",
-        ) from None
-    else:
-        msg = f"Getting scrape data with id {scrape_data_id} from database"
-        logging.info(msg=msg)
-        return scraped_data
+    scraped_data = crud.read_scrape_data_by_id(session, scrape_data_id)
+    msg = f"Getting scrape data with id {scrape_data_id} from database"
+    logging.info(msg=msg)
+    return scraped_data
 
 
 @router.delete(
@@ -108,12 +74,6 @@ def delete_scrape_data(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Scrape data not found",
-        ) from None
-    except SQLAlchemyError as e:
-        logging.exception(msg=e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error",
         ) from None
     else:
         msg = f"Deleted scrape data with id {scrape_data_id} from database"
