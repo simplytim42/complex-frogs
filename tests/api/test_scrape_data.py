@@ -1,8 +1,9 @@
-from fastapi import FastAPI, status
+import pytest
+from fastapi import status
 from fastapi.testclient import TestClient
 from sqlalchemy.exc import SQLAlchemyError
 
-from src.api import scrape_data
+from run_api import app
 from src.database import get_db
 from tests.dummy_data import (
     get_test_db,
@@ -10,9 +11,13 @@ from tests.dummy_data import (
     scraped_data1,
 )
 
-app = FastAPI()
-app.include_router(scrape_data.router)
-app.dependency_overrides[get_db] = get_test_db
+
+@pytest.fixture(autouse=True)
+def override_dependencies():
+    app.dependency_overrides[get_db] = get_test_db
+    yield None
+    app.dependency_overrides = {}
+
 
 client = TestClient(app)
 
