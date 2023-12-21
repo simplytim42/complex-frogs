@@ -44,6 +44,12 @@ class ScrapeDataOut(ScrapeDataBase):
     id: int  # noqa: A003
 
 
+class RootMessage(BaseModel):
+    """Root API message."""
+
+    detail: str = "Welcome to the Complex Frogs API"
+
+
 class TargetExistsMessage(BaseModel):
     """Error message for when a target already exists in the database."""
 

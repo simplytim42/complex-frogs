@@ -2,6 +2,8 @@
 
 from fastapi import APIRouter, status
 
+from src.database import schema
+
 router = APIRouter()
 
 
@@ -12,4 +14,4 @@ router = APIRouter()
 )
 def root() -> dict[str, str]:
     """Root endpoint for API."""
-    return {"message": "Complex Frogs API"}
+    return schema.RootMessage().model_dump()
