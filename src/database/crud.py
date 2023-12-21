@@ -148,7 +148,11 @@ def read_scrape_data_by_id(session: Session, scrape_data_id: int) -> ScrapedData
 
 
 def delete_scrape_data(session: Session, scrape_data_id: int) -> None:
-    """Delete scrape data for a target from the database."""
+    """Delete scrape data for a target from the database.
+
+    Raises:
+        ScrapedDataDoesNotExistError: If the scraped data does not exist in the database.
+    """
     scraped_data = read_scrape_data_by_id(session, scrape_data_id)
     session.delete(scraped_data)
     session.commit()
