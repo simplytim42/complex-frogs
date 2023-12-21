@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.exc import SQLAlchemyError
 
 from run_api import app
-from src.database import get_db
+from src.database import get_db, schema
 from tests.dummy_data import (
     get_test_db,
     new_scrape_target,
@@ -46,7 +46,7 @@ def test_get_targets_db_error(mocker):
     response = client.get("/targets/")
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     data = response.json()
-    assert data["detail"] == "Database error"
+    assert data == schema.DatabaseErrorMessage().model_dump()
 
 
 def test_post_new_target():
@@ -62,7 +62,7 @@ def test_post_new_target_already_exists():
     response = client.post("/targets/", json=scrape_target1)
     assert response.status_code == status.HTTP_409_CONFLICT
     data = response.json()
-    assert data["detail"] == "Target already exists"
+    assert data == schema.TargetExistsMessage().model_dump()
 
 
 def test_post_new_target_db_error(mocker):
@@ -73,7 +73,7 @@ def test_post_new_target_db_error(mocker):
     response = client.post("/targets/", json=new_scrape_target)
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     data = response.json()
-    assert data["detail"] == "Database error"
+    assert data == schema.DatabaseErrorMessage().model_dump()
 
 
 def test_get_target_with_id():
@@ -89,7 +89,7 @@ def test_get_target_with_id_not_found():
     response = client.get("/targets/99999")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     data = response.json()
-    assert data["detail"] == "Target not found"
+    assert data == schema.TargetDoesNotExistMessage().model_dump()
 
 
 def test_get_target_with_id_db_error(mocker):
@@ -100,7 +100,7 @@ def test_get_target_with_id_db_error(mocker):
     response = client.get(f"/targets/{scrape_target2['id']}")
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     data = response.json()
-    assert data["detail"] == "Database error"
+    assert data == schema.DatabaseErrorMessage().model_dump()
 
 
 def test_put_update_target():
@@ -122,7 +122,7 @@ def test_put_update_target_not_found():
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
     data = response.json()
-    assert data["detail"] == "Target not found"
+    assert data == schema.TargetDoesNotExistMessage().model_dump()
 
 
 def test_put_update_target_db_error(mocker):
@@ -136,7 +136,7 @@ def test_put_update_target_db_error(mocker):
     )
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     data = response.json()
-    assert data["detail"] == "Database error"
+    assert data == schema.DatabaseErrorMessage().model_dump()
 
 
 def test_delete_target():
@@ -148,7 +148,7 @@ def test_delete_target_not_found():
     response = client.delete("/targets/99999")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     data = response.json()
-    assert data["detail"] == "Target not found"
+    assert data == schema.TargetDoesNotExistMessage().model_dump()
 
 
 def test_delete_target_db_error(mocker):
@@ -159,4 +159,4 @@ def test_delete_target_db_error(mocker):
     response = client.delete(f"/targets/{scrape_target1['id']}")
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     data = response.json()
-    assert data["detail"] == "Database error"
+    assert data == schema.DatabaseErrorMessage().model_dump()
