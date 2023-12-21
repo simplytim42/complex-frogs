@@ -29,7 +29,7 @@ app = FastAPI(
     title="Complex Frogs API",
     description=description,
     summary="API Access to the Complex Frogs web scraping database",
-    version="2.0.0",
+    version="2.1.0",
     license_info={"name": "MIT License", "identifier": "MIT"},
     contact={
         "name": "Tim MacKay",
