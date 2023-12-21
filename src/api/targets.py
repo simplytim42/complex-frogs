@@ -7,6 +7,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from src import messages
 from src.database import crud, get_db, models, schema
 
 router = APIRouter(
@@ -34,7 +35,7 @@ def get_targets(session: Annotated[Session, Depends(get_db)]) -> Any:
     response_description="The newly created Scraping Target",
     responses={
         status.HTTP_409_CONFLICT: {
-            "model": schema.TargetExistsMessage,
+            "model": messages.TargetExistsMessage,
         },
     },
 )
@@ -77,7 +78,7 @@ def new_target(
     response_description="The requested Scraping Target",
     responses={
         status.HTTP_404_NOT_FOUND: {
-            "model": schema.TargetDoesNotExistMessage,
+            "model": messages.TargetDoesNotExistMessage,
         },
     },
 )
@@ -102,7 +103,7 @@ def get_target(
     response_description="The updated Scraping Target",
     responses={
         status.HTTP_404_NOT_FOUND: {
-            "model": schema.TargetDoesNotExistMessage,
+            "model": messages.TargetDoesNotExistMessage,
         },
     },
 )
@@ -127,7 +128,7 @@ def update_target(
     response_description="No content",
     responses={
         status.HTTP_404_NOT_FOUND: {
-            "model": schema.TargetDoesNotExistMessage,
+            "model": messages.TargetDoesNotExistMessage,
         },
     },
 )

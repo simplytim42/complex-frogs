@@ -6,6 +6,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from src import messages
 from src.database import crud, get_db, schema
 
 router = APIRouter(
@@ -32,7 +33,7 @@ def get_scrape_data(session: Annotated[Session, Depends(get_db)]) -> Any:
     response_description="A list of all Scrape Data for the specified Target",
     responses={
         status.HTTP_404_NOT_FOUND: {
-            "model": schema.TargetDoesNotExistMessage,
+            "model": messages.TargetDoesNotExistMessage,
         },
     },
 )
@@ -53,7 +54,7 @@ def get_scrape_data_for_target(
     response_description="The specified Scrape Data",
     responses={
         status.HTTP_404_NOT_FOUND: {
-            "model": schema.ScrapeDataDoesNotExistMessage,
+            "model": messages.ScrapeDataDoesNotExistMessage,
         },
     },
 )
@@ -74,7 +75,7 @@ def get_scrape_data_by_id(
     response_description="No content",
     responses={
         status.HTTP_404_NOT_FOUND: {
-            "model": schema.ScrapeDataDoesNotExistMessage,
+            "model": messages.ScrapeDataDoesNotExistMessage,
         },
     },
 )

@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, status
 
-from src.database import schema
+from src import messages
 
 router = APIRouter()
 
@@ -14,4 +14,4 @@ router = APIRouter()
 )
 def root() -> dict[str, str]:
     """Root endpoint for API."""
-    return schema.RootMessage().model_dump()
+    return messages.RootMessage().model_dump()

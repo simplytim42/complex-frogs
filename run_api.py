@@ -5,8 +5,9 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 
+from src import messages
 from src.api import root, scrape_data, targets
-from src.database import crud, schema
+from src.database import crud
 from src.logger.config import LOGS_DIR, setup_logger
 
 setup_logger(LOGS_DIR / "api.log")
@@ -50,7 +51,7 @@ async def target_exists_handler(
     """Handle CRUD TargetExistsError."""
     return JSONResponse(
         status_code=status.HTTP_409_CONFLICT,
-        content=schema.TargetExistsMessage().model_dump(),
+        content=messages.TargetExistsMessage().model_dump(),
     )
 
 
@@ -62,7 +63,7 @@ async def target_does_not_exist_handler(
     """Handle CRUD TargetDoesNotExistError."""
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
-        content=schema.TargetDoesNotExistMessage().model_dump(),
+        content=messages.TargetDoesNotExistMessage().model_dump(),
     )
 
 
@@ -74,7 +75,7 @@ async def scrape_data_does_not_exist_handler(
     """Handle CRUD ScrapedDataDoesNotExistError."""
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
-        content=schema.ScrapeDataDoesNotExistMessage().model_dump(),
+        content=messages.ScrapeDataDoesNotExistMessage().model_dump(),
     )
 
 
@@ -87,5 +88,5 @@ async def sqlalchemy_error_handler(
     logging.exception(msg=exc)
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content=schema.DatabaseErrorMessage().model_dump(),
+        content=messages.DatabaseErrorMessage().model_dump(),
     )
