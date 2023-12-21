@@ -51,7 +51,13 @@ class AmazonScraper(BaseScraper):
         return str(content)
 
     def run(self) -> bool:
-        """Run the scraper and return True if data is retrieved successfully."""
+        """Run the scraper.
+
+        Returns:
+            bool: True if the scraper ran successfully, False otherwise.
+        Raises:
+            ScraperError: If there was an error running the scraper.
+        """
         try:
             temp_html = HTMLParser(self.__get_html_with_playwright())
             self.html = temp_html.html

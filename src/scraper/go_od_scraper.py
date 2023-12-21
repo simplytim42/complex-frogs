@@ -38,7 +38,13 @@ class GoOutdoorsScraper(BaseScraper):
         return f"{self.__class__.__name__}(product_id='{self.SKU}')"
 
     def run(self) -> bool:
-        """Run the scraper and return True if data is retrieved successfully."""
+        """Run the scraper.
+
+        Returns:
+            bool: True if the scraper ran successfully, False otherwise.
+        Raises:
+            ScraperError: If there was an error running the scraper.
+        """
         try:
             response = httpx.get(self.URL, headers=self._get_headers())
             response.raise_for_status()

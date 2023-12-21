@@ -57,7 +57,13 @@ class AmazonGoogleScraper(BaseScraper):
         return str(content)
 
     def run(self) -> bool:
-        """Run the scraper and return True if data is retrieved successfully."""
+        """Run the scraper.
+
+        Returns:
+            bool: True if data is retrieved successfully.
+        Rasises:
+            ScraperError: If an error occurs while scraping.
+        """
         try:
             temp_html = HTMLParser(self.__get_html_with_playwright())
             self.html = temp_html.html

@@ -55,7 +55,11 @@ def _target_exists(session: Session, target_site: str, target_sku: str) -> bool:
 
 
 def create_target(session: Session, target: ScrapeTargets) -> ScrapeTargets:
-    """Create a new scraping target in the database."""
+    """Create a new scraping target in the database.
+
+    Raises:
+        TargetExistsError: If the target already exists in the database.
+    """
     if _target_exists(session, target.site, target.sku):
         raise TargetExistsError
 
@@ -70,7 +74,11 @@ def update_target(
     target_id: int,
     new_target: TargetIn,
 ) -> ScrapeTargets:
-    """Update a scraping target in the database."""
+    """Update a scraping target in the database.
+
+    Raises:
+        TargetDoesNotExistError: If the target does not exist in the database.
+    """
     target = read_target(session, target_id, for_update=True)
 
     if target is None:
@@ -85,7 +93,11 @@ def update_target(
 
 
 def delete_target(session: Session, target_id: int) -> None:
-    """Delete a scraping target from the database."""
+    """Delete a scraping target from the database.
+
+    Raises:
+        TargetDoesNotExistError: If the target does not exist in the database.
+    """
     target = read_target(session, target_id, for_update=True)
 
     if target is None:
@@ -108,7 +120,11 @@ def read_scrape_data_for_target(
     session: Session,
     target_id: int,
 ) -> Sequence[ScrapedData]:
-    """Get all scrape data for a target from database."""
+    """Get all scrape data for a target from database.
+
+    Raises:
+        TargetDoesNotExistError: If the target does not exist in the database.
+    """
     if not read_target(session, target_id):
         raise TargetDoesNotExistError
 
@@ -117,7 +133,11 @@ def read_scrape_data_for_target(
 
 
 def read_scrape_data_by_id(session: Session, scrape_data_id: int) -> ScrapedData:
-    """Get specific scrape data by id from database."""
+    """Get specific scrape data by id from database.
+
+    Raises:
+        ScrapedDataDoesNotExistError: If the scraped data does not exist in the database.
+    """
     stmt = select(ScrapedData).where(ScrapedData.id == scrape_data_id)
     scraped_data = session.scalar(stmt)
 
