@@ -68,13 +68,6 @@ def delete_scrape_data(
     session: Annotated[Session, Depends(get_db)],
 ) -> None:
     """Delete specific Scrape Data from the database."""
-    try:
-        crud.delete_scrape_data(session, scrape_data_id)
-    except crud.ScrapedDataDoesNotExistError:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Scrape data not found",
-        ) from None
-    else:
-        msg = f"Deleted scrape data with id {scrape_data_id} from database"
-        logging.info(msg=msg)
+    crud.delete_scrape_data(session, scrape_data_id)
+    msg = f"Deleted scrape data with id {scrape_data_id} from database"
+    logging.info(msg=msg)
