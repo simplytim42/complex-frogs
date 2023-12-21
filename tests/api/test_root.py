@@ -1,10 +1,7 @@
-from fastapi import FastAPI, status
+from fastapi import status
 from fastapi.testclient import TestClient
 
-from src.api import root
-
-app = FastAPI()
-app.include_router(root.router)
+from run_api import app
 
 client = TestClient(app)
 

@@ -1,7 +1,8 @@
-from fastapi import FastAPI, status
+import pytest
+from fastapi import status
 from fastapi.testclient import TestClient
 
-from src.api import scrape_data, targets
+from run_api import app
 from src.database import get_db
 from tests.dummy_data import (
     get_empty_db,
@@ -9,10 +10,13 @@ from tests.dummy_data import (
     scrape_target1,
 )
 
-app = FastAPI()
-app.include_router(targets.router)
-app.include_router(scrape_data.router)
-app.dependency_overrides[get_db] = get_empty_db
+
+@pytest.fixture(autouse=True)
+def override_dependencies():
+    app.dependency_overrides[get_db] = get_empty_db
+    yield None
+    app.dependency_overrides = {}
+
 
 client = TestClient(app)
 

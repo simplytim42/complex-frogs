@@ -1,8 +1,12 @@
 """Main API file for Complex Frogs API."""
+import logging
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
+from sqlalchemy.exc import SQLAlchemyError
 
 from src.api import root, scrape_data, targets
+from src.database import crud
 from src.logger.config import LOGS_DIR, setup_logger
 
 setup_logger(LOGS_DIR / "api.log")
@@ -32,6 +36,56 @@ app = FastAPI(
     },
 )
 
+
 app.include_router(targets.router)
 app.include_router(scrape_data.router)
 app.include_router(root.router)
+
+
+@app.exception_handler(crud.TargetExistsError)
+async def target_exists_handler(
+    request: Request,
+    exc: crud.TargetExistsError,
+) -> JSONResponse:
+    """Handle CRUD TargetExistsError."""
+    return JSONResponse(
+        status_code=status.HTTP_409_CONFLICT,
+        content={"detail": "Target already exists"},
+    )
+
+
+@app.exception_handler(crud.TargetDoesNotExistError)
+async def target_does_not_exist_handler(
+    request: Request,
+    exc: crud.TargetDoesNotExistError,
+) -> JSONResponse:
+    """Handle CRUD TargetDoesNotExistError."""
+    return JSONResponse(
+        status_code=status.HTTP_404_NOT_FOUND,
+        content={"detail": "Target not found"},
+    )
+
+
+@app.exception_handler(crud.ScrapedDataDoesNotExistError)
+async def scrape_data_does_not_exist_handler(
+    request: Request,
+    exc: crud.ScrapedDataDoesNotExistError,
+) -> JSONResponse:
+    """Handle CRUD ScrapedDataDoesNotExistError."""
+    return JSONResponse(
+        status_code=status.HTTP_404_NOT_FOUND,
+        content={"detail": "Scrape data not found"},
+    )
+
+
+@app.exception_handler(SQLAlchemyError)
+async def sqlalchemy_error_handler(
+    request: Request,
+    exc: SQLAlchemyError,
+) -> JSONResponse:
+    """Handle SQLAlchemy errors."""
+    logging.exception(msg=exc)
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"detail": "Database error"},
+    )

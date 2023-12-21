@@ -4,8 +4,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from src.database import crud, get_db, models, schema
@@ -23,17 +22,9 @@ router = APIRouter(
 )
 def get_targets(session: Annotated[Session, Depends(get_db)]) -> Any:
     """Get all Scraping Targets from the database."""
-    try:
-        targets = crud.read_targets(session)
-    except SQLAlchemyError as e:
-        logging.exception(msg=e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error",
-        ) from None
-    else:
-        logging.info("Getting all targets from database")
-        return targets
+    targets = crud.read_targets(session)
+    logging.info("Getting all targets from database")
+    return targets
 
 
 @router.post(
@@ -61,30 +52,18 @@ def new_target(
     - `site` must be set to `go_od`
     - `sku` must be set to the Product ID and name as set in the URL of the product page on Go Outdoors. For example, for the product at `https://www.gooutdoors.co.uk/15903050/family-tent-123456`, the `sku` would be `family-tent-123456`
     """
-    try:
-        now = datetime.now(tz=timezone.utc)
-        last = datetime(1970, 1, 1, tzinfo=timezone.utc)
-        target = models.ScrapeTargets(
-            **new_target.model_dump(),
-            date_added=now,
-            last_scraped=last,
-        )
-        created_target = crud.create_target(session, target)
-    except crud.TargetExistsError:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Target already exists",
-        ) from None
-    except SQLAlchemyError as e:
-        logging.exception(msg=e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error",
-        ) from None
-    else:
-        msg = f"Created new target with sku '{new_target.sku}' in database"
-        logging.info(msg=msg)
-        return created_target
+    now = datetime.now(tz=timezone.utc)
+    last = datetime(1970, 1, 1, tzinfo=timezone.utc)
+    target = models.ScrapeTargets(
+        **new_target.model_dump(),
+        date_added=now,
+        last_scraped=last,
+    )
+    created_target = crud.create_target(session, target)
+
+    msg = f"Created new target with sku '{new_target.sku}' in database"
+    logging.info(msg=msg)
+    return created_target
 
 
 @router.get(
@@ -97,23 +76,14 @@ def get_target(
     session: Annotated[Session, Depends(get_db)],
 ) -> Any:
     """Get a single Scraping Target from database."""
-    try:
-        target = crud.read_target(session, target_id)
-        if target is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Target not found",
-            )
-    except SQLAlchemyError as e:
-        logging.exception(msg=e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error",
-        ) from None
-    else:
-        msg = f"Getting target with id {target_id} from database"
-        logging.info(msg=msg)
-        return target
+    target = crud.read_target(session, target_id)
+
+    if target is None:
+        raise crud.TargetDoesNotExistError
+
+    msg = f"Getting target with id {target_id} from database"
+    logging.info(msg=msg)
+    return target
 
 
 @router.put(
@@ -130,23 +100,10 @@ def update_target(
 
     See *Usage Notes* for `POST /targets/` for helpful details about updating Scraping Targets.
     """
-    try:
-        target = crud.update_target(session, target_id, new_target)
-    except crud.TargetDoesNotExistError:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Target not found",
-        ) from None
-    except SQLAlchemyError as e:
-        logging.exception(msg=e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error",
-        ) from None
-    else:
-        msg = f"Updated target with id {target_id} in database"
-        logging.info(msg=msg)
-        return target
+    target = crud.update_target(session, target_id, new_target)
+    msg = f"Updated target with id {target_id} in database"
+    logging.info(msg=msg)
+    return target
 
 
 @router.delete(
@@ -159,19 +116,6 @@ def delete_target(
     session: Annotated[Session, Depends(get_db)],
 ) -> None:
     """Delete a Scraping Target from the database."""
-    try:
-        crud.delete_target(session, target_id)
-    except crud.TargetDoesNotExistError:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Target not found",
-        ) from None
-    except SQLAlchemyError as e:
-        logging.exception(msg=e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error",
-        ) from None
-    else:
-        msg = f"Deleted target with id {target_id} from database"
-        logging.info(msg=msg)
+    crud.delete_target(session, target_id)
+    msg = f"Deleted target with id {target_id} from database"
+    logging.info(msg=msg)
