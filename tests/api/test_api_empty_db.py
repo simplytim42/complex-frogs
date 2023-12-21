@@ -3,6 +3,7 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 from run_api import app
+from src import messages
 from src.database import get_db
 from tests.dummy_data import (
     get_empty_db,
@@ -40,21 +41,21 @@ def test_get_target_by_id():
     response = client.get("/targets/1")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     data = response.json()
-    assert data["detail"] == "Target not found"
+    assert data == messages.TargetDoesNotExistMessage().model_dump()
 
 
 def test_put_target_by_id():
     response = client.put("/targets/1", json=scrape_target1)
     assert response.status_code == status.HTTP_404_NOT_FOUND
     data = response.json()
-    assert data["detail"] == "Target not found"
+    assert data == messages.TargetDoesNotExistMessage().model_dump()
 
 
 def test_delete_target_by_id():
     response = client.delete("/targets/1")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     data = response.json()
-    assert data["detail"] == "Target not found"
+    assert data == messages.TargetDoesNotExistMessage().model_dump()
 
 
 def test_get_scrape_data():
@@ -67,18 +68,18 @@ def test_get_scrape_data_by_target():
     response = client.get("/scrape-data/target/1")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     data = response.json()
-    assert data["detail"] == "Target not found"
+    assert data == messages.TargetDoesNotExistMessage().model_dump()
 
 
 def test_get_scrape_data_by_id():
     response = client.get("/scrape-data/1")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     data = response.json()
-    assert data["detail"] == "Scrape data not found"
+    assert data == messages.ScrapeDataDoesNotExistMessage().model_dump()
 
 
 def test_delete_scrape_data_by_id():
     response = client.delete("/scrape-data/1")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     data = response.json()
-    assert data["detail"] == "Scrape data not found"
+    assert data == messages.ScrapeDataDoesNotExistMessage().model_dump()

@@ -7,6 +7,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from src import messages
 from src.database import crud, get_db, models, schema
 
 router = APIRouter(
@@ -32,6 +33,11 @@ def get_targets(session: Annotated[Session, Depends(get_db)]) -> Any:
     response_model=schema.TargetOut,
     status_code=status.HTTP_201_CREATED,
     response_description="The newly created Scraping Target",
+    responses={
+        status.HTTP_409_CONFLICT: {
+            "model": messages.TargetExistsMessage,
+        },
+    },
 )
 def new_target(
     new_target: schema.TargetIn,
@@ -70,6 +76,11 @@ def new_target(
     "/{target_id}",
     response_model=schema.TargetOut,
     response_description="The requested Scraping Target",
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "model": messages.TargetDoesNotExistMessage,
+        },
+    },
 )
 def get_target(
     target_id: int,
@@ -90,6 +101,11 @@ def get_target(
     "/{target_id}",
     response_model=schema.TargetOut,
     response_description="The updated Scraping Target",
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "model": messages.TargetDoesNotExistMessage,
+        },
+    },
 )
 def update_target(
     target_id: int,
@@ -110,6 +126,11 @@ def update_target(
     "/{target_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     response_description="No content",
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "model": messages.TargetDoesNotExistMessage,
+        },
+    },
 )
 def delete_target(
     target_id: int,
