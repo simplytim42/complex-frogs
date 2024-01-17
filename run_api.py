@@ -1,4 +1,4 @@
-"""Main API file for Complex Frogs API."""
+"""Main API file for Intrepid API."""
 import logging
 
 from fastapi import FastAPI, Request, status
@@ -26,9 +26,9 @@ Each scrape data is a single scrape of a **Target**.
 """
 
 app = FastAPI(
-    title="Complex Frogs API",
+    title="Intrepid API",
     description=description,
-    summary="API Access to the Complex Frogs web scraping database",
+    summary="API Access to the Intrepid web scraping database",
     version="2.1.0",
     license_info={"name": "MIT License", "identifier": "MIT"},
     contact={

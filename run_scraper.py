@@ -16,7 +16,7 @@ from src.functions.utils import write_file
 from src.logger.config import LOGS_DIR, setup_logger
 from src.scraper import ScraperError, get_scraper
 
-setup_logger(filepath=LOGS_DIR / "frog.log")
+setup_logger(filepath=LOGS_DIR / "intrepid.log")
 
 load_dotenv()
 API_TOKEN = os.getenv("NOTIFICATION_TOKEN")
