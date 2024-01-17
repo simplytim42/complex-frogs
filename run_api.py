@@ -29,7 +29,7 @@ app = FastAPI(
     title="Intrepid API",
     description=description,
     summary="API Access to the Intrepid web scraping database",
-    version="2.1.0",
+    version="2.2.0",
     license_info={"name": "MIT License", "identifier": "MIT"},
     contact={
         "name": "Tim MacKay",
