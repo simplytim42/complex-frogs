@@ -1,5 +1,5 @@
 [Unit]
-Description=FastAPI web server for the Complex Frogs project
+Description=FastAPI web server for the Intrepid project
 # start after the network is up
 After=network.target
 

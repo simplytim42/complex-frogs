@@ -15,7 +15,7 @@ clean:
 deep-clean: clean
 	rm -rf logs/*
 	rm -rf htmlcov
-	rm -rf frog.db
+	rm -rf intrepid.db
 
 test-cov:
 	pytest --cov --cov-report=html .

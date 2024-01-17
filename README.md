@@ -1,4 +1,4 @@
-# complex-frogs
+# intrepid
 web scraping to track the price of things I would like to buy and send me daily notifications using https://pushover.net
 
 there are two main scripts, the first is the scraper that collects the data. The second is the API which enables user interaction with the data.
@@ -25,9 +25,9 @@ NOTE: This project is intended to be deployed on a RaspberryPi and thus this REA
     - User
     - Group
 1. `cp` the file into the `/etc/systemd/system` directory
-1. run `sudo systemctl enable complex-frogs` to set the script to boot on startup
-1. run `sudo systemctl start complex-frogs` to start the script now (without having to reboot)
-1. (if you need to restart the process, for example after updating to a new version, run `sudo systemctl restart complex-frogs` to reboot the process)
+1. run `sudo systemctl enable intrepid` to set the script to boot on startup
+1. run `sudo systemctl start intrepid` to start the script now (without having to reboot)
+1. (if you need to restart the process, for example after updating to a new version, run `sudo systemctl restart intrepid` to reboot the process)
 
 
 ## run all QA checks

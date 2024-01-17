@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class RootMessage(BaseModel):
     """Root API message."""
 
-    detail: str = "Welcome to the Complex Frogs API"
+    detail: str = "Welcome to the Intrepid API"
 
 
 class TargetExistsMessage(BaseModel):
