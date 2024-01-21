@@ -7,7 +7,7 @@ from run_api import app
 from src import messages
 from src.database import get_db
 from tests.dummy_data import (
-    get_test_db,
+    override_get_db,
     scrape_target1,
     scraped_data1,
 )
@@ -15,7 +15,7 @@ from tests.dummy_data import (
 
 @pytest.fixture(autouse=True)
 def override_dependencies():
-    app.dependency_overrides[get_db] = get_test_db
+    app.dependency_overrides[get_db] = override_get_db
     yield None
     app.dependency_overrides = {}
 

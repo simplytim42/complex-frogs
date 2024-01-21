@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from sqlalchemy.pool import StaticPool
 
 from src.database.models import Base, ScrapedData, ScrapeTargets
 
@@ -38,49 +39,57 @@ scraped_data1 = {
 
 
 def get_empty_db() -> Session:
-    engine = create_engine(
-        "sqlite:///:memory:",
-        connect_args={"check_same_thread": False},
-    )
-    Base.metadata.create_all(bind=engine)
-    session = Session(bind=engine)
-    yield session
-    Base.metadata.drop_all(bind=engine)
+    try:
+        engine = create_engine(
+            "sqlite:///:memory:",
+            connect_args={"check_same_thread": False},
+            poolclass=StaticPool,
+        )
+        Base.metadata.create_all(bind=engine)
+        session = Session(bind=engine)
+        yield session
+    finally:
+        session.close()
+        Base.metadata.drop_all(bind=engine)
 
 
-def get_test_db() -> Session:
-    engine = create_engine(
-        "sqlite:///:memory:",
-        connect_args={"check_same_thread": False},
-    )
-    Base.metadata.create_all(bind=engine)
-    session = Session(bind=engine)
-    one = ScrapeTargets(
-        id=scrape_target1["id"],
-        site=scrape_target1["site"],
-        sku=scrape_target1["sku"],
-        send_notification=scrape_target1["send_notification"],
-        date_added=timestamp,
-        last_scraped=timestamp,
-    )
-    one.scraped_data.append(
-        ScrapedData(
-            scrape_target_id=scraped_data1["scrape_target_id"],
-            title=scraped_data1["title"],
-            price=scraped_data1["price"],
-            timestamp=timestamp,
-        ),
-    )
-    two = ScrapeTargets(
-        id=scrape_target2["id"],
-        site=scrape_target2["site"],
-        sku=scrape_target2["sku"],
-        send_notification=scrape_target2["send_notification"],
-        date_added=timestamp,
-        last_scraped=timestamp,
-    )
-    session.add(one)
-    session.add(two)
-    session.commit()
-    yield session
-    Base.metadata.drop_all(bind=engine)
+def override_get_db() -> Session:
+    try:
+        engine = create_engine(
+            "sqlite:///:memory:",
+            connect_args={"check_same_thread": False},
+            poolclass=StaticPool,
+        )
+        Base.metadata.create_all(bind=engine)
+        session = Session(bind=engine)
+        one = ScrapeTargets(
+            id=scrape_target1["id"],
+            site=scrape_target1["site"],
+            sku=scrape_target1["sku"],
+            send_notification=scrape_target1["send_notification"],
+            date_added=timestamp,
+            last_scraped=timestamp,
+        )
+        one.scraped_data.append(
+            ScrapedData(
+                scrape_target_id=scraped_data1["scrape_target_id"],
+                title=scraped_data1["title"],
+                price=scraped_data1["price"],
+                timestamp=timestamp,
+            ),
+        )
+        two = ScrapeTargets(
+            id=scrape_target2["id"],
+            site=scrape_target2["site"],
+            sku=scrape_target2["sku"],
+            send_notification=scrape_target2["send_notification"],
+            date_added=timestamp,
+            last_scraped=timestamp,
+        )
+        session.add(one)
+        session.add(two)
+        session.commit()
+        yield session
+    finally:
+        session.close()
+        Base.metadata.drop_all(bind=engine)
