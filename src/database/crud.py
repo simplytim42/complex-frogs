@@ -148,7 +148,7 @@ def read_scrape_data_by_id(session: Session, scrape_data_id: int) -> ScrapedData
     return scraped_data
 
 
-def delete_scrape_data(session: Session, scrape_data_id: int) -> None:
+def delete_scrape_data(session: Session, scrape_data_id: int) -> ScrapedData:
     """Delete scrape data for a target from the database.
 
     Raises:
@@ -157,3 +157,4 @@ def delete_scrape_data(session: Session, scrape_data_id: int) -> None:
     scraped_data = read_scrape_data_by_id(session, scrape_data_id)
     session.delete(scraped_data)
     session.commit()
+    return scraped_data

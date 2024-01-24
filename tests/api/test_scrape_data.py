@@ -95,8 +95,14 @@ def test_get_scrape_data_by_id_db_error(mocker):
 
 
 def test_delete_scrape_data():
-    response = client.delete(f"/scrape-data/{scraped_data1['scrape_target_id']}")
-    assert response.status_code == status.HTTP_204_NO_CONTENT
+    response = client.get("/scrape-data/")
+    data_to_delete = response.json()
+    response = client.delete(f"/scrape-data/{data_to_delete[0]['id']}")
+
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    assert data["title"] == scraped_data1["title"]
+    assert data["price"] == scraped_data1["price"]
 
 
 def test_delete_scrape_data_not_found():

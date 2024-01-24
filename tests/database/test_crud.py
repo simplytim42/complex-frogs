@@ -150,10 +150,11 @@ def test_read_scrape_data_by_id_no_data(dummy_db: Session):
 
 
 def test_delete_scrape_data(dummy_db: Session):
-    crud.delete_scrape_data(dummy_db, 1)
+    id_for_deletion = 1
+    deleted_data = crud.delete_scrape_data(dummy_db, id_for_deletion)
+    assert deleted_data.id == id_for_deletion
 
     result = crud.read_scrape_data(dummy_db)
-
     assert result == []
 
 
