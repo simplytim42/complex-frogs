@@ -3,6 +3,7 @@
 # V-TBD
 - Add a `CHANGELOG` file and backdate it
 - Rename `get_test_db` and update it to follow `fastapi` docs examples
+- Update DELETE endpoints to return the data that has been deleted
 
 # V2.2.0
 - Update the name of the project throughout the repo to "Intrepid"
