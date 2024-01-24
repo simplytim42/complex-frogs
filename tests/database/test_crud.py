@@ -75,7 +75,9 @@ def test_update_target_no_target(dummy_db: Session, scrape_target1: ScrapeTarget
 
 
 def test_delete_target(dummy_db: Session):
-    crud.delete_target(dummy_db, 2)
+    id_for_deletion = 2
+    deleted_target = crud.delete_target(dummy_db, id_for_deletion)
+    assert deleted_target.id == id_for_deletion
 
     result = crud.read_targets(dummy_db)
 

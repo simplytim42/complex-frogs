@@ -92,7 +92,7 @@ def update_target(
     return target
 
 
-def delete_target(session: Session, target_id: int) -> None:
+def delete_target(session: Session, target_id: int) -> ScrapeTargets:
     """Delete a scraping target from the database.
 
     Raises:
@@ -105,6 +105,7 @@ def delete_target(session: Session, target_id: int) -> None:
 
     session.delete(target)
     session.commit()
+    return target
 
 
 # ---------------------------
