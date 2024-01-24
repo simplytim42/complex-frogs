@@ -124,7 +124,7 @@ def update_target(
 
 @router.delete(
     "/{target_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
+    response_model=schema.TargetOut,
     response_description="No content",
     responses={
         status.HTTP_404_NOT_FOUND: {
@@ -135,8 +135,9 @@ def update_target(
 def delete_target(
     target_id: int,
     session: Annotated[Session, Depends(get_db)],
-) -> None:
+) -> Any:
     """Delete a Scraping Target from the database."""
-    crud.delete_target(session, target_id)
+    deleted_target = crud.delete_target(session, target_id)
     msg = f"Deleted target with id {target_id} from database"
     logging.info(msg=msg)
+    return deleted_target

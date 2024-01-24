@@ -71,7 +71,8 @@ def get_scrape_data_by_id(
 
 @router.delete(
     "/{scrape_data_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
+    status_code=status.HTTP_200_OK,
+    response_model=schema.ScrapeDataOut,
     response_description="No content",
     responses={
         status.HTTP_404_NOT_FOUND: {
@@ -82,8 +83,9 @@ def get_scrape_data_by_id(
 def delete_scrape_data(
     scrape_data_id: int,
     session: Annotated[Session, Depends(get_db)],
-) -> None:
+) -> Any:
     """Delete specific Scrape Data from the database."""
-    crud.delete_scrape_data(session, scrape_data_id)
+    deleted_data = crud.delete_scrape_data(session, scrape_data_id)
     msg = f"Deleted scrape data with id {scrape_data_id} from database"
     logging.info(msg=msg)
+    return deleted_data

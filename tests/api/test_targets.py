@@ -142,7 +142,12 @@ def test_put_update_target_db_error(mocker):
 
 def test_delete_target():
     response = client.delete(f"/targets/{scrape_target1['id']}")
-    assert response.status_code == status.HTTP_204_NO_CONTENT
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    assert data["id"] == scrape_target1["id"]
+    assert data["site"] == scrape_target1["site"]
+    assert data["sku"] == scrape_target1["sku"]
+    assert data["send_notification"] == scrape_target1["send_notification"]
 
 
 def test_delete_target_not_found():
