@@ -8,6 +8,9 @@ on:
 jobs:
   linter:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api
 
     steps:
       - name: Checkout Repository
@@ -29,6 +32,9 @@ jobs:
 
   type-checker:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api
 
     steps:
       - name: Checkout Repository
@@ -51,6 +57,9 @@ jobs:
 
   test-coverage:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api
 
     steps:
       - name: Checkout Repository
