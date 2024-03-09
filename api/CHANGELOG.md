@@ -1,6 +1,7 @@
 # CHANGELOG
 
-# V-TBD
+# V2.3.0
+- Create Monorepo and move project into `api` directory
 - Add a `CHANGELOG` file and backdate it
 - Rename `get_test_db` and update it to follow `fastapi` docs examples
 - Update DELETE endpoints to return the data that has been deleted
